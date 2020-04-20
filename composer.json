@@ -1,0 +1,52 @@
+{
+    "name": "codedredd/laravel-soap",
+    "description": "A SoapClient wrapper integration for Laravel",
+    "keywords": ["laravel", "soap", "client", "wrapper"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Gregor Becker",
+            "email": "gregor@codedredd.de"
+        }
+    ],
+    "require": {
+        "php": ">=7.2.0",
+        "ext-soap": "*",
+        "illuminate/support": "^5.6 || ^6.0 || ^7.0",
+        "phpro/soap-client": "^1.1",
+        "php-http/guzzle6-adapter": "^2.0",
+        "php-http/discovery": "^1.7",
+        "php-http/message": "^1.8",
+        "php-http/httplug": "^2.1",
+        "php-http/client-common": "^2.1",
+        "robrichards/wse-php": "^2.0",
+        "php-http/mock-client": "^1.3",
+        "guzzlehttp/guzzle": "^6.5"
+    },
+    "require-dev": {
+        "symfony/var-dumper": "^5.0",
+        "phpunit/phpunit": "^9.1",
+        "mockery/mockery": "^1.3",
+        "orchestra/testbench": "^5.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "CodeDredd\\Soap\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "CodeDredd\\Soap\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "CodeDredd\\Soap\\SoapServiceProvider"
+            ],
+            "aliases": {
+                "SOAP": "SoapFacade"
+            }
+        }
+    }
+}

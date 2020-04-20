@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+    <wsdl:message name="SayHelloRequest">
+        <wsdl:part name="firstName" type="xsd:string"/>
+    </wsdl:message>
+</wsdl:definitions>
