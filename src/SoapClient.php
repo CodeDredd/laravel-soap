@@ -1,14 +1,7 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Gregor Becker <gregor.becker@getinbyte.com>
- * Date: 15.04.2020
- * Time: 15:42
- */
 
 namespace CodeDredd\Soap;
 
-use Exception;
 use CodeDredd\Soap\Client\Request;
 use CodeDredd\Soap\Client\Response;
 use CodeDredd\Soap\Driver\ExtSoap\ExtSoapEngineFactory;
@@ -18,7 +11,6 @@ use CodeDredd\Soap\Middleware\WsseMiddleware;
 use GuzzleHttp\HandlerStack;
 use Http\Adapter\Guzzle6\Client;
 use Http\Client\Exception\HttpException;
-use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
 use Phpro\SoapClient\Middleware\BasicAuthMiddleware;
@@ -28,13 +20,16 @@ use Phpro\SoapClient\Soap\Driver\ExtSoap\ExtSoapOptions;
 use Phpro\SoapClient\Soap\Engine\EngineInterface;
 use Phpro\SoapClient\Soap\Handler\HandlerInterface;
 use Phpro\SoapClient\Soap\Handler\HttPlugHandle;
-use Phpro\SoapClient\Type\MixedResult;
 use Phpro\SoapClient\Type\ResultInterface;
 use Phpro\SoapClient\Type\ResultProviderInterface;
 use Phpro\SoapClient\Util\XmlFormatter;
 use Phpro\SoapClient\Wsdl\Provider\LocalWsdlProvider;
 use Phpro\SoapClient\Wsdl\Provider\WsdlProviderInterface;
 
+/**
+ * Class SoapClient
+ * @package CodeDredd\Soap
+ */
 class SoapClient {
     use Macroable {
         __call as macroCall;
@@ -45,24 +40,45 @@ class SoapClient {
 	 */
 	protected $engine;
 
-	protected $options = [];
+    /**
+     * @var array
+     */
+    protected $options = [];
 
     /**
      * @var ExtSoapOptions
      */
     protected $extSoapOptions;
 
-	protected $handler;
+    /**
+     * @var
+     */
+    protected $handler;
 
-	protected $handlerOptions = [];
+    /**
+     * @var array
+     */
+    protected $handlerOptions = [];
 
-	protected $wsdl = '';
+    /**
+     * @var string
+     */
+    protected $wsdl = '';
 
-	protected $isClientBuilded = false;
+    /**
+     * @var bool
+     */
+    protected $isClientBuilded = false;
 
-	protected $middlewares = [];
+    /**
+     * @var array
+     */
+    protected $middlewares = [];
 
-	protected $factory;
+    /**
+     * @var SoapFactory|null
+     */
+    protected $factory;
 
     /**
      * @var WsdlProviderInterface
@@ -106,7 +122,11 @@ class SoapClient {
 		}]);
 	}
 
-	public function withHandlerOptions($options) {
+    /**
+     * @param $options
+     * @return $this
+     */
+    public function withHandlerOptions($options) {
 		$this->handlerOptions = array_merge_recursive($this->handlerOptions, $options);
 		return $this->setHandler();
 	}
@@ -124,7 +144,11 @@ class SoapClient {
 		]));
 	}
 
-	private function setHandler(HandlerInterface $handler = null) {
+    /**
+     * @param  HandlerInterface|null  $handler
+     * @return $this
+     */
+    private function setHandler(HandlerInterface $handler = null) {
 		$this->handler = $handler ?? HttPlugHandle::createForClient(
 			Client::createWithConfig($this->handlerOptions)
 		);
@@ -132,7 +156,10 @@ class SoapClient {
         return $this;
 	}
 
-	private function refreshExtSoapOptions() {
+    /**
+     *
+     */
+    private function refreshExtSoapOptions() {
         if ($this->factory->isRecording()) {
             $this->baseWsdl($this->factory->getFakeWsdl());
         }
@@ -143,7 +170,10 @@ class SoapClient {
         }
     }
 
-	private function refreshEngine() {
+    /**
+     * @return $this
+     */
+    private function refreshEngine() {
 	    $this->refreshExtSoapOptions();
         $this->engine = ExtSoapEngineFactory::fromOptionsWithHandler(
             $this->extSoapOptions,
@@ -154,16 +184,27 @@ class SoapClient {
 		return $this;
 	}
 
-	public function getEngine() {
+    /**
+     * @return EngineInterface
+     */
+    public function getEngine() {
 		return $this->engine;
 	}
 
-	public function baseWsdl(string $wsdl) {
+    /**
+     * @param  string  $wsdl
+     * @return $this
+     */
+    public function baseWsdl(string $wsdl) {
 		$this->wsdl = $wsdl;
 		return $this;
 	}
 
-	private function arrayKeysToCamel(array $items) {
+    /**
+     * @param  array  $items
+     * @return array
+     */
+    private function arrayKeysToCamel(array $items) {
 	    $changedItems = [];
 	    foreach ($items as $key => $value) {
 	        $changedItems[Str::camel($key)] = $value;
@@ -210,12 +251,18 @@ class SoapClient {
 		return $this;
 	}
 
-	private function addMiddleware() {
+    /**
+     * Adds middleware to the handler
+     */
+    private function addMiddleware() {
 		foreach ($this->middlewares as $middleware)  {
 			$this->handler->addMiddleware($middleware);
 		}
 	}
 
+    /**
+     * @return $this
+     */
     public function withRemoveEmptyNodes() {
         $this->middlewares = array_merge_recursive($this->middlewares, [
             'empty_nodes' => new RemoveEmptyNodesMiddleware()
@@ -223,6 +270,11 @@ class SoapClient {
         return $this;
     }
 
+    /**
+     * @param  string  $username
+     * @param  string  $password
+     * @return $this
+     */
     public function withBasicAuth(string $username, string $password) {
         $this->middlewares = array_merge_recursive($this->middlewares, [
             'basic' => new BasicAuthMiddleware($username, $password)
@@ -230,6 +282,9 @@ class SoapClient {
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function withWsa() {
         $this->middlewares = array_merge_recursive($this->middlewares, [
             'wsa' => new WsaMiddleware()
@@ -237,7 +292,11 @@ class SoapClient {
         return $this;
     }
 
-	public function withWsse($options) {
+    /**
+     * @param $options
+     * @return $this
+     */
+    public function withWsse($options) {
 		$this->middlewares = array_merge_recursive($this->middlewares, [
 			'wsse' => new WsseMiddleware($options)
 		]);

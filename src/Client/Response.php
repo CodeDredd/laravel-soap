@@ -11,6 +11,10 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
 use Phpro\SoapClient\Type\ResultInterface;
 
+/**
+ * Class Response
+ * @package CodeDredd\Soap\Client
+ */
 class Response implements ResultInterface, ArrayAccess
 {
     use Macroable {
@@ -52,11 +56,19 @@ class Response implements ResultInterface, ArrayAccess
 		return $this->response;
 	}
 
-	public static function fromSoapResponse($result) {
+    /**
+     * @param $result
+     * @return Response
+     */
+    public static function fromSoapResponse($result) {
         return new self(new Psr7Response(200, [], json_encode($result)));
     }
 
-	public static function fromSoapFault(\SoapFault $soapFault) {
+    /**
+     * @param  \SoapFault  $soapFault
+     * @return Response
+     */
+    public static function fromSoapFault(\SoapFault $soapFault) {
 	    return new self(new Psr7Response(400, [], $soapFault->getMessage()));
     }
 
