@@ -1,5 +1,8 @@
 # Laravel SOAP Client
 
+[![Build Status][ico-actions]][link-actions]
+[![Software License][ico-license]](LICENSE.md)
+[![Total Downloads][ico-downloads]][link-downloads]
 
 - [Introduction](#introduction)
 - [Making Requests](#making-requests)
