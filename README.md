@@ -1,8 +1,7 @@
 # Laravel SOAP Client
 
-[![Build Status][ico-actions]][link-actions]
-[![Software License][ico-license]](LICENSE.md)
-[![Total Downloads][ico-downloads]][link-downloads]
+[![Software License](https://img.shields.io/github/license/codedredd/laravel-soap?style=flat-square)](LICENSE.md)
+[![Total Downloads](https://img.shields.io/github/downloads/codedredd/laravel-soap/total)][link-downloads]
 
 - [Introduction](#introduction)
 - [Making Requests](#making-requests)
