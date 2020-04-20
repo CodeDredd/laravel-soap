@@ -10,7 +10,7 @@ use Phpro\SoapClient\Wsdl\Provider\LocalWsdlProvider;
 class SoapXmlTest extends TestCase
 {
     public function testSoapXml() {
-        $file = dirname(__DIR__, 2) . '/Fixtures/Wsdl/workday.wsdl';
+        $file = dirname(__DIR__, 2) . '/Fixtures/Wsdl/weather.wsdl';
         $provider = LocalWsdlProvider::create();
         $provider->provide($file);
         $engine = ExtSoapEngineFactory::fromOptions(
@@ -18,6 +18,6 @@ class SoapXmlTest extends TestCase
                 ->withWsdlProvider($provider)
                 ->disableWsdlCache()
         );
-        dd($engine->getMetadata()->getMethods());
+        self::assertNotEmpty($engine->getMetadata()->getMethods());
     }
 }

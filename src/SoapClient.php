@@ -18,6 +18,7 @@ use CodeDredd\Soap\Middleware\WsseMiddleware;
 use GuzzleHttp\HandlerStack;
 use Http\Adapter\Guzzle6\Client;
 use Http\Client\Exception\HttpException;
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
 use Phpro\SoapClient\Middleware\BasicAuthMiddleware;
@@ -110,9 +111,20 @@ class SoapClient {
 		return $this->setHandler();
 	}
 
+	/**
+	 * Add the given headers to the request.
+	 *
+	 * @param  array  $headers
+	 * @return $this
+	 */
+	public function withHeaders(array $headers)
+	{
+		return $this->withHandlerOptions(array_merge_recursive($this->options, [
+			'headers' => $headers,
+		]));
+	}
 
-
-	public function setHandler(HandlerInterface $handler = null) {
+	private function setHandler(HandlerInterface $handler = null) {
 		$this->handler = $handler ?? HttPlugHandle::createForClient(
 			Client::createWithConfig($this->handlerOptions)
 		);
@@ -165,24 +177,19 @@ class SoapClient {
      * @throws NotFoundConfigurationException
      */
     public function byConfig(string $setup) {
-        try {
-            if (!empty($setup)) {
-                $setup = config()->get('soap.clients.' . $setup);
-                if (!$setup) {
-                    throw new NotFoundConfigurationException($setup);
-                }
-                foreach ($setup as $setupItem => $setupItemConfig) {
-                    if (is_bool($setupItemConfig)) {
-                        $this->{Str::camel($setupItem)}();
-                    } elseif (is_array($setupItemConfig)) {
-                        $this->{Str::camel($setupItem)}($this->arrayKeysToCamel($setupItemConfig));
-                    }
+        if (!empty($setup)) {
+            $setup = config()->get('soap.clients.' . $setup);
+            if (!$setup) {
+                throw new NotFoundConfigurationException($setup);
+            }
+            foreach ($setup as $setupItem => $setupItemConfig) {
+                if (is_bool($setupItemConfig)) {
+                    $this->{Str::camel($setupItem)}();
+                } elseif (is_array($setupItemConfig)) {
+                    $this->{Str::camel($setupItem)}($this->arrayKeysToCamel($setupItemConfig));
                 }
             }
-        } catch (Exception $exception) {
-            throw NotFoundConfigurationException::fromThrowable($exception);
         }
-
         return $this;
     }
 
