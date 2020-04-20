@@ -90,8 +90,7 @@ class SoapClientTest extends TestCase
             'without_fake_array' => ['Get_User', null, null],
             'with_fake_array_wrong_method' => ['Get_User', $fakeResponse, null],
             'with_fake_array' => ['Get_Users', $fakeResponse, $fakeResponse['Get_Users']],
-            //@todo fake responses with string body are always null..
-//            'with_fake_string' => ['Get_Post', $fakeResponse, $fakeResponse['Get_Post']],
+            'with_fake_string' => ['Get_Post', $fakeResponse, ['response' => 'Test']],
         ];
     }
 }

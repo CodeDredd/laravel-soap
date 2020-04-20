@@ -49,7 +49,6 @@ class ResponseSequence
      */
     public function push($body = '', int $status = 200, array $headers = [])
     {
-        $body = is_array($body) ? json_encode($body) : $body;
         return $this->pushResponse(
             SoapFactory::response($body, $status, $headers)
         );

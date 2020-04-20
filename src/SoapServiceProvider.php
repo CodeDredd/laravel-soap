@@ -13,7 +13,9 @@ class SoapServiceProvider extends ServiceProvider
    */
   public function boot()
   {
-    // Nothing here
+	  $this->publishes([
+		  dirname(__DIR__, 1) . '/config/soap.php' => config_path('soap.php'),
+	  ]);
   }
 
   /**

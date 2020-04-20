@@ -245,7 +245,7 @@ class SoapFactory {
 	/**
 	 * Create a new response instance for use during stubbing.
 	 *
-	 * @param  array|string  $body
+	 * @param  array|string|null  $body
 	 * @param  int  $status
 	 * @param  array  $headers
 	 * @return \GuzzleHttp\Promise\PromiseInterface
@@ -254,8 +254,11 @@ class SoapFactory {
 	{
 		if (is_array($body)) {
 			$body = json_encode($body);
+		} elseif(is_string($body)) {
+			$body = json_encode([
+				'response' => $body
+			]);
 		}
-
 		return promise_for(new Psr7Response($status, $headers, $body));
 	}
 
