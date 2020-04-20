@@ -13,24 +13,24 @@ jobs:
       # Drafts your next Release notes as Pull Requests are merged into "master"
       - uses: release-drafter/release-drafter@v5
         with:
-        name-template: 'v$NEXT_PATCH_VERSION 🌈'
-        tag-template: 'v$NEXT_PATCH_VERSION'
-        categories:
-          - title: '🚀 Features'
-            labels:
-              - 'feature'
-              - 'enhancement'
-          - title: '🐛 Bug Fixes'
-            labels:
-              - 'fix'
-              - 'bugfix'
-              - 'bug'
-          - title: '🧰 Maintenance'
-            label: 'chore'
-        change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
-        template: |
-          ## Changes
+          name-template: 'v$NEXT_PATCH_VERSION 🌈'
+          tag-template: 'v$NEXT_PATCH_VERSION'
+          categories:
+            - title: '🚀 Features'
+              labels:
+                - 'feature'
+                - 'enhancement'
+            - title: '🐛 Bug Fixes'
+              labels:
+                - 'fix'
+                - 'bugfix'
+                - 'bug'
+            - title: '🧰 Maintenance'
+              label: 'chore'
+          change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
+          template: |
+            ## Changes
 
-          $CHANGES
+            $CHANGES
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
