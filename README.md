@@ -91,7 +91,7 @@ Headers may be added to requests using the `withHeaders` method. This `withHeade
 You may specify basic authentication credentials using the `withBasicAuth` method, respectively:
 
     // Basic authentication...
-    $response = Soap::withBasicAuth('taylor@laravel.com', 'secret')->post(...);
+    $response = Soap::baseWsdl('http://test.com'/v1?wsdl)->withBasicAuth('taylor@laravel.com', 'secret')->call(...);
 
 #### Web Service Security (WSS / WSSE)
 
