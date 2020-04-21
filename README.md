@@ -5,6 +5,7 @@
 ![test](https://img.shields.io/github/workflow/status/codedredd/laravel-soap/test?style=flat-square)
 ![version](https://img.shields.io/github/v/release/codedredd/laravel-soap?style=flat-square)
 
+- [Installation](#installation)
 - [Introduction](#introduction)
 - [Making Requests](#making-requests)
     - [Request Data](#request-data)
@@ -15,6 +16,17 @@
 - [Testing](#testing)
     - [Faking Responses](#faking-responses)
     - [Inspecting Requests](#inspecting-requests)
+
+<a name="installation"></a>
+## Installation
+
+Execute the following command to get the latest version of the package:
+
+    composer require codedredd/laravel-soap
+    
+Publish Configuration
+
+    php artisan vendor:publish --provider "CodeDredd\Soap\SoapServiceProvider"
 
 <a name="introduction"></a>
 ## Introduction
