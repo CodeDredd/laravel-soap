@@ -11,8 +11,11 @@ use Phpro\SoapClient\Soap\Handler\HandlerInterface;
 
 class ExtSoapEngineFactory
 {
-    public static function fromOptionsWithHandler(ExtSoapOptions $options, HandlerInterface $handler, $withMocking = false)
-    {
+    public static function fromOptionsWithHandler(
+        ExtSoapOptions $options,
+        HandlerInterface $handler,
+        $withMocking = false
+    ) {
         $driver = ExtSoapDriver::createFromOptions($options);
 
         return $withMocking ? new EngineFaker($driver, $handler, $options->getWsdl()) : new Engine($driver, $handler);

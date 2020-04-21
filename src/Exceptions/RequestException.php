@@ -22,7 +22,8 @@ class RequestException extends Exception
      */
     public function __construct(Response $response)
     {
-        parent::__construct("Soap request error with status code {$response->status()}:\n {$response->body()}" , $response->status());
+        parent::__construct("Soap request error with status code {$response->status()}:\n {$response->body()}",
+            $response->status());
 
         $this->response = $response;
     }

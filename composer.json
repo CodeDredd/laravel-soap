@@ -19,8 +19,7 @@
         "php-http/discovery": "^1.7",
         "php-http/message": "^1.8",
         "php-http/client-common": "^2.1",
-        "robrichards/wse-php": "^2.0",
-        "guzzlehttp/guzzle": "^6.5"
+        "robrichards/wse-php": "^2.0"
     },
     "require-dev": {
         "symfony/var-dumper": "^5.0",

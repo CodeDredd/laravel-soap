@@ -30,15 +30,16 @@ use Phpro\SoapClient\Wsdl\Provider\WsdlProviderInterface;
  * Class SoapClient
  * @package CodeDredd\Soap
  */
-class SoapClient {
+class SoapClient
+{
     use Macroable {
         __call as macroCall;
     }
 
-	/**
-	 * @var EngineInterface
-	 */
-	protected $engine;
+    /**
+     * @var EngineInterface
+     */
+    protected $engine;
 
     /**
      * @var array
@@ -85,185 +86,104 @@ class SoapClient {
      */
     protected $wsdlProvider;
 
-	/**
-	 * The request cookies.
-	 *
-	 * @var array
-	 */
-	protected $cookies;
-
-	/**
-	 * The callbacks that should execute before the request is sent.
-	 *
-	 * @var array
-	 */
-	protected $beforeSendingCallbacks;
-
-	/**
-	 * The stub callables that will handle requests.
-	 *
-	 * @var \Illuminate\Support\Collection|null
-	 */
-	protected $stubCallbacks;
-
-	/**
-	 * Create a new Soap Client instance.
-	 *
-	 * @param  \CodeDredd\Soap\SoapFactory|null  $factory
-	 * @return void
-	 */
-	public function __construct(SoapFactory $factory = null)
-	{
-	    $this->factory = $factory;
-		$this->setHandler();
-		$this->wsdlProvider = LocalWsdlProvider::create();
-        $this->beforeSendingCallbacks = collect([function (Request $request, array $options) {
-			$this->cookies = $options['cookies'];
-		}]);
-	}
+    /**
+     * The request cookies.
+     *
+     * @var array
+     */
+    protected $cookies;
 
     /**
-     * @param $options
-     * @return $this
+     * The callbacks that should execute before the request is sent.
+     *
+     * @var array
      */
-    public function withHandlerOptions($options) {
-		$this->handlerOptions = array_merge_recursive($this->handlerOptions, $options);
-		return $this->setHandler();
-	}
+    protected $beforeSendingCallbacks;
 
-	/**
-	 * Add the given headers to the request.
-	 *
-	 * @param  array  $headers
-	 * @return $this
-	 */
-	public function withHeaders(array $headers)
-	{
-		return $this->withHandlerOptions(array_merge_recursive($this->options, [
-			'headers' => $headers,
-		]));
-	}
+    /**
+     * The stub callables that will handle requests.
+     *
+     * @var \Illuminate\Support\Collection|null
+     */
+    protected $stubCallbacks;
+
+    /**
+     * Create a new Soap Client instance.
+     *
+     * @param  \CodeDredd\Soap\SoapFactory|null  $factory
+     * @return void
+     */
+    public function __construct(SoapFactory $factory = null)
+    {
+        $this->factory = $factory;
+        $this->setHandler();
+        $this->wsdlProvider = LocalWsdlProvider::create();
+        $this->beforeSendingCallbacks = collect([
+            function (Request $request, array $options) {
+                $this->cookies = $options['cookies'];
+            }
+        ]);
+    }
 
     /**
      * @param  HandlerInterface|null  $handler
      * @return $this
      */
-    private function setHandler(HandlerInterface $handler = null) {
-		$this->handler = $handler ?? HttPlugHandle::createForClient(
-			Client::createWithConfig($this->handlerOptions)
-		);
+    private function setHandler(HandlerInterface $handler = null)
+    {
+        $this->handler = $handler ?? HttPlugHandle::createForClient(
+                Client::createWithConfig($this->handlerOptions)
+            );
         $this->addMiddleware();
         return $this;
-	}
-
-    /**
-     *
-     */
-    private function refreshExtSoapOptions() {
-        if ($this->factory->isRecording()) {
-            $this->baseWsdl($this->factory->getFakeWsdl());
-        }
-        $this->extSoapOptions = ExtSoapOptions::defaults($this->wsdl, $this->options);
-        if($this->factory->isRecording()) {
-            $this->wsdlProvider->provide($this->factory->getFakeWsdl());
-            $this->extSoapOptions->withWsdlProvider($this->wsdlProvider);
-        }
     }
-
-    /**
-     * @return $this
-     */
-    private function refreshEngine() {
-	    $this->refreshExtSoapOptions();
-        $this->engine = ExtSoapEngineFactory::fromOptionsWithHandler(
-            $this->extSoapOptions,
-            $this->handler,
-            $this->factory->isRecording()
-        );
-
-		return $this;
-	}
-
-    /**
-     * @return EngineInterface
-     */
-    public function getEngine() {
-		return $this->engine;
-	}
-
-    /**
-     * @param  string  $wsdl
-     * @return $this
-     */
-    public function baseWsdl(string $wsdl) {
-		$this->wsdl = $wsdl;
-		return $this;
-	}
-
-    /**
-     * @param  array  $items
-     * @return array
-     */
-    private function arrayKeysToCamel(array $items) {
-	    $changedItems = [];
-	    foreach ($items as $key => $value) {
-	        $changedItems[Str::camel($key)] = $value;
-        }
-	    return $changedItems;
-    }
-
-    /**
-     * @param  string  $setup
-     * @return $this
-     * @throws NotFoundConfigurationException
-     */
-    public function byConfig(string $setup) {
-        if (!empty($setup)) {
-            $setup = config()->get('soap.clients.' . $setup);
-            if (!$setup) {
-                throw new NotFoundConfigurationException($setup);
-            }
-            foreach ($setup as $setupItem => $setupItemConfig) {
-                if (is_bool($setupItemConfig)) {
-                    $this->{Str::camel($setupItem)}();
-                } elseif (is_array($setupItemConfig)) {
-                    $this->{Str::camel($setupItem)}($this->arrayKeysToCamel($setupItemConfig));
-                }
-            }
-        }
-        return $this;
-    }
-
-    /**
-     * Build the Soap client.
-     *
-     * @param  string  $setup
-     * @return SoapClient
-     * @throws NotFoundConfigurationException
-     */
-	public function buildClient(string $setup = '') {
-        $this->byConfig($setup);
-		$this->withHandlerOptions([
-			'handler' => $this->buildHandlerStack()
-		]);
-		$this->refreshEngine();
-		$this->isClientBuilded = true;
-		return $this;
-	}
 
     /**
      * Adds middleware to the handler
      */
-    private function addMiddleware() {
-		foreach ($this->middlewares as $middleware)  {
-			$this->handler->addMiddleware($middleware);
-		}
-	}
+    private function addMiddleware()
+    {
+        foreach ($this->middlewares as $middleware) {
+            $this->handler->addMiddleware($middleware);
+        }
+    }
+
+    /**
+     * Add the given headers to the request.
+     *
+     * @param  array  $headers
+     * @return $this
+     */
+    public function withHeaders(array $headers)
+    {
+        return $this->withHandlerOptions(array_merge_recursive($this->options, [
+            'headers' => $headers,
+        ]));
+    }
+
+    /**
+     * @param $options
+     * @return $this
+     */
+    public function withHandlerOptions($options)
+    {
+        $this->handlerOptions = array_merge_recursive($this->handlerOptions, $options);
+        return $this->setHandler();
+    }
+
+    /**
+     * @return EngineInterface
+     */
+    public function getEngine()
+    {
+        return $this->engine;
+    }
 
     /**
      * @return $this
      */
-    public function withRemoveEmptyNodes() {
+    public function withRemoveEmptyNodes()
+    {
         $this->middlewares = array_merge_recursive($this->middlewares, [
             'empty_nodes' => new RemoveEmptyNodesMiddleware()
         ]);
@@ -275,7 +195,8 @@ class SoapClient {
      * @param  string  $password
      * @return $this
      */
-    public function withBasicAuth(string $username, string $password) {
+    public function withBasicAuth(string $username, string $password)
+    {
         $this->middlewares = array_merge_recursive($this->middlewares, [
             'basic' => new BasicAuthMiddleware($username, $password)
         ]);
@@ -285,7 +206,8 @@ class SoapClient {
     /**
      * @return $this
      */
-    public function withWsa() {
+    public function withWsa()
+    {
         $this->middlewares = array_merge_recursive($this->middlewares, [
             'wsa' => new WsaMiddleware()
         ]);
@@ -296,56 +218,57 @@ class SoapClient {
      * @param $options
      * @return $this
      */
-    public function withWsse($options) {
-		$this->middlewares = array_merge_recursive($this->middlewares, [
-			'wsse' => new WsseMiddleware($options)
-		]);
-		return $this;
-	}
+    public function withWsse($options)
+    {
+        $this->middlewares = array_merge_recursive($this->middlewares, [
+            'wsse' => new WsseMiddleware($options)
+        ]);
+        return $this;
+    }
 
-	/**
-	 * Merge new options into the client.
-	 *
-	 * @param  array  $options
-	 * @return $this
-	 */
-	public function withOptions(array $options)
-	{
-		return tap($this, function ($request) use ($options) {
-			return $this->options = array_merge_recursive($this->options, $options);
-		});
-	}
+    /**
+     * Merge new options into the client.
+     *
+     * @param  array  $options
+     * @return $this
+     */
+    public function withOptions(array $options)
+    {
+        return tap($this, function ($request) use ($options) {
+            return $this->options = array_merge_recursive($this->options, $options);
+        });
+    }
 
-	/**
-	 * Merge the given options with the current request options.
-	 *
-	 * @param  array  $options
-	 * @return array
-	 */
-	public function mergeOptions(...$options)
-	{
-		return array_merge_recursive($this->options, ...$options);
-	}
+    /**
+     * Merge the given options with the current request options.
+     *
+     * @param  array  $options
+     * @return array
+     */
+    public function mergeOptions(...$options)
+    {
+        return array_merge_recursive($this->options, ...$options);
+    }
 
-	/**
-	 * Make it possible to debug the last request.
-	 *
-	 * @return array
-	 */
-	public function debugLastSoapRequest(): array
-	{
-		$lastRequestInfo = $this->engine->collectLastRequestInfo();
-		return [
-			'request' => [
-				'headers' => trim($lastRequestInfo->getLastRequestHeaders()),
-				'body'    => XmlFormatter::format($lastRequestInfo->getLastRequest()),
-			],
-			'response' => [
-				'headers' => trim($lastRequestInfo->getLastResponseHeaders()),
-				'body'    => XmlFormatter::format($lastRequestInfo->getLastResponse()),
-			]
-		];
-	}
+    /**
+     * Make it possible to debug the last request.
+     *
+     * @return array
+     */
+    public function debugLastSoapRequest(): array
+    {
+        $lastRequestInfo = $this->engine->collectLastRequestInfo();
+        return [
+            'request' => [
+                'headers' => trim($lastRequestInfo->getLastRequestHeaders()),
+                'body' => XmlFormatter::format($lastRequestInfo->getLastRequest()),
+            ],
+            'response' => [
+                'headers' => trim($lastRequestInfo->getLastResponseHeaders()),
+                'body' => XmlFormatter::format($lastRequestInfo->getLastResponse()),
+            ]
+        ];
+    }
 
     /**
      * @param $method
@@ -365,138 +288,232 @@ class SoapClient {
      * @param  array  $arguments
      * @return Response
      */
-	public function call(string $method, $arguments = []): Response
-	{
-		try {
+    public function call(string $method, $arguments = []): Response
+    {
+        try {
             if (!$this->isClientBuilded) {
                 $this->buildClient();
             }
-			$result = $this->engine->request($method, $arguments);
-			if ($result instanceof ResultProviderInterface) {
-				$result = Response::fromSoapResponse($result->getResult());
-			}
-			if (!$result instanceof ResultInterface) {
-				$result = Response::fromSoapResponse($result);
-			}
-		} catch (\Exception $exception) {
-            if($exception instanceof \SoapFault) {
+            $result = $this->engine->request($method, $arguments);
+            if ($result instanceof ResultProviderInterface) {
+                $result = Response::fromSoapResponse($result->getResult());
+            }
+            if (!$result instanceof ResultInterface) {
+                $result = Response::fromSoapResponse($result);
+            }
+        } catch (\Exception $exception) {
+            if ($exception instanceof \SoapFault) {
                 /** @var \SoapFault $exception */
                 return Response::fromSoapFault($exception);
             }
             $previous = $exception->getPrevious();
-            if($previous instanceof HttpException) {
-                /** @var HttpException $previous*/
+            if ($previous instanceof HttpException) {
+                /** @var HttpException $previous */
                 return new Response($previous->getResponse());
             }
-			throw SoapException::fromThrowable($exception);
-		}
+            throw SoapException::fromThrowable($exception);
+        }
 
-		return $result;
-	}
+        return $result;
+    }
 
-	/**
-	 * Execute the "before sending" callbacks.
-	 *
-	 * @param  \GuzzleHttp\Psr7\RequestInterface  $request
-	 * @param  array  $options
-	 * @return \Closure
-	 */
-	public function runBeforeSendingCallbacks($request, array $options)
-	{
-		return tap($request, function ($request) use ($options) {
-			$this->beforeSendingCallbacks->each->__invoke(
-				(new Request($request)),
-				$options
-			);
-		});
-	}
+    /**
+     * Build the Soap client.
+     *
+     * @param  string  $setup
+     * @return SoapClient
+     * @throws NotFoundConfigurationException
+     */
+    public function buildClient(string $setup = '')
+    {
+        $this->byConfig($setup);
+        $this->withHandlerOptions([
+            'handler' => $this->buildHandlerStack()
+        ]);
+        $this->refreshEngine();
+        $this->isClientBuilded = true;
+        return $this;
+    }
 
-	/**
-	 * Build the before sending handler stack.
-	 *
-	 * @return \GuzzleHttp\HandlerStack
-	 */
-	public function buildHandlerStack()
-	{
-		return tap(HandlerStack::create(), function ($stack) {
-			$stack->push($this->buildBeforeSendingHandler(), 'before_sending');
-			$stack->push($this->buildRecorderHandler(), 'recorder');
-			$stack->push($this->buildStubHandler(), 'stub');
-		});
-	}
+    /**
+     * @param  string  $setup
+     * @return $this
+     * @throws NotFoundConfigurationException
+     */
+    public function byConfig(string $setup)
+    {
+        if (!empty($setup)) {
+            $setup = config()->get('soap.clients.'.$setup);
+            if (!$setup) {
+                throw new NotFoundConfigurationException($setup);
+            }
+            foreach ($setup as $setupItem => $setupItemConfig) {
+                if (is_bool($setupItemConfig)) {
+                    $this->{Str::camel($setupItem)}();
+                } elseif (is_array($setupItemConfig)) {
+                    $this->{Str::camel($setupItem)}($this->arrayKeysToCamel($setupItemConfig));
+                }
+            }
+        }
+        return $this;
+    }
 
-	/**
-	 * Build the before sending handler.
-	 *
-	 * @return \Closure
-	 */
-	public function buildBeforeSendingHandler()
-	{
-		return function ($handler) {
-			return function ($request, $options) use ($handler) {
-				return $handler($this->runBeforeSendingCallbacks($request, $options), $options);
-			};
-		};
-	}
+    /**
+     * @param  array  $items
+     * @return array
+     */
+    private function arrayKeysToCamel(array $items)
+    {
+        $changedItems = [];
+        foreach ($items as $key => $value) {
+            $changedItems[Str::camel($key)] = $value;
+        }
+        return $changedItems;
+    }
 
-	/**
-	 * Build the recorder handler.
-	 *
-	 * @return \Closure
-	 */
-	public function buildRecorderHandler()
-	{
-		return function ($handler) {
-			return function ($request, $options) use ($handler) {
-				$promise = $handler($this->runBeforeSendingCallbacks($request, $options), $options);
+    /**
+     * Build the before sending handler stack.
+     *
+     * @return \GuzzleHttp\HandlerStack
+     */
+    public function buildHandlerStack()
+    {
+        return tap(HandlerStack::create(), function ($stack) {
+            $stack->push($this->buildBeforeSendingHandler(), 'before_sending');
+            $stack->push($this->buildRecorderHandler(), 'recorder');
+            $stack->push($this->buildStubHandler(), 'stub');
+        });
+    }
 
-				return $promise->then(function ($response) use ($request, $options) {
-					optional($this->factory)->recordRequestResponsePair(
-						(new Request($request)),
-						new Response($response)
-					);
+    /**
+     * Build the before sending handler.
+     *
+     * @return \Closure
+     */
+    public function buildBeforeSendingHandler()
+    {
+        return function ($handler) {
+            return function ($request, $options) use ($handler) {
+                return $handler($this->runBeforeSendingCallbacks($request, $options), $options);
+            };
+        };
+    }
 
-					return $response;
-				});
-			};
-		};
-	}
+    /**
+     * Execute the "before sending" callbacks.
+     *
+     * @param  \GuzzleHttp\Psr7\RequestInterface  $request
+     * @param  array  $options
+     * @return \Closure
+     */
+    public function runBeforeSendingCallbacks($request, array $options)
+    {
+        return tap($request, function ($request) use ($options) {
+            $this->beforeSendingCallbacks->each->__invoke(
+                (new Request($request)),
+                $options
+            );
+        });
+    }
 
-	/**
-	 * Build the stub handler.
-	 *
-	 * @return \Closure
-	 */
-	public function buildStubHandler()
-	{
-		return function (callable $handler) {
-			return function ($request, $options) use ($handler) {
-				$response = ($this->stubCallbacks ?? collect())
-					->map
-					->__invoke((new Request($request)), $options)
-					->filter()
-					->first();
-				if (is_null($response)) {
-					return $handler($request, $options);
-				} elseif (is_array($response)) {
-					return SoapFactory::response($response);
-				}
+    /**
+     * Build the recorder handler.
+     *
+     * @return \Closure
+     */
+    public function buildRecorderHandler()
+    {
+        return function ($handler) {
+            return function ($request, $options) use ($handler) {
+                $promise = $handler($this->runBeforeSendingCallbacks($request, $options), $options);
 
-				return $response;
-			};
-		};
-	}
+                return $promise->then(function ($response) use ($request, $options) {
+                    optional($this->factory)->recordRequestResponsePair(
+                        (new Request($request)),
+                        new Response($response)
+                    );
 
-	/**
-	 * Register a stub callable that will intercept requests and be able to return stub responses.
-	 *
-	 * @param  callable  $callback
-	 * @return $this
-	 */
-	public function stub($callback)
-	{
-		$this->stubCallbacks = collect($callback);
+                    return $response;
+                });
+            };
+        };
+    }
 
-		return $this;
-	}
+    /**
+     * Build the stub handler.
+     *
+     * @return \Closure
+     */
+    public function buildStubHandler()
+    {
+        return function (callable $handler) {
+            return function ($request, $options) use ($handler) {
+                $response = ($this->stubCallbacks ?? collect())
+                    ->map
+                    ->__invoke((new Request($request)), $options)
+                    ->filter()
+                    ->first();
+                if (is_null($response)) {
+                    return $handler($request, $options);
+                } elseif (is_array($response)) {
+                    return SoapFactory::response($response);
+                }
+
+                return $response;
+            };
+        };
+    }
+
+    /**
+     * @return $this
+     */
+    private function refreshEngine()
+    {
+        $this->refreshExtSoapOptions();
+        $this->engine = ExtSoapEngineFactory::fromOptionsWithHandler(
+            $this->extSoapOptions,
+            $this->handler,
+            $this->factory->isRecording()
+        );
+
+        return $this;
+    }
+
+    /**
+     *
+     */
+    private function refreshExtSoapOptions()
+    {
+        if ($this->factory->isRecording()) {
+            $this->baseWsdl($this->factory->getFakeWsdl());
+        }
+        $this->extSoapOptions = ExtSoapOptions::defaults($this->wsdl, $this->options);
+        if ($this->factory->isRecording()) {
+            $this->wsdlProvider->provide($this->factory->getFakeWsdl());
+            $this->extSoapOptions->withWsdlProvider($this->wsdlProvider);
+        }
+    }
+
+    /**
+     * @param  string  $wsdl
+     * @return $this
+     */
+    public function baseWsdl(string $wsdl)
+    {
+        $this->wsdl = $wsdl;
+        return $this;
+    }
+
+    /**
+     * Register a stub callable that will intercept requests and be able to return stub responses.
+     *
+     * @param  callable  $callback
+     * @return $this
+     */
+    public function stub($callback)
+    {
+        $this->stubCallbacks = collect($callback);
+
+        return $this;
+    }
 }

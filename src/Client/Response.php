@@ -46,21 +46,12 @@ class Response implements ResultInterface, ArrayAccess
         $this->response = $response;
     }
 
-	/**
-	 * Get the full SOAP enveloppe response
-	 *
-	 * @return string
-	 */
-	public function getResponse(): string
-	{
-		return $this->response;
-	}
-
     /**
      * @param $result
      * @return Response
      */
-    public static function fromSoapResponse($result) {
+    public static function fromSoapResponse($result)
+    {
         return new self(new Psr7Response(200, [], json_encode($result)));
     }
 
@@ -68,8 +59,29 @@ class Response implements ResultInterface, ArrayAccess
      * @param  \SoapFault  $soapFault
      * @return Response
      */
-    public static function fromSoapFault(\SoapFault $soapFault) {
-	    return new self(new Psr7Response(400, [], $soapFault->getMessage()));
+    public static function fromSoapFault(\SoapFault $soapFault)
+    {
+        return new self(new Psr7Response(400, [], $soapFault->getMessage()));
+    }
+
+    /**
+     * Get the full SOAP enveloppe response
+     *
+     * @return string
+     */
+    public function getResponse(): string
+    {
+        return $this->response;
+    }
+
+    /**
+     * Get the JSON decoded body of the response as an object.
+     *
+     * @return object
+     */
+    public function object()
+    {
+        return json_decode($this->body(), false);
     }
 
     /**
@@ -84,44 +96,9 @@ class Response implements ResultInterface, ArrayAccess
         $body = (string) $this->response->getBody();
         if ($transformXml && Str::contains($body, '<?xml')) {
             $message = SoapXml::fromString($body)->getFaultMessage();
-            return trim($sanitizeXmlFaultMessage ? Str::after($message, 'Exception:') : $message)
-                ;
+            return trim($sanitizeXmlFaultMessage ? Str::after($message, 'Exception:') : $message);
         }
         return $body;
-    }
-
-    /**
-     * Get the JSON decoded body of the response as an array.
-     *
-     * @return array
-     */
-    public function json()
-    {
-        if (! $this->decoded) {
-            $this->decoded = json_decode($this->body(), true);
-        }
-
-        return $this->decoded;
-    }
-
-    /**
-     * Get the JSON decoded body of the response as an object.
-     *
-     * @return object
-     */
-    public function object()
-    {
-        return json_decode($this->body(), false);
-    }
-
-    /**
-     * Get the status code of the response.
-     *
-     * @return int
-     */
-    public function status()
-    {
-        return (int) $this->response->getStatusCode();
     }
 
     /**
@@ -132,6 +109,16 @@ class Response implements ResultInterface, ArrayAccess
     public function successful()
     {
         return $this->status() >= 200 && $this->status() < 300;
+    }
+
+    /**
+     * Get the status code of the response.
+     *
+     * @return int
+     */
+    public function status()
+    {
+        return (int) $this->response->getStatusCode();
     }
 
     /**
@@ -155,26 +142,6 @@ class Response implements ResultInterface, ArrayAccess
     }
 
     /**
-     * Determine if the response indicates a client error occurred.
-     *
-     * @return bool
-     */
-    public function clientError()
-    {
-        return $this->status() >= 400 && $this->status() < 500;
-    }
-
-    /**
-     * Determine if the response indicates a server error occurred.
-     *
-     * @return bool
-     */
-    public function serverError()
-    {
-        return $this->status() >= 500;
-    }
-
-    /**
      * Throw an exception if a server or client error occurred.
      *
      * @return $this
@@ -190,54 +157,88 @@ class Response implements ResultInterface, ArrayAccess
         return $this;
     }
 
-	/**
-	 * Determine if the given offset exists.
-	 *
-	 * @param  string  $offset
-	 * @return bool
-	 */
-	public function offsetExists($offset)
-	{
-		return isset($this->json()[$offset]);
-	}
+    /**
+     * Determine if the response indicates a server error occurred.
+     *
+     * @return bool
+     */
+    public function serverError()
+    {
+        return $this->status() >= 500;
+    }
 
-	/**
-	 * Get the value for a given offset.
-	 *
-	 * @param  string  $offset
-	 * @return mixed
-	 */
-	public function offsetGet($offset)
-	{
-		return $this->json()[$offset];
-	}
+    /**
+     * Determine if the response indicates a client error occurred.
+     *
+     * @return bool
+     */
+    public function clientError()
+    {
+        return $this->status() >= 400 && $this->status() < 500;
+    }
 
-	/**
-	 * Set the value at the given offset.
-	 *
-	 * @param  string  $offset
-	 * @param  mixed  $value
-	 * @return void
-	 *
-	 * @throws \LogicException
-	 */
-	public function offsetSet($offset, $value)
-	{
-		throw new LogicException('Response data may not be mutated using array access.');
-	}
+    /**
+     * Determine if the given offset exists.
+     *
+     * @param  string  $offset
+     * @return bool
+     */
+    public function offsetExists($offset)
+    {
+        return isset($this->json()[$offset]);
+    }
 
-	/**
-	 * Unset the value at the given offset.
-	 *
-	 * @param  string  $offset
-	 * @return void
-	 *
-	 * @throws \LogicException
-	 */
-	public function offsetUnset($offset)
-	{
-		throw new LogicException('Response data may not be mutated using array access.');
-	}
+    /**
+     * Get the JSON decoded body of the response as an array.
+     *
+     * @return array
+     */
+    public function json()
+    {
+        if (!$this->decoded) {
+            $this->decoded = json_decode($this->body(), true);
+        }
+
+        return $this->decoded;
+    }
+
+    /**
+     * Get the value for a given offset.
+     *
+     * @param  string  $offset
+     * @return mixed
+     */
+    public function offsetGet($offset)
+    {
+        return $this->json()[$offset];
+    }
+
+    /**
+     * Set the value at the given offset.
+     *
+     * @param  string  $offset
+     * @param  mixed  $value
+     * @return void
+     *
+     * @throws \LogicException
+     */
+    public function offsetSet($offset, $value)
+    {
+        throw new LogicException('Response data may not be mutated using array access.');
+    }
+
+    /**
+     * Unset the value at the given offset.
+     *
+     * @param  string  $offset
+     * @return void
+     *
+     * @throws \LogicException
+     */
+    public function offsetUnset($offset)
+    {
+        throw new LogicException('Response data may not be mutated using array access.');
+    }
 
     /**
      * Dynamically proxy other methods to the underlying response.
@@ -249,7 +250,7 @@ class Response implements ResultInterface, ArrayAccess
     public function __call($method, $parameters)
     {
         return static::hasMacro($method)
-                    ? $this->macroCall($method, $parameters)
-                    : $this->response->{$method}(...$parameters);
+            ? $this->macroCall($method, $parameters)
+            : $this->response->{$method}(...$parameters);
     }
 }

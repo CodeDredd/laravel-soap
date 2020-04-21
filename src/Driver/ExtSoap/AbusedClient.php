@@ -18,7 +18,7 @@ class AbusedClient extends PhproAbusedClient
 
     public function __doRequest($request, $location, $action, $version, $oneWay = 0)
     {
-    	$xml = SoapXml::fromString($request);
+        $xml = SoapXml::fromString($request);
         $action = $action ?? $xml->getBody()->firstChild->localName;
         $this->storedRequest = new SoapRequest($request, $location, $action, $version, $oneWay);
 

@@ -32,11 +32,11 @@ use Illuminate\Support\Facades\Facade;
  */
 class Soap extends Facade
 {
-  /**
-   * {@inheritDoc}
-   */
-  protected static function getFacadeAccessor()
-  {
-    return SoapFactory::class;
-  }
+    /**
+     * {@inheritDoc}
+     */
+    protected static function getFacadeAccessor()
+    {
+        return SoapFactory::class;
+    }
 }

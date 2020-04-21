@@ -55,6 +55,19 @@ class ResponseSequence
     }
 
     /**
+     * Push a response to the sequence.
+     *
+     * @param  mixed  $response
+     * @return $this
+     */
+    public function pushResponse($response)
+    {
+        $this->responses[] = $response;
+
+        return $this;
+    }
+
+    /**
      * Push a response with the given status code to the sequence.
      *
      * @param  int  $status
@@ -86,16 +99,13 @@ class ResponseSequence
     }
 
     /**
-     * Push a response to the sequence.
+     * Make the sequence return a default response when it is empty.
      *
-     * @param  mixed  $response
      * @return $this
      */
-    public function pushResponse($response)
+    public function dontFailWhenEmpty()
     {
-        $this->responses[] = $response;
-
-        return $this;
+        return $this->whenEmpty(SoapFactory::response());
     }
 
     /**
@@ -110,16 +120,6 @@ class ResponseSequence
         $this->emptyResponse = $response;
 
         return $this;
-    }
-
-    /**
-     * Make the sequence return a default response when it is empty.
-     *
-     * @return $this
-     */
-    public function dontFailWhenEmpty()
-    {
-        return $this->whenEmpty(SoapFactory::response());
     }
 
     /**
@@ -143,7 +143,7 @@ class ResponseSequence
             throw new OutOfBoundsException('A request was made, but the response sequence is empty.');
         }
 
-        if (! $this->failWhenEmpty && count($this->responses) === 0) {
+        if (!$this->failWhenEmpty && count($this->responses) === 0) {
             return value($this->emptyResponse ?? SoapFactory::response());
         }
 

@@ -1,7 +1,7 @@
 # Laravel SOAP Client
 
 [![Software License](https://img.shields.io/github/license/codedredd/laravel-soap?style=flat-square)](LICENSE.md)
-[![Total Downloads](https://img.shields.io/github/downloads/codedredd/laravel-soap/total?style=flat-square)]()
+[![Total Downloads](https://img.shields.io/github/downloads/codedredd/laravel-soap/total?style=flat-square)](https://packagist.org/packages/codedredd/laravel-soap)
 ![test](https://img.shields.io/github/workflow/status/codedredd/laravel-soap/test?style=flat-square)
 ![version](https://img.shields.io/github/v/release/codedredd/laravel-soap?style=flat-square)
 
@@ -23,7 +23,7 @@
 Execute the following command to get the latest version of the package:
 
     composer require codedredd/laravel-soap
-    
+
 Publish Configuration
 
     php artisan vendor:publish --provider "CodeDredd\Soap\SoapServiceProvider"
@@ -169,9 +169,9 @@ You may specify additional [Soap request options](https://doc.bccnsoft.com/docs/
     $response = Soap::baseWsdl(...)->withOptions([
         'trace' => true,
     ])->call(...);
-    
+
 By default this options are set by the Phpro package:
-    
+
     'trace' => true,
     'exceptions' => true,
     'keep_alive' => true,
@@ -223,7 +223,7 @@ If you would like to overwrite the fallback ACTION pattern that will stub all un
         // Stub a string response for all other actions
         '*' => Soap::response('Hello World', 200, ['Headers']),
     ]);
-    
+
 One important notice. Because a SOAP API doesn't return only string every response with only a string in the body will be formatted to an array:
 
     //For above example
@@ -288,20 +288,20 @@ Right now you can only check the action
     });
     //Or shortcut
     Soap::assertActionSent('Get_Users')
-    
+
 If needed, you may assert that a specific request was not sent using the `assertNotSent` method:
 
     Soap::fake();
-    
+
     Soap::baseWsdl('http://test.com/v1?wsdl')
         ->call('Get_Users');
-       
+
     Soap::assertNotSent(function (Request $request) {
         return $request->action() === 'Get_Posts';
     });
-    
+
 Or, if you would like to assert that no requests were sent, you may use the `assertNothingSent` method:
 
     Soap::fake();
-    
+
     Soap::assertNothingSent();

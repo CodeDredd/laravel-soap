@@ -70,7 +70,7 @@ class WsseMiddleware extends Middleware
 
     public function __construct(array $properties)
     {
-        foreach($properties as $key => $value){
+        foreach ($properties as $key => $value) {
             $this->{$key} = $value;
         }
     }
@@ -128,7 +128,7 @@ class WsseMiddleware extends Middleware
     public function beforeRequest(callable $handler, RequestInterface $request): Promise
     {
         $xml = SoapXml::fromStream($request->getBody());
-	    $wsse = new WSSESoap($xml->getXmlDocument());
+        $wsse = new WSSESoap($xml->getXmlDocument());
 
         // Prepare the WSSE soap class:
         $wsse->signAllHeaders = $this->signAllHeaders;
@@ -139,7 +139,7 @@ class WsseMiddleware extends Middleware
             $wsse->addUserToken($this->userTokenName, $this->userTokenPassword, $this->userTokenDigest);
         }
 
-        if(!empty($this->privateKeyFile) && !empty($this->publicKeyFile)) {
+        if (!empty($this->privateKeyFile) && !empty($this->publicKeyFile)) {
             // Create new XMLSec Key using the dsigType and type is private key
             $key = new XMLSecurityKey($this->digitalSignMethod, ['type' => 'private']);
             $key->loadKey($this->privateKeyFile, true);
@@ -180,7 +180,7 @@ class WsseMiddleware extends Middleware
             [
                 'keys' => [
                     'private' => [
-                        'key'    => $this->privateKeyFile,
+                        'key' => $this->privateKeyFile,
                         'isFile' => true,
                         'isCert' => false,
                     ]
