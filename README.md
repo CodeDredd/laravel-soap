@@ -33,12 +33,12 @@ Publish Configuration
 
 This package provides an expressive, minimal API around the [Soap Client from Phpro](https://github.com/phpro/soap-client), allowing you to quickly make outgoing SOAP requests to communicate with other web applications.
 It is using [HTTPplug](http://httplug.io/) as handler with [Guzzle](https://github.com/php-http/guzzle6-adapter) as client.
-Some code is based/copied on/from [Laravel Http wrapper](https://github.com/illuminate/http). Tanks for inspiration :-)
+Some code is based/copied on/from [Laravel Http wrapper](https://github.com/illuminate/http). Thanks for inspiration :-)
 
 <a name="making-requests"></a>
 ## Making Requests
 
-To make requests, you may use the `call` method. First, let's examine how to make a basic `action` request:
+To make requests, you may use the `call` method or your soap action through magic `__call`. First, let's examine how to make a basic `action` request:
 
     use CodeDredd\Soap\Facades\Soap;
 
@@ -56,7 +56,7 @@ The `call` method returns an instance of `CodeDredd\Soap\Client\Response`, which
     $response->serverError() : bool;
     $response->clientError() : bool;
 
-The `CodeDredd\Soap\Client\Response` object also implements the PHP `ArrayAccess` interface, allowing you to access JSON response data directly on the response:
+The `CodeDredd\Soap\Client\Response` object also implements the PHP `ArrayAccess` interface, allowing you to access your response data directly on the response:
 
     return Soap::baseWsdl('http://test.com'/v1?wsdl)->call('Get_Users')['name'];
 
