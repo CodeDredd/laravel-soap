@@ -16,6 +16,8 @@
 - [Testing](#testing)
     - [Faking Responses](#faking-responses)
     - [Inspecting Requests](#inspecting-requests)
+- [Contributing](#contributing)
+- [License](#license)
 
 <a name="installation"></a>
 ## Installation
@@ -316,3 +318,11 @@ Or, if you would like to assert that no requests were sent, you may use the `ass
     Soap::fake();
 
     Soap::assertNothingSent();
+
+<a name="contributing"></a>
+## Contributing
+Please post issues and send PRs.
+
+<a name="licence"></a>
+## License
+Laravel Soap is open-sourced software licensed under the MIT license.
