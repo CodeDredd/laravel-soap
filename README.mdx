@@ -59,21 +59,28 @@ The `call` method returns an instance of `CodeDredd\Soap\Client\Response`, which
 The `CodeDredd\Soap\Client\Response` object also implements the PHP `ArrayAccess` interface, allowing you to access your response data directly on the response:
 
     return Soap::baseWsdl('http://test.com'/v1?wsdl)->call('Get_Users')['name'];
+    
+If you have published the config file then your able to setup a soap client in that configuration. After that it's even easier to initialize the client:
+
+    $client = Soap::buildClient('your_client_name');
+    $response = $client->call(...);
 
 <a name="request-data"></a>
 ### Request Data
 
 Of course, calling a action with arguments is also possible:
 
-    $response = Soap::baseWsdl('http://test.com'/v1?wsdl)->call('Submit_User', [
-        'name' => 'Steve',
-        'role' => 'Network Administrator',
-    ]);
+    $response = Soap::baseWsdl('http://test.com'/v1?wsdl)
+        ->call('Submit_User', [
+            'name' => 'Steve',
+            'role' => 'Network Administrator',
+        ]);
     // Or via magic method call
-    $response = Soap::baseWsdl('http://test.com'/v1?wsdl)->Submit_User([
-        'name' => 'Steve',
-        'role' => 'Network Administrator',
-    ]);
+    $response = Soap::baseWsdl('http://test.com'/v1?wsdl)
+        ->Submit_User([
+            'name' => 'Steve',
+            'role' => 'Network Administrator',
+        ]);
 
 <a name="headers"></a>
 ### Headers
@@ -159,7 +166,10 @@ The `CodeDredd\Soap\Exceptions\RequestException` instance has a public `$respons
 
 The `throw` method returns the response instance if no error occurred, allowing you to chain other operations onto the `throw` method:
 
-    return Soap::baseWsdl(...)->call(...)->throw()->json();
+    return Soap::baseWsdl(...)
+        ->call(...)
+        ->throw()
+        ->json();
 
 <a name="soap-options"></a>
 ### Soap Client Options
@@ -204,7 +214,7 @@ For example, to instruct the SOAP client to return empty, `200` status code resp
 
 Alternatively, you may pass an array to the `fake` method. The array's keys should represent ACTION patterns that you wish to fake and their associated responses. The `*` character may be used as a wildcard character. You may use the `response` method to construct stub / fake responses for these endpoints:
 The difference between Laravels HTTP wrapper is the fact that actions which are not defined in fake are also faked with a default 200 response!
-Also a faked response status code is always 200 if you define it int the range between 200 and 400. Status codes 400 and greater are correct faked.
+Also a faked response status code is always 200 if you define it in the range between 200 and 400. Status codes 400 and greater are correct responded.
 
     Soap::fake([
         // Stub a JSON response for all Get_ actions...
@@ -238,26 +248,26 @@ Sometimes you may need to specify that a single ACTION should return a series of
     Soap::fake([
         // Stub a series of responses for Get_* actions...
         'Get_*' => Soap::sequence()
-                                ->push('Hello World')
-                                ->push(['foo' => 'bar'])
-                                ->pushStatus(404),
+            ->push('Hello World')
+            ->push(['foo' => 'bar'])
+            ->pushStatus(404)
     ]);
 
 When all of the responses in a response sequence have been consumed, any further requests will cause the response sequence to throw an exception. If you would like to specify a default response that should be returned when a sequence is empty, you may use the `whenEmpty` method:
 
     Soap::fake([
-        / Stub a series of responses for Get_* actions...
+        // Stub a series of responses for Get_* actions...
         'Get_*' => Soap::sequence()
-                                ->push('Hello World')
-                                ->push(['foo' => 'bar'])
-                                ->whenEmpty(Soap::response()),
+            ->push('Hello World')
+            ->push(['foo' => 'bar'])
+            ->whenEmpty(Soap::response())
     ]);
 
 If you would like to fake a sequence of responses but do not need to specify a specific ACTION pattern that should be faked, you may use the `Soap::fakeSequence` method:
 
     Soap::fakeSequence()
-            ->push('Hello World')
-            ->whenEmpty(Soap::response());
+        ->push('Hello World')
+        ->whenEmpty(Soap::response());
 
 #### Fake Callback
 
