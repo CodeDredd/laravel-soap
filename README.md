@@ -274,17 +274,18 @@ When faking responses, you may occasionally wish to inspect the requests the cli
 
 The `assertSent` method accepts a callback which will be given an `CodeDredd\Soap\Client\Request` instance and should return a boolean value indicating if the request matches your expectations. In order for the test to pass, at least one request must have been issued matching the given expectations:
 
-Right now you can only check the action
-
     Soap::fake();
 
     Soap::withHeaders([
         'X-First' => 'foo',
     ])->baseWsdl('http://test.com/v1?wsdl')
-    ->call('Get_Users');
+    ->call('Get_Users', [
+        'name' => 'CodeDredd'
+    ]);
 
     Soap::assertSent(function ($request) {
-        return $request->action() === 'Get_Users';
+        return $request->action() === 'Get_Users' && 
+            $request->arguments() === ['name' => 'CodeDredd'];
     });
     //Or shortcut
     Soap::assertActionSent('Get_Users')

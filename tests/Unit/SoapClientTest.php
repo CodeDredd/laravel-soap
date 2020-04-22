@@ -49,14 +49,18 @@ class SoapClientTest extends TestCase
     {
         Soap::fake();
 
-        /** @var Response $response */
-        $response = Soap::buildClient('laravel_soap')->Submit_User([
+        $arguments = [
             'prename' => 'Corona',
             'lastname' => 'Pandemic',
-        ]);
+        ];
 
-        Soap::assertSent(function (Request $request) {
-           dd($request->arguments());
+        /** @var Response $response */
+        $response = Soap::buildClient('laravel_soap')->Submit_User($arguments);
+
+        self::assertTrue($response->ok());
+        Soap::assertSent(function (Request $request) use ($arguments) {
+           return $request->arguments() === $arguments &&
+               $request->action() === 'Submit_User';
         });
     }
 

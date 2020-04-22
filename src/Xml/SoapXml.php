@@ -1,10 +1,12 @@
 <?php
 
-namespace CodeDredd\Soap\XML;
+namespace CodeDredd\Soap\Xml;
 
 class SoapXml extends \Phpro\SoapClient\Xml\SoapXml
 {
     /**
+     * Get the error message from a SoapFault instance
+     *
      * @return string
      */
     public function getFaultMessage(): string

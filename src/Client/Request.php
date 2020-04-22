@@ -2,9 +2,14 @@
 
 namespace CodeDredd\Soap\Client;
 
-use CodeDredd\Soap\XML\SoapXml;
-use CodeDredd\Soap\XML\XMLSerializer;
+use CodeDredd\Soap\Xml\SoapXml;
+use CodeDredd\Soap\Xml\XMLSerializer;
+use Illuminate\Support\Arr;
 
+/**
+ * Class Request
+ * @package CodeDredd\Soap\Client
+ */
 class Request
 {
     /**
@@ -23,7 +28,6 @@ class Request
     public function __construct($request)
     {
         $this->request = $request;
-        //@todo still need to get the arguments some how
     }
 
     /**
@@ -34,13 +38,29 @@ class Request
         return $this->request->getHeaderLine('SOAPAction');
     }
 
+    /**
+     * @return \Psr\Http\Message\RequestInterface
+     */
     public function getRequest() {
         return $this->request;
     }
 
+    /**
+     * Return complete xml request body
+     *
+     * @return string
+     */
+    public function xmlContent() {
+        return $this->request->getBody()->getContents();
+    }
+
+    /**
+     * Return request arguments
+     *
+     * @return array
+     */
     public function arguments(): array {
-        $xml = SoapXml::fromString($this->request->getBody()->getContents());
-        dd(XMLSerializer::dom2Array($xml->getBody(), true));
-        return json_decode(json_encode((array) $xml->getBody()), true);
+        $xml = SoapXml::fromString($this->xmlContent());
+        return Arr::first(XMLSerializer::domNodeToArray($xml->getBody()));
     }
 }
