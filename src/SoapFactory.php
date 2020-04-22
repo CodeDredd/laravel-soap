@@ -5,7 +5,7 @@ namespace CodeDredd\Soap;
 use Closure;
 use CodeDredd\Soap\Client\Request;
 use CodeDredd\Soap\Client\ResponseSequence;
-use CodeDredd\Soap\XML\XMLSerializer;
+use CodeDredd\Soap\Xml\XMLSerializer;
 use GuzzleHttp\Psr7\Response as Psr7Response;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;

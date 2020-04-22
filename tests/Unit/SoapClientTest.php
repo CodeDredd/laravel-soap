@@ -3,6 +3,7 @@
 namespace CodeDredd\Soap\Tests\Unit;
 
 use CodeDredd\Soap\Client\Request;
+use CodeDredd\Soap\Client\Response;
 use CodeDredd\Soap\Facades\Soap;
 use CodeDredd\Soap\Tests\TestCase;
 
@@ -42,6 +43,25 @@ class SoapClientTest extends TestCase
 	    Soap::fakeSequence()->push('test');
 	    $response = Soap::buildClient('laravel_soap')->Get_User()['response'];
 	    self::assertEquals('test', $response);
+    }
+
+    public function testRequestWithArguments()
+    {
+        Soap::fake();
+
+        $arguments = [
+            'prename' => 'Corona',
+            'lastname' => 'Pandemic',
+        ];
+
+        /** @var Response $response */
+        $response = Soap::buildClient('laravel_soap')->Submit_User($arguments);
+
+        self::assertTrue($response->ok());
+        Soap::assertSent(function (Request $request) use ($arguments) {
+           return $request->arguments() === $arguments &&
+               $request->action() === 'Submit_User';
+        });
     }
 
     public function testSequenceFake()

@@ -5,7 +5,7 @@ namespace CodeDredd\Soap\Client;
 use LogicException;
 use ArrayAccess;
 use CodeDredd\Soap\Exceptions\RequestException;
-use CodeDredd\Soap\XML\SoapXml;
+use CodeDredd\Soap\Xml\SoapXml;
 use GuzzleHttp\Psr7\Response as Psr7Response;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CodeDredd\Soap\Faker;
 
-use CodeDredd\Soap\XML\XMLSerializer;
+use CodeDredd\Soap\Xml\XMLSerializer;
 use Phpro\SoapClient\Soap\Engine\DriverInterface;
 use Phpro\SoapClient\Soap\Engine\EngineInterface;
 use Phpro\SoapClient\Soap\Engine\Metadata\MetadataInterface;
@@ -13,6 +13,10 @@ use Phpro\SoapClient\Soap\HttpBinding\LastRequestInfo;
 use Phpro\SoapClient\Soap\HttpBinding\SoapRequest;
 use Phpro\SoapClient\Xml\SoapXml;
 
+/**
+ * Class EngineFaker
+ * @package CodeDredd\Soap\Faker
+ */
 class EngineFaker implements EngineInterface
 {
     /**
@@ -25,8 +29,17 @@ class EngineFaker implements EngineInterface
      */
     private $handler;
 
+    /**
+     * @var string
+     */
     private $wsdl;
 
+    /**
+     * EngineFaker constructor.
+     * @param  DriverInterface  $driver
+     * @param  HandlerInterface  $handler
+     * @param  string  $wsdl
+     */
     public function __construct(
         DriverInterface $driver,
         HandlerInterface $handler,
@@ -37,24 +50,30 @@ class EngineFaker implements EngineInterface
         $this->wsdl = $wsdl;
     }
 
+    /**
+     * @return MetadataInterface
+     */
     public function getMetadata(): MetadataInterface
     {
         return $this->driver->getMetadata();
     }
 
+    /**
+     * @param  string  $method
+     * @param  array  $arguments
+     * @return mixed
+     */
     public function request(string $method, array $arguments)
     {
-        $arguments = [
-            'SOAP-ENV:Body' => $arguments
-        ];
-        $xml = new \SimpleXMLElement('<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"/>');
-        XMLSerializer::arrayToXml($arguments, $xml);
-        $request = new SoapRequest($xml->asXML(), $this->wsdl, $method, 1);
+        $request = new SoapRequest(XMLSerializer::arrayToSoapXml($arguments), $this->wsdl, $method, 1);
         $response = $this->handler->request($request);
 
         return json_decode($response->getResponse());
     }
 
+    /**
+     * @return LastRequestInfo
+     */
     public function collectLastRequestInfo(): LastRequestInfo
     {
         return $this->handler->collectLastRequestInfo();

@@ -2,9 +2,15 @@
 
 namespace CodeDredd\Soap\Client;
 
-use Phpro\SoapClient\Type\MultiArgumentRequest;
+use CodeDredd\Soap\Xml\SoapXml;
+use CodeDredd\Soap\Xml\XMLSerializer;
+use Illuminate\Support\Arr;
 
-class Request extends MultiArgumentRequest
+/**
+ * Class Request
+ * @package CodeDredd\Soap\Client
+ */
+class Request
 {
     /**
      * The underlying PSR request.
@@ -22,8 +28,6 @@ class Request extends MultiArgumentRequest
     public function __construct($request)
     {
         $this->request = $request;
-        //@todo still need to get the arguments some how
-        parent::__construct([]);
     }
 
     /**
@@ -32,5 +36,31 @@ class Request extends MultiArgumentRequest
     public function action(): string
     {
         return $this->request->getHeaderLine('SOAPAction');
+    }
+
+    /**
+     * @return \Psr\Http\Message\RequestInterface
+     */
+    public function getRequest() {
+        return $this->request;
+    }
+
+    /**
+     * Return complete xml request body
+     *
+     * @return string
+     */
+    public function xmlContent() {
+        return $this->request->getBody()->getContents();
+    }
+
+    /**
+     * Return request arguments
+     *
+     * @return array
+     */
+    public function arguments(): array {
+        $xml = SoapXml::fromString($this->xmlContent());
+        return Arr::first(XMLSerializer::domNodeToArray($xml->getBody()));
     }
 }
