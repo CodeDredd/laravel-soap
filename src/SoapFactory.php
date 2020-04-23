@@ -5,12 +5,11 @@ namespace CodeDredd\Soap;
 use Closure;
 use CodeDredd\Soap\Client\Request;
 use CodeDredd\Soap\Client\ResponseSequence;
-use CodeDredd\Soap\Xml\XMLSerializer;
+use function GuzzleHttp\Promise\promise_for;
 use GuzzleHttp\Psr7\Response as Psr7Response;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
 use PHPUnit\Framework\Assert as PHPUnit;
-use function GuzzleHttp\Promise\promise_for;
 
 class SoapFactory
 {
@@ -99,6 +98,7 @@ class SoapFactory
     public function fakeWsdl(string $wsdl)
     {
         $this->fakeWsdlLocation = $wsdl;
+
         return $this;
     }
 
@@ -152,14 +152,15 @@ class SoapFactory
             foreach ($callback as $method => $callable) {
                 $this->stubMethod($method, $callable);
             }
+
             return $this;
         }
         $this->stubCallbacks = $this->stubCallbacks->merge(collect([
             $callback instanceof Closure
                 ? $callback
                 : function () use ($callback) {
-                return $callback;
-            },
+                    return $callback;
+                },
         ]));
 
         return $this;
@@ -191,9 +192,10 @@ class SoapFactory
             $body = json_encode($body);
         } elseif (is_string($body)) {
             $body = json_encode([
-                'response' => $body
+                'response' => $body,
             ]);
         }
+
         return promise_for(new Psr7Response($status, $headers, $body));
     }
 
@@ -207,9 +209,10 @@ class SoapFactory
     public function stubMethod($method, $callback)
     {
         return $this->fake(function ($request, $options) use ($method, $callback) {
-            if (!Str::is(Str::start($method, '*'), $request->action())) {
+            if (! Str::is(Str::start($method, '*'), $request->action())) {
                 return;
             }
+
             return $callback instanceof Closure || $callback instanceof ResponseSequence
                 ? $callback($request, $options)
                 : $callback;

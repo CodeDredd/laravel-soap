@@ -4,25 +4,25 @@ use RobRichards\XMLSecLibs\XMLSecurityKey;
 
 return [
 
-	/*
-	|--------------------------------------------------------------------------
-	| SOAP Client Configuration
-	|--------------------------------------------------------------------------
-	|
-	| Her you can setup your soap client by configuration so that ou just need
-	| a name.
-	|
-	| example: Soap::buildClient('laravel_soap')
-	*/
+    /*
+    |--------------------------------------------------------------------------
+    | SOAP Client Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Her you can setup your soap client by configuration so that ou just need
+    | a name.
+    |
+    | example: Soap::buildClient('laravel_soap')
+    */
 
-	'clients' => [
-		'laravel_soap' => [
-		    'base_wsdl' => 'test.wsdl',
-		    'with_wsa' => true,
-		    'with_basic_auth' => [
-			    'username' => 'username',
-			    'password' => 'password',
-		    ],
+    'clients' => [
+        'laravel_soap' => [
+            'base_wsdl' => 'test.wsdl',
+            'with_wsa' => true,
+            'with_basic_auth' => [
+                'username' => 'username',
+                'password' => 'password',
+            ],
             'with_wsse' => [
                 'user_token_name' => 'username',
                 'user_token_password' => 'password',
@@ -34,8 +34,8 @@ return [
                 'digital_sign_method' => XMLSecurityKey::RSA_SHA1,
                 'timestamp' => 3600,
                 'sign_all_headers' => false,
-            ]
+            ],
         ],
-	],
+    ],
 
 ];

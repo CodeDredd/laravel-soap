@@ -27,8 +27,7 @@ use Phpro\SoapClient\Wsdl\Provider\LocalWsdlProvider;
 use Phpro\SoapClient\Wsdl\Provider\WsdlProviderInterface;
 
 /**
- * Class SoapClient
- * @package CodeDredd\Soap
+ * Class SoapClient.
  */
 class SoapClient
 {
@@ -121,7 +120,7 @@ class SoapClient
         $this->beforeSendingCallbacks = collect([
             function (Request $request, array $options) {
                 $this->cookies = $options['cookies'];
-            }
+            },
         ]);
     }
 
@@ -135,11 +134,12 @@ class SoapClient
                 Client::createWithConfig($this->handlerOptions)
             );
         $this->addMiddleware();
+
         return $this;
     }
 
     /**
-     * Adds middleware to the handler
+     * Adds middleware to the handler.
      */
     private function addMiddleware()
     {
@@ -168,6 +168,7 @@ class SoapClient
     public function withHandlerOptions($options)
     {
         $this->handlerOptions = array_merge_recursive($this->handlerOptions, $options);
+
         return $this->setHandler();
     }
 
@@ -185,8 +186,9 @@ class SoapClient
     public function withRemoveEmptyNodes()
     {
         $this->middlewares = array_merge_recursive($this->middlewares, [
-            'empty_nodes' => new RemoveEmptyNodesMiddleware()
+            'empty_nodes' => new RemoveEmptyNodesMiddleware(),
         ]);
+
         return $this;
     }
 
@@ -198,8 +200,9 @@ class SoapClient
     public function withBasicAuth(string $username, string $password)
     {
         $this->middlewares = array_merge_recursive($this->middlewares, [
-            'basic' => new BasicAuthMiddleware($username, $password)
+            'basic' => new BasicAuthMiddleware($username, $password),
         ]);
+
         return $this;
     }
 
@@ -209,8 +212,9 @@ class SoapClient
     public function withWsa()
     {
         $this->middlewares = array_merge_recursive($this->middlewares, [
-            'wsa' => new WsaMiddleware()
+            'wsa' => new WsaMiddleware(),
         ]);
+
         return $this;
     }
 
@@ -221,8 +225,9 @@ class SoapClient
     public function withWsse($options)
     {
         $this->middlewares = array_merge_recursive($this->middlewares, [
-            'wsse' => new WsseMiddleware($options)
+            'wsse' => new WsseMiddleware($options),
         ]);
+
         return $this;
     }
 
@@ -258,6 +263,7 @@ class SoapClient
     public function debugLastSoapRequest(): array
     {
         $lastRequestInfo = $this->engine->collectLastRequestInfo();
+
         return [
             'request' => [
                 'headers' => trim($lastRequestInfo->getLastRequestHeaders()),
@@ -266,7 +272,7 @@ class SoapClient
             'response' => [
                 'headers' => trim($lastRequestInfo->getLastResponseHeaders()),
                 'body' => XmlFormatter::format($lastRequestInfo->getLastResponse()),
-            ]
+            ],
         ];
     }
 
@@ -280,6 +286,7 @@ class SoapClient
         if (static::hasMacro($method)) {
             return $this->macroCall($method, $parameters);
         }
+
         return $this->call($method, $parameters);
     }
 
@@ -291,14 +298,14 @@ class SoapClient
     public function call(string $method, $arguments = []): Response
     {
         try {
-            if (!$this->isClientBuilded) {
+            if (! $this->isClientBuilded) {
                 $this->buildClient();
             }
             $result = $this->engine->request($method, $arguments);
             if ($result instanceof ResultProviderInterface) {
                 $result = Response::fromSoapResponse($result->getResult());
             }
-            if (!$result instanceof ResultInterface) {
+            if (! $result instanceof ResultInterface) {
                 $result = Response::fromSoapResponse($result);
             }
         } catch (\Exception $exception) {
@@ -328,10 +335,11 @@ class SoapClient
     {
         $this->byConfig($setup);
         $this->withHandlerOptions([
-            'handler' => $this->buildHandlerStack()
+            'handler' => $this->buildHandlerStack(),
         ]);
         $this->refreshEngine();
         $this->isClientBuilded = true;
+
         return $this;
     }
 
@@ -342,9 +350,9 @@ class SoapClient
      */
     public function byConfig(string $setup)
     {
-        if (!empty($setup)) {
+        if (! empty($setup)) {
             $setup = config()->get('soap.clients.'.$setup);
-            if (!$setup) {
+            if (! $setup) {
                 throw new NotFoundConfigurationException($setup);
             }
             foreach ($setup as $setupItem => $setupItemConfig) {
@@ -355,6 +363,7 @@ class SoapClient
                 }
             }
         }
+
         return $this;
     }
 
@@ -368,6 +377,7 @@ class SoapClient
         foreach ($items as $key => $value) {
             $changedItems[Str::camel($key)] = $value;
         }
+
         return $changedItems;
     }
 
@@ -479,9 +489,6 @@ class SoapClient
         return $this;
     }
 
-    /**
-     *
-     */
     private function refreshExtSoapOptions()
     {
         if ($this->factory->isRecording()) {
@@ -501,6 +508,7 @@ class SoapClient
     public function baseWsdl(string $wsdl)
     {
         $this->wsdl = $wsdl;
+
         return $this;
     }
 

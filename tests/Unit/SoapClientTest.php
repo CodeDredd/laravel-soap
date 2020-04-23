@@ -9,9 +9,8 @@ use CodeDredd\Soap\Tests\TestCase;
 
 class SoapClientTest extends TestCase
 {
-
     /**
-     * Test that a "fake" terminal returns an instance of BuilderFake
+     * Test that a "fake" terminal returns an instance of BuilderFake.
      *
      * @return void
      */
@@ -40,9 +39,9 @@ class SoapClientTest extends TestCase
 
     public function testArrayAccessResponse()
     {
-	    Soap::fakeSequence()->push('test');
-	    $response = Soap::buildClient('laravel_soap')->Get_User()['response'];
-	    self::assertEquals('test', $response);
+        Soap::fakeSequence()->push('test');
+        $response = Soap::buildClient('laravel_soap')->Get_User()['response'];
+        self::assertEquals('test', $response);
     }
 
     public function testRequestWithArguments()
@@ -59,7 +58,7 @@ class SoapClientTest extends TestCase
 
         self::assertTrue($response->ok());
         Soap::assertSent(function (Request $request) use ($arguments) {
-           return $request->arguments() === $arguments &&
+            return $request->arguments() === $arguments &&
                $request->action() === 'Submit_User';
         });
     }
@@ -106,13 +105,14 @@ class SoapClientTest extends TestCase
                     'Users' => [
                         [
                             'name' => 'test',
-                            'field' => 'bla'
-                        ]
-                    ]
-                ]
+                            'field' => 'bla',
+                        ],
+                    ],
+                ],
             ],
-            'Get_Post' => 'Test'
+            'Get_Post' => 'Test',
         ];
+
         return [
             'without_fake_array' => ['Get_User', null, null],
             'with_fake_array_wrong_method' => ['Get_User', $fakeResponse, null],

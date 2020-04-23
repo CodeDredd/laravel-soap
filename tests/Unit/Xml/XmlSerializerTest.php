@@ -3,13 +3,10 @@
 namespace CodeDredd\Soap\Xml;
 
 use CodeDredd\Soap\Tests\TestCase;
-use Phpro\SoapClient\Soap\Driver\ExtSoap\ExtSoapEngineFactory;
-use Phpro\SoapClient\Soap\Driver\ExtSoap\ExtSoapOptions;
-use Phpro\SoapClient\Wsdl\Provider\LocalWsdlProvider;
 
 class XmlSerializerTest extends TestCase
 {
-    protected $xml = <<<XML
+    protected $xml = <<<'XML'
 <?xml version="1.0"?>
 <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
     <SOAP-ENV:Body>
@@ -21,7 +18,7 @@ XML;
 
     protected $array = [
         'prename' => 'Code',
-        'lastname' => 'dredd'
+        'lastname' => 'dredd',
     ];
 
     public function testArrayToSoapXml()
