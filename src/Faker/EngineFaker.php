@@ -11,11 +11,9 @@ use Phpro\SoapClient\Soap\Engine\Metadata\MetadataInterface;
 use Phpro\SoapClient\Soap\Handler\HandlerInterface;
 use Phpro\SoapClient\Soap\HttpBinding\LastRequestInfo;
 use Phpro\SoapClient\Soap\HttpBinding\SoapRequest;
-use Phpro\SoapClient\Xml\SoapXml;
 
 /**
- * Class EngineFaker
- * @package CodeDredd\Soap\Faker
+ * Class EngineFaker.
  */
 class EngineFaker implements EngineInterface
 {

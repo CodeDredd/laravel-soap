@@ -12,7 +12,6 @@ use RobRichards\XMLSecLibs\XMLSecurityKey;
 
 class WsseMiddleware extends Middleware
 {
-
     /**
      * @var string
      */
@@ -135,11 +134,11 @@ class WsseMiddleware extends Middleware
         $wsse->addTimestamp($this->timestamp);
 
         // Add a user token if this is configured.
-        if (!empty($this->userTokenName) && !empty($this->userTokenPassword)) {
+        if (! empty($this->userTokenName) && ! empty($this->userTokenPassword)) {
             $wsse->addUserToken($this->userTokenName, $this->userTokenPassword, $this->userTokenDigest);
         }
 
-        if (!empty($this->privateKeyFile) && !empty($this->publicKeyFile)) {
+        if (! empty($this->privateKeyFile) && ! empty($this->publicKeyFile)) {
             // Create new XMLSec Key using the dsigType and type is private key
             $key = new XMLSecurityKey($this->digitalSignMethod, ['type' => 'private']);
             $key->loadKey($this->privateKeyFile, true);
@@ -159,17 +158,18 @@ class WsseMiddleware extends Middleware
             $wsse->encryptSoapDoc($siteKey, $key, [
                 'KeyInfo' => [
                     'X509SubjectKeyIdentifier' => $this->serverCertificateHasSubjectKeyIdentifier,
-                ]
+                ],
             ]);
         }
 
         $request = $request->withBody($xml->toStream());
+
         return $handler($request);
     }
 
     public function afterResponse(ResponseInterface $response): ResponseInterface
     {
-        if (!$this->encrypt) {
+        if (! $this->encrypt) {
             return $response;
         }
 
@@ -183,8 +183,8 @@ class WsseMiddleware extends Middleware
                         'key' => $this->privateKeyFile,
                         'isFile' => true,
                         'isCert' => false,
-                    ]
-                ]
+                    ],
+                ],
             ]
         );
 

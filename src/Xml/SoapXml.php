@@ -5,7 +5,7 @@ namespace CodeDredd\Soap\Xml;
 class SoapXml extends \Phpro\SoapClient\Xml\SoapXml
 {
     /**
-     * Get the error message from a SoapFault instance
+     * Get the error message from a SoapFault instance.
      *
      * @return string
      */

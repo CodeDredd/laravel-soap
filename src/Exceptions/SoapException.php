@@ -3,9 +3,7 @@
 namespace CodeDredd\Soap\Exceptions;
 
 /**
- * Class SoapException
- *
- * @package CodeDredd\Soap\Exceptions
+ * Class SoapException.
  */
 class SoapException extends \RuntimeException
 {

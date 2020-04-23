@@ -143,7 +143,7 @@ class ResponseSequence
             throw new OutOfBoundsException('A request was made, but the response sequence is empty.');
         }
 
-        if (!$this->failWhenEmpty && count($this->responses) === 0) {
+        if (! $this->failWhenEmpty && count($this->responses) === 0) {
             return value($this->emptyResponse ?? SoapFactory::response());
         }
 
