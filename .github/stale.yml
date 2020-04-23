@@ -1,17 +1,23 @@
 # Number of days of inactivity before an issue becomes stale
-daysUntilStale: 60
+daysUntilStale: 21
 # Number of days of inactivity before a stale issue is closed
-daysUntilClose: 7
+daysUntilClose: 30
 # Issues with these labels will never be considered stale
 exemptLabels:
-  - pinned
-  - security
+  - todo
+  - 'in progress'
 # Label to use when marking an issue as stale
-staleLabel: wontfix
+staleLabel: inactive
 # Comment to post when marking an issue as stale. Set to `false` to disable
 markComment: >
-  This issue has been automatically marked as stale because it has not had
-  recent activity. It will be closed if no further activity occurs. Thank you
-  for your contributions.
+  Hi everyone! Seems like there hasn't been much going on in this issue lately.
+  If there are still questions, comments, or bugs, please feel free to continue
+  the discussion. Unfortunately, we don't have time to get to every issue. We
+  are always open to contributions so please send us a pull request if you would
+  like to help. Inactive issues will be closed after 30 days. Thanks!
 # Comment to post when closing a stale issue. Set to `false` to disable
-closeComment: false
+closeComment: >
+  Hey there, it's me again! I am going close this issue to help our maintainers
+  focus on the current development roadmap instead. If the issue mentioned is
+  still a concern, please open a new ticket and mention this old one. Cheers
+  and thanks for using Laravel Soap!
