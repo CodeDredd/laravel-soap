@@ -6,7 +6,7 @@ use CodeDredd\Soap\SoapFactory;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * Class Soap
+ * Class Soap.
  *
  * @method static \CodeDredd\Soap\SoapClient baseWsdl(string $wsdl)
  * @method static \CodeDredd\Soap\SoapClient stub(callable $callback)
@@ -28,12 +28,11 @@ use Illuminate\Support\Facades\Facade;
  * @method static assertActionCalled(string $action)
  * @method static assertNothingSent()
  * @method static assertSequencesAreEmpty()
- * @package CodeDredd\Soap
  */
 class Soap extends Facade
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected static function getFacadeAccessor()
     {

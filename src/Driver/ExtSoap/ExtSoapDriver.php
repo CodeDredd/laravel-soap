@@ -10,6 +10,7 @@ class ExtSoapDriver extends PhproExtSoapDriver
     public static function createFromOptions(ExtSoapOptions $options): PhproExtSoapDriver
     {
         $client = AbusedClient::createFromOptions($options);
+
         return self::createFromClient($client);
     }
 }

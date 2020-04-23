@@ -2,18 +2,17 @@
 
 namespace CodeDredd\Soap\Client;
 
-use LogicException;
 use ArrayAccess;
 use CodeDredd\Soap\Exceptions\RequestException;
 use CodeDredd\Soap\Xml\SoapXml;
 use GuzzleHttp\Psr7\Response as Psr7Response;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
+use LogicException;
 use Phpro\SoapClient\Type\ResultInterface;
 
 /**
- * Class Response
- * @package CodeDredd\Soap\Client
+ * Class Response.
  */
 class Response implements ResultInterface, ArrayAccess
 {
@@ -65,7 +64,7 @@ class Response implements ResultInterface, ArrayAccess
     }
 
     /**
-     * Get the full SOAP enveloppe response
+     * Get the full SOAP enveloppe response.
      *
      * @return string
      */
@@ -96,8 +95,10 @@ class Response implements ResultInterface, ArrayAccess
         $body = (string) $this->response->getBody();
         if ($transformXml && Str::contains($body, '<?xml')) {
             $message = SoapXml::fromString($body)->getFaultMessage();
+
             return trim($sanitizeXmlFaultMessage ? Str::after($message, 'Exception:') : $message);
         }
+
         return $body;
     }
 
@@ -195,7 +196,7 @@ class Response implements ResultInterface, ArrayAccess
      */
     public function json()
     {
-        if (!$this->decoded) {
+        if (! $this->decoded) {
             $this->decoded = json_decode($this->body(), true);
         }
 

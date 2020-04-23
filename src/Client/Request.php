@@ -7,8 +7,7 @@ use CodeDredd\Soap\Xml\XMLSerializer;
 use Illuminate\Support\Arr;
 
 /**
- * Class Request
- * @package CodeDredd\Soap\Client
+ * Class Request.
  */
 class Request
 {
@@ -41,26 +40,30 @@ class Request
     /**
      * @return \Psr\Http\Message\RequestInterface
      */
-    public function getRequest() {
+    public function getRequest()
+    {
         return $this->request;
     }
 
     /**
-     * Return complete xml request body
+     * Return complete xml request body.
      *
      * @return string
      */
-    public function xmlContent() {
+    public function xmlContent()
+    {
         return $this->request->getBody()->getContents();
     }
 
     /**
-     * Return request arguments
+     * Return request arguments.
      *
      * @return array
      */
-    public function arguments(): array {
+    public function arguments(): array
+    {
         $xml = SoapXml::fromString($this->xmlContent());
+
         return Arr::first(XMLSerializer::domNodeToArray($xml->getBody()));
     }
 }

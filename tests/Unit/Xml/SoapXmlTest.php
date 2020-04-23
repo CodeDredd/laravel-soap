@@ -9,8 +9,9 @@ use Phpro\SoapClient\Wsdl\Provider\LocalWsdlProvider;
 
 class SoapXmlTest extends TestCase
 {
-    public function testSoapXml() {
-        $file = dirname(__DIR__, 2) . '/Fixtures/Wsdl/weather.wsdl';
+    public function testSoapXml()
+    {
+        $file = dirname(__DIR__, 2).'/Fixtures/Wsdl/weather.wsdl';
         $provider = LocalWsdlProvider::create();
         $provider->provide($file);
         $engine = ExtSoapEngineFactory::fromOptions(

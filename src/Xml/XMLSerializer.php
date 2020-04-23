@@ -2,24 +2,24 @@
 
 namespace CodeDredd\Soap\Xml;
 
-use \DOMDocument;
-use \DOMNode;
-use \SimpleXMLElement;
+use DOMDocument;
+use DOMNode;
 use Illuminate\Support\Str;
+use SimpleXMLElement;
 
 /**
- * Class XMLSerializer
- * @package CodeDredd\Soap\Xml
+ * Class XMLSerializer.
  */
-class XMLSerializer {
-
+class XMLSerializer
+{
     /**
-     * Recursive function to turn a DOMDocument element to an array
+     * Recursive function to turn a DOMDocument element to an array.
      *
      * @param DOMDocument|DomNode $node the document (might also be a DOMElement/DOMNode?)
      * @return array
      */
-    public static function domNodeToArray($node) {
+    public static function domNodeToArray($node)
+    {
         $output = [];
         switch ($node->nodeType) {
             case XML_CDATA_SECTION_NODE:
@@ -32,7 +32,7 @@ class XMLSerializer {
                     $v = self::domNodeToArray($child);
                     if (isset($child->tagName)) {
                         $t = Str::after($child->tagName, ':');
-                        if (!isset($output[$t])) {
+                        if (! isset($output[$t])) {
                             $output[$t] = [];
                         }
                         $output[$t][] = $v;
@@ -40,7 +40,7 @@ class XMLSerializer {
                         $output = (string) $v;
                     }
                 }
-                if ($node->attributes->length && !is_array($output)) { // Has attributes but isn't an array
+                if ($node->attributes->length && ! is_array($output)) { // Has attributes but isn't an array
                     $output = ['@content' => $output]; // Change output into an array.
                 }
                 if (is_array($output)) {
@@ -59,18 +59,20 @@ class XMLSerializer {
                 }
                 break;
         }
+
         return $output;
     }
 
     /**
-     * Return a valid SOAP Xml
+     * Return a valid SOAP Xml.
      *
      * @param  array  $array
      * @return mixed
      */
-    public static function arrayToSoapXml(array $array) {
+    public static function arrayToSoapXml(array $array)
+    {
         $array = [
-            'SOAP-ENV:Body' => $array
+            'SOAP-ENV:Body' => $array,
         ];
         $xml = new SimpleXMLElement('<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"/>');
         self::addArrayToXml($array, $xml);
@@ -82,16 +84,16 @@ class XMLSerializer {
      * @param $array
      * @param $xml
      */
-    public static function addArrayToXml($array, &$xml){
+    public static function addArrayToXml($array, &$xml)
+    {
         foreach ($array as $key => $value) {
-            if(is_array($value)){
-                if(is_int($key)){
-                    $key = "node";
+            if (is_array($value)) {
+                if (is_int($key)) {
+                    $key = 'node';
                 }
                 $label = $xml->addChild($key);
                 self::addArrayToXml($value, $label);
-            }
-            else {
+            } else {
                 $xml->addChild($key, $value);
             }
         }
