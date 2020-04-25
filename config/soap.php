@@ -3,6 +3,15 @@
 use RobRichards\XMLSecLibs\XMLSecurityKey;
 
 return [
+    /*
+    |--------------------------------------------------------------------------
+    | SOAP Code Generation directory
+    |--------------------------------------------------------------------------
+    |
+    | Define the destination for the code generator under the app directory
+    */
+
+    'code_path' => 'Soap',
 
     /*
     |--------------------------------------------------------------------------

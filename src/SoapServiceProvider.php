@@ -2,6 +2,7 @@
 
 namespace CodeDredd\Soap;
 
+use CodeDredd\Soap\Commands\GenerateClassMapCommand;
 use Illuminate\Support\ServiceProvider;
 
 class SoapServiceProvider extends ServiceProvider
@@ -26,6 +27,7 @@ class SoapServiceProvider extends ServiceProvider
     public function register()
     {
         $this->registerService();
+        $this->registerCommands();
     }
 
     /**
@@ -38,5 +40,10 @@ class SoapServiceProvider extends ServiceProvider
         $this->app->bind('Soap', function () {
             return new SoapFactory();
         });
+    }
+
+    protected function registerCommands()
+    {
+        $this->commands(GenerateClassMapCommand::class);
     }
 }

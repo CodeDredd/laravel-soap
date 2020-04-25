@@ -9,8 +9,11 @@
 namespace CodeDredd\Soap\Commands;
 
 
+use CodeDredd\Soap\Code\ClassGenerator;
 use Illuminate\Console\Command;
-use TitasGailius\Terminal\Terminal;
+use Illuminate\Support\Str;
+use Phpro\SoapClient\Soap\Driver\ExtSoap\ExtSoapEngineFactory;
+use Phpro\SoapClient\Soap\Driver\ExtSoap\ExtSoapOptions;
 
 class GenerateClassMapCommand extends Command
 {
@@ -51,7 +54,23 @@ class GenerateClassMapCommand extends Command
             $clientNames = array_keys($clients);
         }
         $wsdl = $this->anticipate('Please type the wsdl or the name of your client configuration if u have defined in the config "soap.php"', $clientNames);
+        if(!Str::contains($wsdl, ['http:', 'https:'])) {
+            $wsdl = config()->get('soap.clients.' . $wsdl . '.base_wsdl');
+        }
+        $engine = ExtSoapEngineFactory::fromOptions(
+            ExtSoapOptions::defaults($wsdl, [])
+        );
+        $methods = collect($engine->getMetadata()->getMethods())->mapWithKeys(function ($method) {
+            return [ $method->getName() => $method ];
+        });
 
+        $generateAllClassMaps = $this->confirm('Do you want to generate all client methods?');
+        $singleClass = '';
+        if (!$generateAllClassMaps) {
+            $singleClass = $this->anticipate('Which method do you want to generate?', $methods->keys()->toArray());
+        }
+
+        ClassGenerator::clientMethod($methods->get($singleClass));
     }
 
 }
