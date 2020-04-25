@@ -1,2 +1,10 @@
-site_name: Laravel SOAP
-repo_url: https://github.com/codedredd/laravel-soap
+site_name: Laravel SOAP Docs
+site_description: 'Laravel SOAP Documentation'
+site_author: 'Gregor Becker'
+docs_dir: docs/
+repo_name: 'mhausenblas/actions-sandbox'
+repo_url: 'https://github.com/mhausenblas/actions-sandbox'
+nav:
+  - Home: index.md
+theme:
+  name: 'material'
