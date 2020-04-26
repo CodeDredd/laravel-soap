@@ -360,6 +360,8 @@ class SoapClient
                     $this->{Str::camel($setupItem)}();
                 } elseif (is_array($setupItemConfig)) {
                     $this->{Str::camel($setupItem)}($this->arrayKeysToCamel($setupItemConfig));
+                } elseif (is_string($setupItemConfig)) {
+                    $this->{Str::camel($setupItem)}($setupItemConfig);
                 }
             }
         }
