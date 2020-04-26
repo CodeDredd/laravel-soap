@@ -60,10 +60,9 @@ class GenerateClassMapCommand extends Command
         $engine = ExtSoapEngineFactory::fromOptions(
             ExtSoapOptions::defaults($wsdl, [])
         );
-        $methods = collect($engine->getMetadata()->getMethods())->mapWithKeys(function ($method) {
-            return [ $method->getName() => $method ];
-        });
-
+        $methods = collect($engine->getMetadata()->getMethods()->fetchOneByName('Get_Customers'));
+        $types = $engine->getMetadata()->getTypes()->fetchOneByName('Customer_Request_ReferencesType');
+        dd($types);
         $generateAllClassMaps = $this->confirm('Do you want to generate all client methods?');
         $singleClass = '';
         if (!$generateAllClassMaps) {

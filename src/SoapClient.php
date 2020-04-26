@@ -11,6 +11,8 @@ use CodeDredd\Soap\Middleware\WsseMiddleware;
 use GuzzleHttp\HandlerStack;
 use Http\Adapter\Guzzle6\Client;
 use Http\Client\Exception\HttpException;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
 use Phpro\SoapClient\Middleware\BasicAuthMiddleware;
@@ -277,6 +279,21 @@ class SoapClient
     }
 
     /**
+     * Handle a failed validation attempt.
+     *
+     * @param  \Illuminate\Contracts\Validation\Validator  $validator
+     * @return Response
+     */
+    protected function failedValidation(Validator $validator)
+    {
+        return Response::fromSoapResponse([
+            "success" => false,
+            "message" => __("Invalid data."),
+            "errors" => $validator->errors(),
+        ]);
+    }
+
+    /**
      * @param $method
      * @param $parameters
      * @return mixed
@@ -292,7 +309,7 @@ class SoapClient
 
     /**
      * @param  string  $method
-     * @param  array  $arguments
+     * @param  array|Validator  $arguments
      * @return Response
      */
     public function call(string $method, $arguments = []): Response
@@ -301,6 +318,14 @@ class SoapClient
             if (! $this->isClientBuilded) {
                 $this->buildClient();
             }
+
+            if ($arguments instanceof Validator) {
+                if ($arguments->fails()) {
+                    return $this->failedValidation($arguments);
+                }
+                $arguments = $arguments->validated();
+            }
+
             $result = $this->engine->request($method, $arguments);
             if ($result instanceof ResultProviderInterface) {
                 $result = Response::fromSoapResponse($result->getResult());

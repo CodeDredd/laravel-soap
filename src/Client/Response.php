@@ -47,11 +47,12 @@ class Response implements ResultInterface, ArrayAccess
 
     /**
      * @param $result
+     * @param  int  $status
      * @return Response
      */
-    public static function fromSoapResponse($result)
+    public static function fromSoapResponse($result, $status = 200)
     {
-        return new self(new Psr7Response(200, [], json_encode($result)));
+        return new self(new Psr7Response($status, [], json_encode($result)));
     }
 
     /**
