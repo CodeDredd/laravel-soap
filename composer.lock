@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0d9edb0108a247390c34212ea62dd45f",
+    "content-hash": "a0fbca4f6279020fa5ebb10dea58c854",
     "packages": [
         {
             "name": "brick/math",
@@ -4002,6 +4002,62 @@
                 "php"
             ],
             "time": "2020-03-13T01:23:26+00:00"
+        },
+        {
+            "name": "wsdl2phpgenerator/wsdl2phpgenerator",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wsdl2phpgenerator/wsdl2phpgenerator.git",
+                "reference": "c92d01beed99b26b75d8c514f386f39eb84454c1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wsdl2phpgenerator/wsdl2phpgenerator/zipball/c92d01beed99b26b75d8c514f386f39eb84454c1",
+                "reference": "c92d01beed99b26b75d8c514f386f39eb84454c1",
+                "shasum": ""
+            },
+            "require": {
+                "ext-soap": "*",
+                "php": "^7.2",
+                "symfony/options-resolver": "^3.4 || ^4.3 || ^5.0",
+                "symfony/polyfill-iconv": "^1.13.1"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.16",
+                "kasperg/phing-github": "0.2.*",
+                "phing/phing": "^2.16.3",
+                "php-vcr/php-vcr": "^1.4.4",
+                "php-vcr/phpunit-testlistener-vcr": "^3.2.1",
+                "phpstan/phpstan": "^0.12.9",
+                "phpunit/phpunit": "^8.5",
+                "psr/log": "^1.1.2",
+                "symfony/yaml": "^2.8.52"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.5.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Wsdl2PhpGenerator\\": [
+                        "src/",
+                        "lib/"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Simple class library for generating php classes from a wsdl file.",
+            "keywords": [
+                "soap",
+                "wsdl"
+            ],
+            "time": "2020-02-12T08:06:22+00:00"
         }
     ],
     "packages-dev": [

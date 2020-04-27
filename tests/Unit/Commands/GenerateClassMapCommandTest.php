@@ -16,7 +16,7 @@ class GenerateClassMapCommandTest extends TestCase
         $this->artisan('soap:classmap')
             ->expectsQuestion('Please type the wsdl or the name of your client configuration if u have defined in the config "soap.php"', 'laravel_soap')
             ->expectsConfirmation('Do you want to generate all client methods?', 'no')
-            ->expectsQuestion('Which method do you want to generate?', 'GetWeatherInformation');
+            ->expectsQuestion('Which method do you want to generate?', 'Get_Customers');
     }
 
     public function testSoap() {

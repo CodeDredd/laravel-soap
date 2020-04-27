@@ -10,10 +10,12 @@ namespace CodeDredd\Soap\Commands;
 
 
 use CodeDredd\Soap\Code\ClientGenerator;
+use CodeDredd\Soap\Types\Generator;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use Phpro\SoapClient\Soap\Driver\ExtSoap\ExtSoapEngineFactory;
 use Phpro\SoapClient\Soap\Driver\ExtSoap\ExtSoapOptions;
+use Phpro\SoapClient\Soap\Engine\Metadata\Model\Method;
 
 class GenerateClassMapCommand extends Command
 {
@@ -57,19 +59,18 @@ class GenerateClassMapCommand extends Command
         if(!Str::contains($wsdl, ['http:', 'https:'])) {
             $wsdl = config()->get('soap.clients.' . $wsdl . '.base_wsdl');
         }
-        $engine = ExtSoapEngineFactory::fromOptions(
-            ExtSoapOptions::defaults($wsdl, [])
-        );
-        $methods = collect($engine->getMetadata()->getMethods()->fetchOneByName('Get_Customers'));
-        $types = $engine->getMetadata()->getTypes()->fetchOneByName('Customer_Request_ReferencesType');
-        dd($types);
         $generateAllClassMaps = $this->confirm('Do you want to generate all client methods?');
         $singleClass = '';
+        $generator = new Generator();
+        $generator->setConfigByWsdl($wsdl);
+
+        $methods = collect($generator->getService()->getOperations());
         if (!$generateAllClassMaps) {
             $singleClass = $this->anticipate('Which method do you want to generate?', $methods->keys()->toArray());
         }
-
-        ClientGenerator::clientMethod($methods->get($singleClass));
+        $codeGenerator = new ClientGenerator($generator->getService(), 'laravel_soap');
+        $codeGenerator->generate($singleClass);
+//        ClientGenerator::clientMethod($methods->get($singleClass));
     }
 
 }

@@ -21,7 +21,8 @@
         "php-http/discovery": "^1.7",
         "php-http/message": "^1.8",
         "php-http/client-common": "^2.1",
-        "robrichards/wse-php": "^2.0"
+        "robrichards/wse-php": "^2.0",
+        "wsdl2phpgenerator/wsdl2phpgenerator": "^3.4"
     },
     "require-dev": {
         "symfony/var-dumper": "^5.0",

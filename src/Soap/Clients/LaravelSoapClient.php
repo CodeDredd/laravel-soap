@@ -12,13 +12,24 @@ class LaravelSoapClient
         __call as macroCall;
     }
 
+    /**
+     * @var \CodeDredd\Soap\SoapClient
+     */
     protected $client;
 
+    /**
+     * LaravelSoapClient constructor.
+     */
     public function __construct()
     {
         $this->client = Soap::buildClient('laravel_soap');
     }
 
+    /**
+     * @param $method
+     * @param $parameters
+     * @return \CodeDredd\Soap\Client\Response|mixed
+     */
     public function __call($method, $parameters)
     {
         if (static::hasMacro($method)) {
