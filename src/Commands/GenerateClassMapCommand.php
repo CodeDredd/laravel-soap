@@ -9,7 +9,7 @@
 namespace CodeDredd\Soap\Commands;
 
 
-use CodeDredd\Soap\Code\ClassGenerator;
+use CodeDredd\Soap\Code\ClientGenerator;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use Phpro\SoapClient\Soap\Driver\ExtSoap\ExtSoapEngineFactory;
@@ -69,7 +69,7 @@ class GenerateClassMapCommand extends Command
             $singleClass = $this->anticipate('Which method do you want to generate?', $methods->keys()->toArray());
         }
 
-        ClassGenerator::clientMethod($methods->get($singleClass));
+        ClientGenerator::clientMethod($methods->get($singleClass));
     }
 
 }
