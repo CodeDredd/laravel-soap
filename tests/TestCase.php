@@ -51,6 +51,7 @@ abstract class TestCase extends OrchestraTestCase
                 'user_token_password'   => 'password',
             ],
         ]);
-        $app['config']->set('soap.code_path', 'Soap');
+        $app['config']->set('soap.code_path', app_path('Soap'));
+        $app['config']->set('soap.code_namespace', 'App\\Soap');
     }
 }

@@ -39,8 +39,11 @@ class LaravelSoapClient
         return $this->client->call($method, $parameters);
     }
 
+    /**
+     * @param  array  $body
+     * @return \CodeDredd\Soap\Client\Response
+     */
     public function Get_Customers(array $body = []) {
-        $validation = GetCustomersValidation::validator($body);
-        return $this->client->call('Get_Customers', $validation);
+        return $this->client->call('Get_Customers', GetCustomersValidation::validator($body));
     }
 }

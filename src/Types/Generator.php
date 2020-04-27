@@ -31,7 +31,7 @@ class Generator extends \Wsdl2PhpGenerator\Generator
         }
         $this->load($wsdl);
     }
-    public function getTypes($wsdl) {
+    public function getTypes() {
         return $this->types;
     }
 
