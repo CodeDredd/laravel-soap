@@ -312,20 +312,18 @@ class SoapClient
      * @param  array|Validator  $arguments
      * @return Response
      */
-    public function call(string $method, $arguments = []): Response
+    public function call(string $method, $arguments): Response
     {
         try {
             if (! $this->isClientBuilded) {
                 $this->buildClient();
             }
-
             if ($arguments instanceof Validator) {
                 if ($arguments->fails()) {
                     return $this->failedValidation($arguments);
                 }
                 $arguments = $arguments->validated();
             }
-
             $result = $this->engine->request($method, $arguments);
             if ($result instanceof ResultProviderInterface) {
                 $result = Response::fromSoapResponse($result->getResult());

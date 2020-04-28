@@ -21,6 +21,16 @@ class GenerateClassMapCommandTest extends TestCase
 
     public function testSoap() {
         $client = $this->app->make(LaravelSoapClient::class);
-        dd($client->Get_Customers(['Request_References' => []])->json());
+        $result = $client->Get_Customers([
+            'Request_References' => [
+                'Customer_Reference' => [
+                    'ID' => [
+                        '_' => 'CUSTOMER-6-1',
+                        'type' => 'Customer_Reference_ID'
+                    ]
+                ]
+            ]
+        ])->object();
+        dd($result);
     }
 }

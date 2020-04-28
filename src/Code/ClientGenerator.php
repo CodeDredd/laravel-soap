@@ -9,9 +9,12 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
 use Laminas\Code\Generator\ClassGenerator;
+use Laminas\Code\Generator\DocBlock\Tag\GenericTag;
+use Laminas\Code\Generator\DocBlock\Tag\MethodTag;
 use Laminas\Code\Generator\DocBlock\Tag\ParamTag;
 use Laminas\Code\Generator\DocBlock\Tag\ReturnTag;
 use Laminas\Code\Generator\DocBlockGenerator;
+use Laminas\Code\Generator\InterfaceGenerator;
 use Laminas\Code\Generator\MethodGenerator;
 use Laminas\Code\Generator\PropertyGenerator;
 use Phpro\SoapClient\Exception\MetadataException;
@@ -63,8 +66,12 @@ class ClientGenerator
     public function generate($actionName = '')
     {
         $validationNameSpace = $this->codeNamespace . '\\Validations\\' . $this->clientClassName;
+        $clientInterface = $this->createNewClientContract($this->configName);
+        $clientInterface->setNamespaceName($this->codeNamespace . '\\Contracts');
         $clientClass = $this->createNewClient($this->configName);
-        $clientClass->setNamespaceName($this->codeNamespace . '\\Clients');
+        $clientClass->setNamespaceName($this->codeNamespace . '\\Clients')
+            ->addUse($this->codeNamespace . '\\Contracts\\' . $this->clientClassName . 'Contract')
+            ->setImplementedInterfaces([$this->clientClassName . 'Contract']);
         $method = $this->actions->get($actionName);
         $validationClass = $this->createNewValidation($method);
         $validationClass->setNamespaceName($validationNameSpace);
@@ -100,12 +107,38 @@ class ClientGenerator
         );
     }
 
+    public function createNewClientContract($configName) {
+        $clientClass = new InterfaceGenerator();
+        $className = ucfirst(Str::camel($configName).'Contract');
+        $methodTags = $this->actions->map(function (Operation $action) {
+            $params = $action->getParams() > 0 ? '($body = [])' : '()';
+            return new GenericTag(
+                'method',
+                'CodeDredd\\Soap\\Client\\Response ' . $action->getName() . $params . $action->getDescription()
+            );
+        })->values()->toArray();
+        $docBlock = DocBlockGenerator::fromArray([
+            'shortDescription' => $configName.' Client',
+            'tags' => $methodTags
+        ]);
+        return $clientClass->setName($className)
+            ->setDocBlock($docBlock);
+    }
+
     public function createNewClient($configName)
     {
         $clientClass = new ClassGenerator();
         $className = ucfirst(Str::camel($configName).'Client');
+        $methodTags = $this->actions->map(function (Operation $action) {
+            $params = $action->getParams() > 0 ? '($body = [])' : '()';
+            return new GenericTag(
+                'method',
+                'CodeDredd\\Soap\\Client\\Response ' . $action->getName() . $params
+            );
+        })->values()->toArray();
         $docBlock = DocBlockGenerator::fromArray([
-            'shortDescription' => $configName.' Client'
+            'shortDescription' => $configName.' Client',
+            'tags' => $methodTags
         ]);
         $constructorDocBlock = DocBlockGenerator::fromArray([
             'shortDescription' => $className.' constructor'
@@ -125,6 +158,12 @@ class ClientGenerator
         $callMethodBody = 'if (static::hasMacro($method)) {'."\n\x20\x20\x20\x20"
             .'return $this->macroCall($method, $parameters);'."\n"
             .'}'."\n\n"
+            . '$validationClass = \'CodeDredd\\Soap\\Soap\\Validations\\LaravelSoap\\\''."\n    "
+            . '. ucfirst(Str::camel($method))'."\n    "
+            . '. \'Validation\';'."\n"
+            .'if (class_exists($validationClass)) {'."\n    "
+            . '$parameters = app()->call([$validationClass, \'validator\'], [\'parameters\' => $parameters]);'."\n"
+            . '}'."\n\n"
             .'return $this->client->call($method, $parameters);';
         $clientClass->setName($className)
             ->setDocBlock($docBlock)
@@ -149,15 +188,17 @@ class ClientGenerator
         $className = ucfirst(Str::camel($action->getName()) . 'Validation');
         $validationArray = [];
         if (count($action->getParams()) > 0) {
-            $requestType = Arr::first($action->getParams());
-
-            $type = $this->types->get($requestType);
-            if ($type instanceof ComplexType) {
-                $validationArray = $this->generateValidationArrayByAction($type->getMembers(), $validationArray);
+            foreach ($action->getParams() as $param) {
+                $type = $this->types->get($param);
+                $validationForParam = [];
+                if ($type instanceof ComplexType) {
+                    $validationForParam = $this->generateValidationArrayByAction($type->getMembers(), $validationForParam);
+                }
+                Arr::forget($validationForParam, '*');
+                $validationArray[] = $validationForParam;
             }
-
             $validationArray = Arr::dot($validationArray);
-            Arr::forget($validationArray, '*');
+
         }
         $validatorFlags = [MethodGenerator::FLAG_PUBLIC, MethodGenerator::FLAG_STATIC];
         $validatorBody = 'return Validator::make($parameters, [' . "\n"

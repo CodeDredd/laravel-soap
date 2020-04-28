@@ -3,10 +3,19 @@
 namespace CodeDredd\Soap\Soap\Clients;
 
 use CodeDredd\Soap\Facades\Soap;
+use CodeDredd\Soap\Soap\Contracts\LaravelSoapContract;
 use CodeDredd\Soap\Soap\Validations\GetCustomersValidation;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
 
-class LaravelSoapClient
+/**
+ * Class LaravelSoapClient
+ * @method \CodeDredd\Soap\Client\Response Get_Customers($body = []) Blub
+ * @package CodeDredd\Soap\Soap\Clients
+ */
+class LaravelSoapClient implements LaravelSoapContract
 {
     use Macroable {
         __call as macroCall;
@@ -35,15 +44,17 @@ class LaravelSoapClient
         if (static::hasMacro($method)) {
             return $this->macroCall($method, $parameters);
         }
+        $validationClass = 'CodeDredd\\Soap\\Soap\\Validations\\LaravelSoap\\'
+            . ucfirst(Str::camel($method))
+            . 'Validation';
+        if (class_exists($validationClass)) {
+            $parameters = app()->call([$validationClass, 'validator'], ['parameters' => $parameters]);
+        }
 
-        return $this->client->call($method, $parameters);
+        return $this->client->__call($method, $parameters);
     }
 
-    /**
-     * @param  array  $body
-     * @return \CodeDredd\Soap\Client\Response
-     */
-    public function Get_Customers(array $body = []) {
-        return $this->client->call('Get_Customers', GetCustomersValidation::validator($body));
+    public function getClient() {
+        return $this->client;
     }
 }
