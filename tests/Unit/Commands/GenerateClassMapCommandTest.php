@@ -13,10 +13,8 @@ class GenerateClassMapCommandTest extends TestCase
 {
     public function testConsoleCommand()
     {
-        $this->artisan('soap:classmap')
-            ->expectsQuestion('Please type the wsdl or the name of your client configuration if u have defined in the config "soap.php"', 'laravel_soap')
-            ->expectsConfirmation('Do you want to generate all client methods?', 'no')
-            ->expectsQuestion('Which method do you want to generate?', 'Get_Customers');
+        $this->artisan('soap:make:client')
+            ->expectsQuestion('Please type the wsdl or the name of your client configuration if u have defined one in the config "soap.php"', 'laravel_soap');
     }
 
     public function testSoap() {

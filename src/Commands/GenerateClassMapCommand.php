@@ -1,15 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Gregor Becker <gregor.becker@getinbyte.com>
- * Date: 23.04.2020
- * Time: 14:10
- */
 
 namespace CodeDredd\Soap\Commands;
 
 
-use CodeDredd\Soap\Code\ClientGenerator;
+use CodeDredd\Soap\Code\Client;
+use CodeDredd\Soap\Code\ClientContract;
 use CodeDredd\Soap\Types\Generator;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
@@ -24,14 +19,14 @@ class GenerateClassMapCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'soap:classmap';
+    protected $signature = 'soap:make:client {--dry-run}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command to check our php code';
+    protected $description = 'Generate a custom client with all possible methods by wsdl';
 
     /**
      * Create a new command instance.
@@ -50,27 +45,40 @@ class GenerateClassMapCommand extends Command
      */
     public function handle()
     {
-        $clients = config()->get('soap.clients');
+        $clients = config('soap.clients');
         $clientNames = [];
-        if (!empty($possibleClients)) {
+
+        if (!empty($clients)) {
             $clientNames = array_keys($clients);
         }
-        $wsdl = $this->anticipate('Please type the wsdl or the name of your client configuration if u have defined in the config "soap.php"', $clientNames);
+        $wsdl = $this->anticipate('Please type the wsdl or the name of your client configuration if u have defined one in the config "soap.php"', $clientNames);
         if(!Str::contains($wsdl, ['http:', 'https:'])) {
+            $configName = $wsdl;
             $wsdl = config()->get('soap.clients.' . $wsdl . '.base_wsdl');
+        } else {
+            $configName = $this->ask('Please give a name under which the code will be generated. E.g. "laravel_soap"');
         }
-        $generateAllClassMaps = $this->confirm('Do you want to generate all client methods?');
-        $singleClass = '';
+//        $generateAllClassMaps = $this->confirm('Do you want to generate all client methods?');
+//        $singleClass = '';
         $generator = new Generator();
         $generator->setConfigByWsdl($wsdl);
-
-        $methods = collect($generator->getService()->getOperations());
-        if (!$generateAllClassMaps) {
-            $singleClass = $this->anticipate('Which method do you want to generate?', $methods->keys()->toArray());
+        $clientContract = new ClientContract($generator->getService(), $configName);
+        $client = new Client($generator->getService(), $configName);
+        $client->createNewClient();
+        if ($this->option('dry-run')) {
+            echo $client->getCode();
+        } else {
+            $client->save();
         }
-        $codeGenerator = new ClientGenerator($generator->getService(), 'laravel_soap');
-        $codeGenerator->generate($singleClass);
-//        ClientGenerator::clientMethod($methods->get($singleClass));
+
+
+//        $methods = collect($generator->getService()->getOperations());
+//        if (!$generateAllClassMaps) {
+//            $singleClass = $this->anticipate('Which method do you want to generate?', $methods->keys()->toArray());
+//        }
+//        $codeGenerator = new Generator($generator->getService(), $configName);
+//        $codeGenerator->generate($singleClass);
+//        Generator::clientMethod($methods->get($singleClass));
     }
 
 }
