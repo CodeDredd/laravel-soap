@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Gregor Becker <gregor.becker@getinbyte.com>
- * Date: 15.04.2020
- * Time: 15:30.
- */
-
 namespace CodeDredd\Soap\Tests;
 
 use CodeDredd\Soap\Facades\Soap;
@@ -16,7 +9,8 @@ abstract class TestCase extends OrchestraTestCase
 {
     /**
      * Load package service provider.
-     * @param  \Illuminate\Foundation\Application $app
+     * @param  \Illuminate\Foundation\Application  $app
+     * @return string[]
      */
     protected function getPackageProviders($app)
     {

@@ -14,16 +14,34 @@ use Laminas\Code\Generator\MethodGenerator;
 use Laminas\Code\Generator\PropertyGenerator;
 use Wsdl2PhpGenerator\Operation;
 
+/**
+ * Class Client
+ * @package CodeDredd\Soap\Code
+ */
 class Client extends Base
 {
+    /**
+     * @var ClientContract
+     */
     protected $clientContract;
+
+    /**
+     * Client constructor.
+     *
+     * @param  Service  $engine
+     * @param $configName
+     */
     public function __construct(Service $engine, $configName)
     {
+        parent::__construct($engine, $configName);
         $this->codeClass = new ClassGenerator();
         $this->clientContract = new ClientContract($engine, $configName);
-        parent::__construct($engine, $configName);
+        $this->createNewClient();
     }
 
+    /**
+     * @return ClassGenerator
+     */
     public function createNewClient()
     {
         $this->clientContract->createNewClientContract();
@@ -36,7 +54,7 @@ class Client extends Base
             );
         })->values()->toArray();
         $docBlock = DocBlockGenerator::fromArray([
-            'shortDescription' => $this->configName.' Client',
+            'shortDescription' => $this->clientClassName.' Client',
             'tags' => $methodTags
         ]);
         $constructorDocBlock = DocBlockGenerator::fromArray([
@@ -84,6 +102,10 @@ class Client extends Base
         return $this->codeClass;
     }
 
+    /**
+     * @param  Operation  $action
+     * @return MethodGenerator
+     */
     public static function createNewAction(Operation $action) {
         $validationClass = ucfirst(Str::camel($action->getName()).'Validation');
         $actionBody = 'return $this->client->call(\'' . $action->getName()
@@ -108,6 +130,9 @@ class Client extends Base
         );
     }
 
+    /**
+     * Save generated code as file
+     */
     public function save() {
         $this->clientContract->save();
         $this->saveFile('/Clients/' . $this->clientClassName .'Client.php');

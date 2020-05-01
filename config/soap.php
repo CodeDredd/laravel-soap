@@ -11,8 +11,10 @@ return [
     | Define the destination for the code generator under the app directory
     */
 
-    'code_path' => app_path('Soap'),
-    'code_namespace' => 'App\\Soap',
+    'code' => [
+        'path' => app_path('Soap'),
+        'namespace' => 'App\\Soap',
+    ],
 
     /*
     |--------------------------------------------------------------------------

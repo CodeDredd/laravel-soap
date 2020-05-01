@@ -5,6 +5,10 @@ docs_dir: docs/
 repo_name: 'codedredd/laravel-soap'
 repo_url: 'https://github.com/codedredd/laravel-soap'
 nav:
-  - Home: index.md
+  - Introduction: 'index.md'
+  - Commands:
+      - Overview: 'commands/overview.md'
+      - 'Make Client': 'commands/make-client.md'
+      - 'Make Validation': 'commands/make-validation.md'
 theme:
   name: 'material'
