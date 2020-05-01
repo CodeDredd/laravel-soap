@@ -6,9 +6,18 @@ repo_name: 'codedredd/laravel-soap'
 repo_url: 'https://github.com/codedredd/laravel-soap'
 nav:
   - Introduction: 'index.md'
+  - Installation: 'installation.md'
+  - Client:
+      - Request: 'client/request.md'
+      - Response: 'client/response.md'
+      - authentication: 'client/authentication.md'
+      - configuration: 'client/configuration.md'
   - Commands:
       - Overview: 'commands/overview.md'
       - 'Make Client': 'commands/make-client.md'
       - 'Make Validation': 'commands/make-validation.md'
+  - Testing:
+      - Faking: 'testing/faking.md'
+      - Asserts: 'testing/asserts.md'
 theme:
   name: 'material'
