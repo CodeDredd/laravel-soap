@@ -2,6 +2,8 @@
 
 namespace CodeDredd\Soap;
 
+use CodeDredd\Soap\Commands\MakeClientCommand;
+use CodeDredd\Soap\Commands\MakeValidationCommand;
 use Illuminate\Support\ServiceProvider;
 
 class SoapServiceProvider extends ServiceProvider
@@ -13,9 +15,7 @@ class SoapServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->publishes([
-            dirname(__DIR__, 1).'/config/soap.php' => config_path('soap.php'),
-        ]);
+        $this->registerPublishing();
     }
 
     /**
@@ -25,11 +25,16 @@ class SoapServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->mergeConfigFrom(
+            __DIR__.'/../config/soap.php', 'soap'
+        );
+
         $this->registerService();
+        $this->registerCommands();
     }
 
     /**
-     * Register Horizon's services in the container.
+     * Register Soap's services in the container.
      *
      * @return void
      */
@@ -38,5 +43,30 @@ class SoapServiceProvider extends ServiceProvider
         $this->app->bind('Soap', function () {
             return new SoapFactory();
         });
+    }
+
+    /**
+     * Register the package's publishable resources.
+     *
+     * @return void
+     */
+    private function registerPublishing()
+    {
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                dirname(__DIR__, 1).'/config/soap.php' => config_path('soap.php'),
+            ], 'soap-config');
+        }
+    }
+
+    /**
+     * Register Soap commands.
+     *
+     * @return void
+     */
+    protected function registerCommands()
+    {
+        $this->commands(MakeClientCommand::class);
+        $this->commands(MakeValidationCommand::class);
     }
 }

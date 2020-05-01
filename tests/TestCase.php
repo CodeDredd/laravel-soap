@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Gregor Becker <gregor.becker@getinbyte.com>
- * Date: 15.04.2020
- * Time: 15:30.
- */
 
 namespace CodeDredd\Soap\Tests;
 
@@ -16,7 +10,8 @@ abstract class TestCase extends OrchestraTestCase
 {
     /**
      * Load package service provider.
-     * @param  \Illuminate\Foundation\Application $app
+     * @param  \Illuminate\Foundation\Application  $app
+     * @return string[]
      */
     protected function getPackageProviders($app)
     {
@@ -45,11 +40,13 @@ abstract class TestCase extends OrchestraTestCase
     {
         // Setup default wsse
         $app['config']->set('soap.clients.laravel_soap', [
-            'base_wsdl' => 'laravel_soap.wsdl',
+            'base_wsdl' => __DIR__.'/Fixtures/Wsdl/weather.wsdl',
             'with_wsse' => [
                 'user_token_name'   => 'username',
                 'user_token_password'   => 'password',
             ],
         ]);
+        $app['config']->set('soap.code.path', __DIR__.'/app');
+        $app['config']->set('soap.code.namespace', 'App\\Soap');
     }
 }
