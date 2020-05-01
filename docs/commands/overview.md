@@ -5,7 +5,7 @@
 You need to install following package to use the code generation feature
 
 ````bash
-composer require --dev laminas/laminas-code
+composer require --dev laminas/laminas-code wsdl2phpgenerator/wsdl2phpgenerator
 ````
 
 Here is a list of all available soap commands.
