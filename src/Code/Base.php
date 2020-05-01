@@ -1,4 +1,5 @@
 <?php
+
 namespace CodeDredd\Soap\Code;
 
 use CodeDredd\Soap\Types\Service;
@@ -7,12 +8,10 @@ use Laminas\Code\Generator\ClassGenerator;
 use Laminas\Code\Generator\FileGenerator;
 
 /**
- * Class Base
- * @package CodeDredd\Soap\Code
+ * Class Base.
  */
 class Base
 {
-
     /**
      * @var \Illuminate\Support\Collection
      */
@@ -67,18 +66,20 @@ class Base
     /**
      * @return string
      */
-    public function getCode() {
+    public function getCode()
+    {
         return $this->codeClass->generate();
     }
 
     /**
      * @param $filePath
      */
-    public function saveFile($filePath) {
-        $file = config('soap.code.path', app_path('Soap')) . $filePath;
-        if (!file_exists($file)) {
+    public function saveFile($filePath)
+    {
+        $file = config('soap.code.path', app_path('Soap')).$filePath;
+        if (! file_exists($file)) {
             $fileCode = FileGenerator::fromArray([
-                'classes' => [$this->codeClass]
+                'classes' => [$this->codeClass],
             ]);
             mkdir(dirname($file), 0777, true);
             file_put_contents($file, $fileCode->generate());

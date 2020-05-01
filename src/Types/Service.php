@@ -3,11 +3,10 @@
  * Created by PhpStorm.
  * User: Gregor Becker <gregor.becker@getinbyte.com>
  * Date: 27.04.2020
- * Time: 17:21
+ * Time: 17:21.
  */
 
 namespace CodeDredd\Soap\Types;
-
 
 use Wsdl2PhpGenerator\ConfigInterface;
 use Wsdl2PhpGenerator\Operation;
@@ -18,11 +17,12 @@ class Service extends \Wsdl2PhpGenerator\Service
 
     public function __construct(ConfigInterface $config, $identifier, array $types, $description)
     {
-        $this->operations  = [];
+        $this->operations = [];
         parent::__construct($config, $identifier, $types, $description);
     }
 
-    public function getOperations() {
+    public function getOperations()
+    {
         return $this->operations;
     }
 

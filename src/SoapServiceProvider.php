@@ -60,7 +60,7 @@ class SoapServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register Soap commands
+     * Register Soap commands.
      *
      * @return void
      */

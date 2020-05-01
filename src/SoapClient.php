@@ -12,7 +12,6 @@ use GuzzleHttp\HandlerStack;
 use Http\Adapter\Guzzle6\Client;
 use Http\Client\Exception\HttpException;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
 use Phpro\SoapClient\Middleware\BasicAuthMiddleware;
@@ -287,9 +286,9 @@ class SoapClient
     protected function failedValidation(Validator $validator)
     {
         return Response::fromSoapResponse([
-            "success" => false,
-            "message" => __("Invalid data."),
-            "errors" => $validator->errors(),
+            'success' => false,
+            'message' => __('Invalid data.'),
+            'errors' => $validator->errors(),
         ]);
     }
 

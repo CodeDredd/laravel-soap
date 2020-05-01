@@ -1,4 +1,5 @@
 <?php
+
 namespace CodeDredd\Soap\Types;
 
 use Illuminate\Console\OutputStyle;
@@ -18,10 +19,11 @@ class Generator extends \Wsdl2PhpGenerator\Generator
 
     protected $output;
 
-    public function setConfigByWsdl($wsdl, OutputStyle $output = null) {
+    public function setConfigByWsdl($wsdl, OutputStyle $output = null)
+    {
         $this->config = new Config([
             'inputFile' => $wsdl,
-            'outputDir' => '/tmp/output'
+            'outputDir' => '/tmp/output',
         ]);
 
         $this->log('Starting generation');
@@ -38,11 +40,14 @@ class Generator extends \Wsdl2PhpGenerator\Generator
         }
         $this->load($wsdl);
     }
-    public function getTypes() {
+
+    public function getTypes()
+    {
         return $this->types;
     }
 
-    public function getService() {
+    public function getService()
+    {
         return $this->service;
     }
 
@@ -112,7 +117,7 @@ class Generator extends \Wsdl2PhpGenerator\Generator
                         }
                     }
                 }
-                if (!$already_registered) {
+                if (! $already_registered) {
                     $this->types[$typeNode->getName()] = $type;
                 }
             }
