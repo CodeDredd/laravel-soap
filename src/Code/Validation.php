@@ -1,4 +1,5 @@
 <?php
+
 namespace CodeDredd\Soap\Code;
 
 use CodeDredd\Soap\Types\Service;
@@ -14,8 +15,7 @@ use Wsdl2PhpGenerator\Operation;
 use Wsdl2PhpGenerator\Variable;
 
 /**
- * Class Validation
- * @package CodeDredd\Soap\Code
+ * Class Validation.
  */
 class Validation extends Base
 {
@@ -49,7 +49,7 @@ class Validation extends Base
     public function createNewValidation(Operation $action)
     {
         $this->actionName = $action->getName();
-        $className = ucfirst(Str::camel($action->getName()) . 'Validation');
+        $className = ucfirst(Str::camel($action->getName()).'Validation');
         $validationArray = [];
         if (count($action->getParams()) > 0) {
             foreach ($action->getParams() as $key => $param) {
@@ -62,18 +62,17 @@ class Validation extends Base
                 $validationArray[] = $validationForParam;
             }
             $validationArray = Arr::dot($validationArray);
-
         }
         $validatorFlags = [MethodGenerator::FLAG_PUBLIC, MethodGenerator::FLAG_STATIC];
-        $validatorBody = 'return Validator::make($parameters, [' . "\n"
-            . $this->arrayToStringCode($validationArray)
-            . ']);';
+        $validatorBody = 'return Validator::make($parameters, ['."\n"
+            .$this->arrayToStringCode($validationArray)
+            .']);';
         $docBlock = DocBlockGenerator::fromArray([
             'shortDescription' => $this->actionName.' Validation',
-            'longDescription' => $action->getDescription()
+            'longDescription' => $action->getDescription(),
         ]);
         $this->codeClass->setName($className)
-            ->setNamespaceName($this->codeNamespace . '\\Validations\\' . $this->clientClassName)
+            ->setNamespaceName($this->codeNamespace.'\\Validations\\'.$this->clientClassName)
             ->setDocBlock($docBlock)
             ->addUse(Validator::class)
             ->addMethod('validator', ['parameters'], $validatorFlags, $validatorBody);
@@ -84,10 +83,11 @@ class Validation extends Base
     /**
      * @param  array  $actionNames
      */
-    public function generateValidationFiles(array $actionNames = []) {
+    public function generateValidationFiles(array $actionNames = [])
+    {
         foreach ($actionNames as $actionName) {
             $action = $this->actions->get($actionName);
-            if (!empty($action)) {
+            if (! empty($action)) {
                 $this->codeClass = $this->createNewValidation($action);
                 $this->dryRun ? print_r($this->getCode()) : $this->save();
             }
@@ -98,13 +98,15 @@ class Validation extends Base
      * @param  array  $array
      * @return string
      */
-    protected function arrayToStringCode(array $array) {
+    protected function arrayToStringCode(array $array)
+    {
         $stringCode = '';
         foreach ($array as $key => $value) {
-            if (!empty($value)) {
-                $stringCode .= "    '" . $key . '\' => \'' . $value . "',\n";
+            if (! empty($value)) {
+                $stringCode .= "    '".$key.'\' => \''.$value."',\n";
             }
         }
+
         return $stringCode;
     }
 
@@ -121,10 +123,10 @@ class Validation extends Base
             if ($propertyType instanceof ComplexType) {
                 $validationArray['*'] = 'filled';
                 $validationArray[$property->getName()] = $this->generateValidationArrayByAction($propertyType->getMembers());
-            } elseif($propertyType instanceof Enum) {
-                $validationArray[$property->getName()] = 'in:' . $propertyType->getValidValues();
+            } elseif ($propertyType instanceof Enum) {
+                $validationArray[$property->getName()] = 'in:'.$propertyType->getValidValues();
             } else {
-                $validationArray[$property->getName()] = $this->mapToValidType($property->getType()) . ($property->getNullable() ? '|nullable'  : '');
+                $validationArray[$property->getName()] = $this->mapToValidType($property->getType()).($property->getNullable() ? '|nullable' : '');
             }
         }
 
@@ -135,7 +137,8 @@ class Validation extends Base
      * @param $type
      * @return string
      */
-    public function mapToValidType($type) {
+    public function mapToValidType($type)
+    {
         switch ($type) {
             case 'datetime': return 'date_format:Y-m-d H:i:s';
             case 'date': return 'date';
@@ -152,17 +155,19 @@ class Validation extends Base
     /**
      * @return string
      */
-    public function getCode() {
+    public function getCode()
+    {
         return $this->codeClass->generate();
     }
 
     /**
-     * Save generated code as file
+     * Save generated code as file.
      */
-    public function save() {
+    public function save()
+    {
         $this->saveFile(
-            '/Validations/' . $this->clientClassName . '/'
-            . ucfirst(Str::camel($this->actionName).'Validation.php')
+            '/Validations/'.$this->clientClassName.'/'
+            .ucfirst(Str::camel($this->actionName).'Validation.php')
         );
     }
 }

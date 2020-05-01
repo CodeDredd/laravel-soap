@@ -40,7 +40,7 @@ class MakeClientCommand extends Command
      */
     public function handle()
     {
-        list($wsdl, $configName) = $this->getWsdlAndConfigName();
+        [$wsdl, $configName] = $this->getWsdlAndConfigName();
         $service = $this->getGeneratorService($wsdl);
 
         $client = new Client($service, $configName);
@@ -51,30 +51,33 @@ class MakeClientCommand extends Command
         }
     }
 
-    public function getGeneratorService($wsdl, Command $commandInstance = null) {
+    public function getGeneratorService($wsdl, Command $commandInstance = null)
+    {
         $commandInstance = $commandInstance ?? $this;
         $commandInstance->line('Loading wsdl configuration ...');
         $generator = new Generator();
         $generator->setConfigByWsdl($wsdl, $this->output);
+
         return $generator->getService();
     }
 
-    public function getWsdlAndConfigName(Command $commandInstance = null) {
+    public function getWsdlAndConfigName(Command $commandInstance = null)
+    {
         $commandInstance = $commandInstance ?? $this;
         $clients = config('soap.clients');
         $clientNames = [];
 
-        if (!empty($clients)) {
+        if (! empty($clients)) {
             $clientNames = array_keys($clients);
         }
         $wsdl = $commandInstance->anticipate('Please type the wsdl or the name of your client configuration if u have defined one in the config "soap.php"', $clientNames);
-        if(!Str::contains($wsdl, ['http:', 'https:'])) {
+        if (! Str::contains($wsdl, ['http:', 'https:'])) {
             $configName = $wsdl;
-            $wsdl = config()->get('soap.clients.' . $wsdl . '.base_wsdl');
+            $wsdl = config()->get('soap.clients.'.$wsdl.'.base_wsdl');
         } else {
             $configName = $commandInstance->ask('Please give a name under which the code will be generated. E.g. "laravel_soap"');
         }
-        return [ $wsdl, $configName ];
-    }
 
+        return [$wsdl, $configName];
+    }
 }

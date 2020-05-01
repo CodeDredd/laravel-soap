@@ -6,7 +6,8 @@ use Illuminate\Support\Facades\Validator;
 
 class GetCustomersValidation
 {
-    public static function validator ($parameters = []) {
+    public static function validator($parameters = [])
+    {
         return Validator::make($parameters, [
             '0.Request_References.*' => 'filled',
             '0.Request_References.Customer_Reference.*' => 'filled',

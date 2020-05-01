@@ -1,4 +1,5 @@
 <?php
+
 namespace CodeDredd\Soap\Code;
 
 use CodeDredd\Soap\Facades\Soap;
@@ -15,8 +16,7 @@ use Laminas\Code\Generator\PropertyGenerator;
 use Wsdl2PhpGenerator\Operation;
 
 /**
- * Class Client
- * @package CodeDredd\Soap\Code
+ * Class Client.
  */
 class Client extends Base
 {
@@ -48,45 +48,46 @@ class Client extends Base
         $className = ucfirst(Str::camel($this->configName).'Client');
         $methodTags = $this->actions->map(function (Operation $action) {
             $params = $action->getParams() > 0 ? '($body = [])' : '()';
+
             return new GenericTag(
                 'method',
-                'CodeDredd\\Soap\\Client\\Response ' . $action->getName() . $params
+                'CodeDredd\\Soap\\Client\\Response '.$action->getName().$params
             );
         })->values()->toArray();
         $docBlock = DocBlockGenerator::fromArray([
             'shortDescription' => $this->clientClassName.' Client',
-            'tags' => $methodTags
+            'tags' => $methodTags,
         ]);
         $constructorDocBlock = DocBlockGenerator::fromArray([
-            'shortDescription' => $className.' constructor'
+            'shortDescription' => $className.' constructor',
         ]);
         $callDocBlock = DocBlockGenerator::fromArray([
             'shortDescription' => 'Execute soap call',
             'tags' => [
                 new ParamTag('method', 'string'),
                 new ParamTag('parameters', 'mixed'),
-                new ReturnTag('\CodeDredd\Soap\Client\Response|mixed')
-            ]
+                new ReturnTag('\CodeDredd\Soap\Client\Response|mixed'),
+            ],
         ]);
         $callMethodParameters = [
             'method',
-            'parameters'
+            'parameters',
         ];
         $callMethodBody = 'if (static::hasMacro($method)) {'."\n    "
             .'return $this->macroCall($method, $parameters);'."\n"
             .'}'."\n\n"
-            . '$validationClass = \'CodeDredd\\\\Soap\\\\Soap\\\\Validations\\\\LaravelSoap\\\\\''."\n    "
-            . '. ucfirst(Str::camel($method))'."\n    "
-            . '. \'Validation\';'."\n"
+            .'$validationClass = \'CodeDredd\\\\Soap\\\\Soap\\\\Validations\\\\LaravelSoap\\\\\''."\n    "
+            .'. ucfirst(Str::camel($method))'."\n    "
+            .'. \'Validation\';'."\n"
             .'if (class_exists($validationClass)) {'."\n    "
-            . '$parameters = app()->call([$validationClass, \'validator\'], [\'parameters\' => $parameters]);'."\n"
-            . '}'."\n\n"
+            .'$parameters = app()->call([$validationClass, \'validator\'], [\'parameters\' => $parameters]);'."\n"
+            .'}'."\n\n"
             .'return $this->client->call($method, $parameters);';
 
         $this->codeClass->setName($className)
             ->setDocBlock($docBlock)
-            ->setNamespaceName($this->codeNamespace . '\\Clients')
-            ->setImplementedInterfaces([$this->codeNamespace . '\\Contracts\\' . $this->clientClassName . 'Contract'])
+            ->setNamespaceName($this->codeNamespace.'\\Clients')
+            ->setImplementedInterfaces([$this->codeNamespace.'\\Contracts\\'.$this->clientClassName.'Contract'])
             ->addProperty('client', null, PropertyGenerator::FLAG_PROTECTED)
             ->addUse(Soap::class)
             ->addUse(Macroable::class)
@@ -106,36 +107,38 @@ class Client extends Base
      * @param  Operation  $action
      * @return MethodGenerator
      */
-    public static function createNewAction(Operation $action) {
+    public static function createNewAction(Operation $action)
+    {
         $validationClass = ucfirst(Str::camel($action->getName()).'Validation');
-        $actionBody = 'return $this->client->call(\'' . $action->getName()
-            . '\', ' . $validationClass . '::validator($body));';
+        $actionBody = 'return $this->client->call(\''.$action->getName()
+            .'\', '.$validationClass.'::validator($body));';
+
         return new MethodGenerator(
             $action->getName(),
             empty($action->getParams()) ? [] : [
                 [
                     'name' => 'body',
-                    'defaultValue' => []
-                ]
+                    'defaultValue' => [],
+                ],
             ],
             MethodGenerator::FLAG_PUBLIC,
             $actionBody,
             DocBlockGenerator::fromArray([
-                'shortDescription' => 'Call action ' . $action->getName(),
+                'shortDescription' => 'Call action '.$action->getName(),
                 'tags' => [
                     new ParamTag('body', 'array'),
-                    new ReturnTag('\CodeDredd\Soap\Client\Response')
-                ]
+                    new ReturnTag('\CodeDredd\Soap\Client\Response'),
+                ],
             ])
         );
     }
 
     /**
-     * Save generated code as file
+     * Save generated code as file.
      */
-    public function save() {
+    public function save()
+    {
         $this->clientContract->save();
-        $this->saveFile('/Clients/' . $this->clientClassName .'Client.php');
+        $this->saveFile('/Clients/'.$this->clientClassName.'Client.php');
     }
-
 }

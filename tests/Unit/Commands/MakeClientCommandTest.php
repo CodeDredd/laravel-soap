@@ -2,12 +2,7 @@
 
 namespace CodeDredd\Soap\Tests\Unit\Commands;
 
-use CodeDredd\Soap\Facades\Soap;
-use CodeDredd\Soap\Soap\Clients\LaravelSoapClient;
 use CodeDredd\Soap\Tests\TestCase;
-use Phpro\SoapClient\Soap\Driver\ExtSoap\ExtSoapEngineFactory;
-use Phpro\SoapClient\Soap\Driver\ExtSoap\ExtSoapOptions;
-use Phpro\SoapClient\Wsdl\Provider\LocalWsdlProvider;
 
 class MakeClientCommandTest extends TestCase
 {
