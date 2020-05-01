@@ -2,10 +2,10 @@
 
 [![Software License](https://img.shields.io/github/license/codedredd/laravel-soap?style=flat-square)](LICENSE.md)
 [![Total Downloads](https://img.shields.io/packagist/dt/codedredd/laravel-soap?style=flat-square)](https://packagist.org/packages/codedredd/laravel-soap)
-[![test](https://img.shields.io/github/workflow/status/codedredd/laravel-soap/test?style=flat-square)](https://github.com/CodeDredd/laravel-soap/actions?query=workflow%3Atest)
+[![test](https://img.shields.io/github/workflow/status/codedredd/laravel-soap/test?label=test&logo=github&style=flat-square)](https://github.com/CodeDredd/laravel-soap/actions?query=workflow%3Atest)
 [![styleci](https://github.styleci.io/repos/7548986/shield)](https://github.styleci.io/repos/257192373)
 [![version](https://img.shields.io/github/v/release/codedredd/laravel-soap?style=flat-square)](https://github.com/CodeDredd/laravel-soap/releases)
-[![documentation](https://img.shields.io/github/workflow/status/codedredd/laravel-soap/documentation?style=flat-square)](https://codedredd.github.io/laravel-soap/)
+[![documentation](https://img.shields.io/github/workflow/status/codedredd/laravel-soap/documentation?label=docs&logo=read-the-docs&style=flat-square)](https://codedredd.github.io/laravel-soap/)
 
 <a name="installation"></a>
 ## Installation
