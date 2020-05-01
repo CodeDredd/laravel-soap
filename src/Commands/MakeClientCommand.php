@@ -40,7 +40,6 @@ class MakeClientCommand extends Command
      */
     public function handle()
     {
-        dd('Doing handle');
         list($wsdl, $configName) = $this->getWsdlAndConfigName();
         $service = $this->getGeneratorService($wsdl);
 
