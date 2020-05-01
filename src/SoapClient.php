@@ -312,7 +312,7 @@ class SoapClient
      * @param  array|Validator  $arguments
      * @return Response
      */
-    public function call(string $method, $arguments): Response
+    public function call(string $method, $arguments = []): Response
     {
         try {
             if (! $this->isClientBuilded) {
