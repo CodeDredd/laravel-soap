@@ -9,7 +9,6 @@ use function GuzzleHttp\Promise\promise_for;
 use GuzzleHttp\Psr7\Response as Psr7Response;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
-use PHPUnit\Framework\Assert as PHPUnit;
 
 class SoapFactory
 {
@@ -85,11 +84,13 @@ class SoapFactory
         return $this->recording;
     }
 
-    public function getResponseSequences() {
+    public function getResponseSequences()
+    {
         return $this->responseSequences;
     }
 
-    public function getRecorded() {
+    public function getRecorded()
+    {
         return $this->recorded;
     }
 
