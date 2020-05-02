@@ -1,4 +1,5 @@
 <?php
+
 namespace CodeDredd\Soap;
 
 use CodeDredd\Soap\Client\Request;

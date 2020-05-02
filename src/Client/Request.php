@@ -64,6 +64,7 @@ class Request
     {
         $xml = SoapXml::fromString($this->xmlContent());
         $arguments = Arr::first(XMLSerializer::domNodeToArray($xml->getBody()));
+
         return $arguments ?? [];
     }
 }
