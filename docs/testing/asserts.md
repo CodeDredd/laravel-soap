@@ -1,5 +1,32 @@
+# Asserts
+
 When faking responses, you may occasionally wish to inspect the requests the client receives in order to make sure your application is sending the correct data or headers. You may accomplish this by calling the `Soap::assertSent` method after calling `Soap::fake`.
 
+## Overview
+
+### assertSent
+
+!!! info ""
+    - **`Method`** : `#!php-inline function assertSent(callable $callback)`
+    - **`Return`** : `#!php-inline void`
+
+!!! example "Examples"
+    === "simple"
+        ``` php-inline
+        Soap::assertSent(function($request){
+            return $request->action() === 'YourAction'
+        });
+        ```
+    === "with arguments"
+        ``` php-inline
+        Soap::assertSent(function($request){
+            return $request->action() === 'YourAction' &&
+                $request->arguments() === ['argument' => 'value']
+        });
+        ```
+
+
+## Examples
 The `assertSent` method accepts a callback which will be given an `CodeDredd\Soap\Client\Request` instance and should return a boolean value indicating if the request matches your expectations. In order for the test to pass, at least one request must have been issued matching the given expectations:
 
     Soap::fake();
