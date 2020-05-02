@@ -4,6 +4,10 @@ site_author: 'Gregor Becker'
 docs_dir: docs/
 repo_name: 'codedredd/laravel-soap'
 repo_url: 'https://github.com/codedredd/laravel-soap'
+
+# Copyright
+copyright: Copyright &copy; 2020 - 2020 Gregor Becker
+
 nav:
   - Introduction: 'index.md'
   - Installation: 'installation.md'
@@ -16,8 +20,26 @@ nav:
       - Overview: 'commands/overview.md'
       - 'Make Client': 'commands/make-client.md'
       - 'Make Validation': 'commands/make-validation.md'
-  - Testing:
-      - Faking: 'testing/faking.md'
-      - Asserts: 'testing/asserts.md'
+  - Testing: 'testing.md'
 theme:
   name: 'material'
+markdown_extensions:
+  - admonition
+  - codehilite:
+      guess_lang: false
+  - toc:
+      permalink: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.highlight:
+      extend_pygments_lang:
+        - name: php-inline
+          lang: php
+          options:
+            startinline: true

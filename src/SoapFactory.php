@@ -9,7 +9,6 @@ use function GuzzleHttp\Promise\promise_for;
 use GuzzleHttp\Psr7\Response as Psr7Response;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
-use PHPUnit\Framework\Assert as PHPUnit;
 
 class SoapFactory
 {
@@ -71,6 +70,10 @@ class SoapFactory
             return $this->macroCall($method, $parameters);
         }
 
+        if (Str::contains($method, 'assert')) {
+            return (new SoapTesting($this))->{$method}(...$parameters);
+        }
+
         return tap(new SoapClient($this), function ($request) {
             $request->stub($this->stubCallbacks);
         })->{$method}(...$parameters);
@@ -79,6 +82,16 @@ class SoapFactory
     public function isRecording()
     {
         return $this->recording;
+    }
+
+    public function getResponseSequences()
+    {
+        return $this->responseSequences;
+    }
+
+    public function getRecorded()
+    {
+        return $this->recorded;
     }
 
     /**
@@ -220,33 +233,6 @@ class SoapFactory
     }
 
     /**
-     * Assert that a request / response pair was recorded matching a given truth test.
-     *
-     * @param  string  $action
-     * @return void
-     */
-    public function assertActionCalled(string $action)
-    {
-        $this->assertSent(function (Request $request) use ($action) {
-            return $request->action() === $action;
-        });
-    }
-
-    /**
-     * Assert that a request / response pair was recorded matching a given truth test.
-     *
-     * @param  callable  $callback
-     * @return void
-     */
-    public function assertSent($callback)
-    {
-        PHPUnit::assertTrue(
-            $this->recorded($callback)->count() > 0,
-            'An expected request was not recorded.'
-        );
-    }
-
-    /**
      * Get a collection of the request / response pairs matching the given truth test.
      *
      * @param  callable  $callback
@@ -265,47 +251,5 @@ class SoapFactory
         return collect($this->recorded)->filter(function ($pair) use ($callback) {
             return $callback($pair[0], $pair[1]);
         });
-    }
-
-    /**
-     * Assert that a request / response pair was not recorded matching a given truth test.
-     *
-     * @param  callable  $callback
-     * @return void
-     */
-    public function assertNotSent($callback)
-    {
-        PHPUnit::assertFalse(
-            $this->recorded($callback)->count() > 0,
-            'Unexpected request was recorded.'
-        );
-    }
-
-    /**
-     * Assert that no request / response pair was recorded.
-     *
-     * @return void
-     */
-    public function assertNothingSent()
-    {
-        PHPUnit::assertEmpty(
-            $this->recorded,
-            'Requests were recorded.'
-        );
-    }
-
-    /**
-     * Assert that every created response sequence is empty.
-     *
-     * @return void
-     */
-    public function assertSequencesAreEmpty()
-    {
-        foreach ($this->responseSequences as $responseSequence) {
-            PHPUnit::assertTrue(
-                $responseSequence->isEmpty(),
-                'Not all response sequences are empty.'
-            );
-        }
     }
 }

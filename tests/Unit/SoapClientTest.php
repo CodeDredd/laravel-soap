@@ -78,6 +78,8 @@ class SoapClientTest extends TestCase
         self::assertEquals($responseFake, $response->json());
         self::assertEquals($responseFake2, $response2->json());
         self::assertEquals($responseFake2, $response3->json());
+
+        Soap::assertSentCount(3);
     }
 
     /**

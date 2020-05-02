@@ -63,7 +63,8 @@ class Request
     public function arguments(): array
     {
         $xml = SoapXml::fromString($this->xmlContent());
+        $arguments = Arr::first(XMLSerializer::domNodeToArray($xml->getBody()));
 
-        return Arr::first(XMLSerializer::domNodeToArray($xml->getBody()));
+        return $arguments ?? [];
     }
 }

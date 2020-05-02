@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static assertActionCalled(string $action)
  * @method static assertNothingSent()
  * @method static assertSequencesAreEmpty()
+ * @method static assertSentCount($count)
  */
 class Soap extends Facade
 {
