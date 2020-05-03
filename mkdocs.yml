@@ -9,22 +9,23 @@ repo_url: 'https://github.com/codedredd/laravel-soap'
 copyright: Copyright &copy; 2020 - 2020 Gregor Becker
 
 nav:
-  - Introduction: 'index.md'
-  - Installation: 'installation.md'
+  - 'Get started': 'index.md'
   - Client:
       - Request: 'client/request.md'
       - Response: 'client/response.md'
       - authentication: 'client/authentication.md'
       - configuration: 'client/configuration.md'
-  - Commands:
-      - Overview: 'commands/overview.md'
-      - 'Make Client': 'commands/make-client.md'
-      - 'Make Validation': 'commands/make-validation.md'
+  - Commands: 'commands.md'
   - Testing: 'testing.md'
 theme:
   name: 'material'
+  language: 'en'
+  palette:
+    primary: 'cyan'
+    accent: 'deep orange'
 markdown_extensions:
   - admonition
+  - attr_list
   - codehilite:
       guess_lang: false
   - toc:

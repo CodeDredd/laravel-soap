@@ -1,88 +1,195 @@
 # :fontawesome-solid-journal-whills: **Testing**
 
-Many Laravel services provide functionality to help you easily and expressively write tests, and this SOAP wrapper is no exception.
+---
+Many Laravel services provide functionality to help you easily and expressively write tests, 
+and this SOAP wrapper is no exception.
 
+---
+![alt text](https://image.slidesharecdn.com/agilelessonsfromstarwarsapil17-170125183657/95/agile-lessons-to-learn-from-star-wars-15-638.jpg?cb=1485369462 "Testing"){: style="height:auto;width:100%"}
+
+---
 ## :fontawesome-brands-jedi-order: **Faking**
 
-The `Soap` facade's `fake` method allows you to instruct the SOAP client to return stubbed / dummy responses when requests are made.
+Include `#!php-inline use CodeDredd\Soap\Facades\Soap` in your testing class.
+The `Soap` facade's `fake` method allows you to instruct the SOAP client to return stubbed / dummy responses 
+when requests are made.
 
-### Simple Fake
-For example, to instruct the SOAP client to return empty, `200` status code responses for every request, you may call the `fake` method with no arguments:
+### :fontawesome-solid-jedi: ***fake***
 
-    use CodeDredd\Soap\Facades\Soap;
+> Intercepts request with possible given responses
 
-    Soap::fake();
+!!! info ""
+    - **`Method`** : `#!php-inline function fake($callback = null)`
+    - **`Param`** : `#!php-inline callable|array $callback`
+    - **`Return`** : `#!php-inline \CodeDredd\Soap\SoapFactory`
 
-    $response = Soap::baseWsdl(...)->call(...);
+!!! example "Examples with Soap::response"
+    === "simple"
+        For returning empty `200` status code responses for every request, you may call the `fake` method with no arguments
+        ``` php-inline
+        Soap::fake();
+        ```
+    === "with arguments"
+        You may pass an array to the `fake` method. The array's keys should represent ACTION patterns that you wish to fake and their associated responses. The `*` character may be used as a wildcard character. You may use the `response` method to construct stub / fake responses for these endpoints
+        ```` php-inline
+        Soap::fake([
+            // Stub a JSON response for all Get_ actions...
+            'Get_*' => Soap::response(['foo' => 'bar'], 200, ['Headers']),
+    
+            // Stub a string response for Submit_User action
+            'Submit_User' => Soap::response('Hello World', 200, ['Headers']),
+        ]);
+        ````
+        
+        !!! warning "Difference between Laravel Http"
+            The difference between Laravels HTTP wrapper is the fact that actions which are not defined in fake are also faked with a default 200 response!
+            
+    === "overwrite default response"
+        ``` php-inline
+        Soap::fake([
+            // Stub a JSON response for all Get_ actions...
+            'Get_*' => Soap::response(['foo' => 'bar'], 200, ['Headers']),
+    
+            // Stub a string response for all other actions
+            '*' => Soap::response('Hello World', 200, ['Headers']),
+        ]);
+        ```
+    === "with callback"
+        If you require more complicated logic to determine what responses to return for certain endpoints, you may pass a callback to the `fake` method. This callback will receive an instance of `CodeDredd\Soap\Client\Request` and should return a response instance:
+        ``` php-inline
+        Soap::fake(function ($request) {
+            return Soap::response('Hello World', 200);
+        });
+        ```
 
-### Faking Specific URLs
+!!! example "Examples with Soap::sequence"
+    === "simple"
+        Sometimes you may need to specify that a single ACTION should return a series of fake responses in a specific order. You may accomplish this by using the `Soap::sequence` method to build the responses:
+        ```` php-inline
+        Soap::fake([
+            // Stub a series of responses for Get_* actions...
+            'Get_*' => Soap::sequence()
+                ->push('Hello World')
+                ->push(['foo' => 'bar'])
+                ->pushStatus(404)
+        ]);
+        ````
+        
+        !!! warning "Throws exception if empty"
+            When all of the responses in a response sequence have been consumed, any further requests will cause the response sequence to throw an exception!
+            
+    === "wtih whenEmpty"
+        If you would like to specify a default response that should be returned when a sequence is empty, you may use the `whenEmpty` method
+        ``` php-inline
+        Soap::fake([
+            // Stub a series of responses for Get_* actions...
+            'Get_*' => Soap::sequence()
+                ->push('Hello World')
+                ->push(['foo' => 'bar'])
+                ->whenEmpty(Soap::response())
+        ]);
+        ```
 
-Alternatively, you may pass an array to the `fake` method. The array's keys should represent ACTION patterns that you wish to fake and their associated responses. The `*` character may be used as a wildcard character. You may use the `response` method to construct stub / fake responses for these endpoints:
-The difference between Laravels HTTP wrapper is the fact that actions which are not defined in fake are also faked with a default 200 response!
-Also a faked response status code is always 200 if you define it in the range between 200 and 400. Status codes 400 and greater are correct responded.
+### :fontawesome-solid-jedi: ***response***
 
-    Soap::fake([
-        // Stub a JSON response for all Get_ actions...
-        'Get_*' => Soap::response(['foo' => 'bar'], 200, ['Headers']),
+> Create a new response instance for use during stubbing (for fake responses)
 
-        // Stub a string response for Submit_User action
-        'Submit_User' => Soap::response('Hello World', 200, ['Headers']),
-    ]);
+!!! info ""
 
-If you would like to overwrite the fallback ACTION pattern that will stub all unmatched URLs, you may use a single `*` character:
+    - **`Method`** : `#!php-inline static function response($body = null, $status = 200, $headers = [])`
+    - **`Param`** : `#!php-inline array|string|null $body`
+    - **`Param`** : `#!php-inline int $status`
+    - **`Param`** : `#!php-inline array $headers`
+    - **`Return`** : `#!php-inline \GuzzleHttp\Promise\PromiseInterface`
 
-    Soap::fake([
-        // Stub a JSON response for all Get_ actions...
-        'Get_*' => Soap::response(['foo' => 'bar'], 200, ['Headers']),
+!!! warning "When `$body` is string"
+    One important notice. Because a SOAP API doesn't return a single string value every response with only a string in the body is wrapped in an array with key `response`.
+    
+        [
+            'response' => 'Hello World'
+        ]
 
-        // Stub a string response for all other actions
-        '*' => Soap::response('Hello World', 200, ['Headers']),
-    ]);
+### :fontawesome-solid-jedi: ***sequence***
 
-One important notice. Because a SOAP API doesn't return only string every response with only a string in the body will be formatted to an array:
+> Get an invokable object that returns a sequence of responses in order for use during stubbing
 
-    //For above example
-    [
-        'response' => 'Hello World'
-    ]
+!!! info ""
+    - **`Method`** : `#!php-inline function sequence(array $responses = [])`
+    - **`Return`** : `#!php-inline \CodeDredd\Soap\Client\ResponseSequence`
+    
+#### :fontawesome-brands-galactic-republic: ***push***
 
-### Faking Response Sequences
+> Push a response to the sequence.
 
-Sometimes you may need to specify that a single ACTION should return a series of fake responses in a specific order. You may accomplish this by using the `Soap::sequence` method to build the responses:
+!!! info ""
+    - **`Method`** : `#!php-inline function push($body = '', int $status = 200, array $headers = [])`
+    - **`Return`** : `#!php-inline \CodeDredd\Soap\Client\ResponseSequence`
 
-    Soap::fake([
-        // Stub a series of responses for Get_* actions...
-        'Get_*' => Soap::sequence()
-            ->push('Hello World')
-            ->push(['foo' => 'bar'])
-            ->pushStatus(404)
-    ]);
+#### :fontawesome-brands-galactic-republic: ***pushResponse***
 
-When all of the responses in a response sequence have been consumed, any further requests will cause the response sequence to throw an exception. If you would like to specify a default response that should be returned when a sequence is empty, you may use the `whenEmpty` method:
+> Push a response to the sequence.
 
-    Soap::fake([
-        // Stub a series of responses for Get_* actions...
-        'Get_*' => Soap::sequence()
-            ->push('Hello World')
-            ->push(['foo' => 'bar'])
-            ->whenEmpty(Soap::response())
-    ]);
+!!! info ""
+    - **`Method`** : `#!php-inline function pushResponse($response)`
+    - **`Param`** : `#!php-inline \GuzzleHttp\Promise\PromiseInterface|\Closure $response`
+    - **`Return`** : `#!php-inline \CodeDredd\Soap\Client\ResponseSequence`
+    
+#### :fontawesome-brands-galactic-republic: ***pushStatus***
 
-If you would like to fake a sequence of responses but do not need to specify a specific ACTION pattern that should be faked, you may use the `Soap::fakeSequence` method:
+> Push a response with the given status code to the sequence.
 
+!!! info ""
+    - **`Method`** : `#!php-inline function pushStatus(string $filePath, int $status = 200, array $headers = [])`
+    - **`Return`** : `#!php-inline \CodeDredd\Soap\Client\ResponseSequence`
+    
+#### :fontawesome-brands-galactic-republic: ***dontFailWhenEmpty***
+
+> Make the sequence return a default response when it is empty.
+
+!!! info ""
+    - **`Method`** : `#!php-inline function dontFailWhenEmpty()`
+    - **`Return`** : `#!php-inline \CodeDredd\Soap\Client\ResponseSequence`
+    
+#### :fontawesome-brands-galactic-republic: ***whenEmpty***
+
+> Make the sequence return a custom default response when it is empty.
+
+!!! info ""
+    - **`Method`** : `#!php-inline function whenEmpty($response)`
+    - **`Param`** : `#!php-inline \GuzzleHttp\Promise\PromiseInterface|\Closure $response`
+    - **`Return`** : `#!php-inline \CodeDredd\Soap\Client\ResponseSequence`
+    
+#### :fontawesome-brands-galactic-republic: ***pushFile***
+
+> Push response with the contents of a file as the body to the sequence.
+
+!!! info ""
+    - **`Method`** : `#!php-inline function pushFile(int $status = 200, array $headers = [])`
+    - **`Return`** : `#!php-inline \CodeDredd\Soap\Client\ResponseSequence`
+
+### :fontawesome-solid-jedi: ***fakeSequence***
+
+If you would like to fake a sequence of responses but do not need to specify a specific ACTION pattern that should be faked, you may use the `Soap::fakeSequence` method.
+
+> Register a response sequence for the given URL pattern.
+
+!!! info ""
+    - **`Method`** : `#!php-inline function fakeSequence(string $url = '*')`
+    - **`Return`** : `#!php-inline \CodeDredd\Soap\Client\ResponseSequence`
+    
+!!! example "Example"
+    ``` php-inline
     Soap::fakeSequence()
         ->push('Hello World')
         ->whenEmpty(Soap::response());
+    ```
+    
+!!! tip "Tip"
+    ``fakeSequence`` has the same methods as [`Soap::response`](#response).
+    So in most cases `fakeSequence` will be the better choice to fake response because its an easier and shorter
+    way to define fake responses.
 
-### Fake Callback
-
-If you require more complicated logic to determine what responses to return for certain endpoints, you may pass a callback to the `fake` method. This callback will receive an instance of `CodeDredd\Soap\Client\Request` and should return a response instance:
-
-    Soap::fake(function ($request) {
-        return Soap::response('Hello World', 200);
-    });
-
-------------------------
+---
 
 ## :fontawesome-brands-jedi-order: **Asserts**
 
