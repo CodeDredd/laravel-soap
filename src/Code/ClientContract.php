@@ -43,7 +43,7 @@ class ClientContract extends Base
         $docBlock = DocBlockGenerator::fromArray([
             'shortDescription' => $this->clientClassName.' Contract',
             'tags' => $methodTags,
-        ]);
+        ])->setWordWrap(false);
 
         return $this->codeClass->setName($className)
             ->setDocBlock($docBlock);
