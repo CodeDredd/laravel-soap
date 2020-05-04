@@ -70,7 +70,7 @@ class Validation extends Base
         $docBlock = DocBlockGenerator::fromArray([
             'shortDescription' => $this->actionName.' Validation',
             'longDescription' => $action->getDescription(),
-        ]);
+        ])->setWordWrap(false);
         $this->codeClass->setName($className)
             ->setNamespaceName($this->codeNamespace.'\\Validations\\'.$this->clientClassName)
             ->setDocBlock($docBlock)

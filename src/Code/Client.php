@@ -57,7 +57,7 @@ class Client extends Base
         $docBlock = DocBlockGenerator::fromArray([
             'shortDescription' => $this->clientClassName.' Client',
             'tags' => $methodTags,
-        ]);
+        ])->setWordWrap(false);
         $constructorDocBlock = DocBlockGenerator::fromArray([
             'shortDescription' => $className.' constructor',
         ]);
@@ -68,7 +68,7 @@ class Client extends Base
                 new ParamTag('parameters', 'mixed'),
                 new ReturnTag('\CodeDredd\Soap\Client\Response|mixed'),
             ],
-        ]);
+        ])->setWordWrap(false);
         $callMethodParameters = [
             'method',
             'parameters',
