@@ -76,7 +76,7 @@ class Client extends Base
         $callMethodBody = 'if (static::hasMacro($method)) {'."\n    "
             .'return $this->macroCall($method, $parameters);'."\n"
             .'}'."\n\n"
-            .'$validationClass = \'CodeDredd\\\\Soap\\\\Soap\\\\Validations\\\\LaravelSoap\\\\\''."\n    "
+            .'$validationClass = \''.addslashes($this->codeNamespace.'\Validations\LaravelSoap\\')."'\n    "
             .'. ucfirst(Str::camel($method))'."\n    "
             .'. \'Validation\';'."\n"
             .'if (class_exists($validationClass)) {'."\n    "
