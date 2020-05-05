@@ -37,7 +37,7 @@ class ClientContract extends Base
 
             return new GenericTag(
                 'method',
-                'CodeDredd\\Soap\\Client\\Response '.$action->getName().$params.$action->getDescription()
+                '\\CodeDredd\\Soap\\Client\\Response '.$action->getName().$params.$action->getDescription()
             );
         })->values()->toArray();
         $docBlock = DocBlockGenerator::fromArray([
