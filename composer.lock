@@ -2099,21 +2099,21 @@
         },
         {
             "name": "robrichards/wse-php",
-            "version": "2.0.3",
+            "version": "2.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/robrichards/wse-php.git",
-                "reference": "f705f0242ab5f9ea69570955d2ebc64a902b12eb"
+                "reference": "89e1393251121238d6d8d9194f027159dd05bf7a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/robrichards/wse-php/zipball/f705f0242ab5f9ea69570955d2ebc64a902b12eb",
-                "reference": "f705f0242ab5f9ea69570955d2ebc64a902b12eb",
+                "url": "https://api.github.com/repos/robrichards/wse-php/zipball/89e1393251121238d6d8d9194f027159dd05bf7a",
+                "reference": "89e1393251121238d6d8d9194f027159dd05bf7a",
                 "shasum": ""
             },
             "require": {
                 "php": ">= 5.3",
-                "robrichards/xmlseclibs": ">=3.0.2"
+                "robrichards/xmlseclibs": ">=3.0.4"
             },
             "type": "library",
             "autoload": {
@@ -2139,7 +2139,7 @@
                 "soap",
                 "ws-addressing"
             ],
-            "time": "2019-01-03T15:37:08+00:00"
+            "time": "2020-05-11T16:50:52+00:00"
         },
         {
             "name": "robrichards/xmlseclibs",
