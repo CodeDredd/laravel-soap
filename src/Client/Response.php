@@ -67,9 +67,20 @@ class Response implements ResultInterface, ArrayAccess
     /**
      * Get the full SOAP enveloppe response.
      *
+     * @deprecated removed in v2 and replaced by toPsrResponse
      * @return string
      */
     public function getResponse(): string
+    {
+        return $this->response;
+    }
+
+    /**
+     * Get the underlying PSR response for the response.
+     *
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    public function toPsrResponse()
     {
         return $this->response;
     }
@@ -134,6 +145,16 @@ class Response implements ResultInterface, ArrayAccess
     }
 
     /**
+     * Determine if the response indicates a client or server error occurred.
+     *
+     * @return bool
+     */
+    public function failed()
+    {
+        return $this->serverError() || $this->clientError();
+    }
+
+    /**
      * Determine if the response was a redirect.
      *
      * @return bool
@@ -152,7 +173,7 @@ class Response implements ResultInterface, ArrayAccess
      */
     public function throw()
     {
-        if ($this->serverError() || $this->clientError()) {
+        if ($this->failed()) {
             throw new RequestException($this);
         }
 
@@ -240,6 +261,16 @@ class Response implements ResultInterface, ArrayAccess
     public function offsetUnset($offset)
     {
         throw new LogicException('Response data may not be mutated using array access.');
+    }
+
+    /**
+     * Get the body of the response.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->body();
     }
 
     /**
