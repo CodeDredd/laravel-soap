@@ -1227,29 +1227,29 @@
         },
         {
             "name": "php-http/discovery",
-            "version": "1.7.4",
+            "version": "1.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-http/discovery.git",
-                "reference": "82dbef649ccffd8e4f22e1953c3a5265992b83c0"
+                "reference": "64a18cc891957e05d91910b3c717d6bd11fbede9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-http/discovery/zipball/82dbef649ccffd8e4f22e1953c3a5265992b83c0",
-                "reference": "82dbef649ccffd8e4f22e1953c3a5265992b83c0",
+                "url": "https://api.github.com/repos/php-http/discovery/zipball/64a18cc891957e05d91910b3c717d6bd11fbede9",
+                "reference": "64a18cc891957e05d91910b3c717d6bd11fbede9",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.1"
+                "php": "^7.1 || ^8.0"
             },
             "conflict": {
                 "nyholm/psr7": "<1.0"
             },
             "require-dev": {
-                "akeneo/phpspec-skip-example-extension": "^4.0",
+                "graham-campbell/phpspec-skip-example-extension": "^5.0",
                 "php-http/httplug": "^1.0 || ^2.0",
                 "php-http/message-factory": "^1.0",
-                "phpspec/phpspec": "^5.1",
+                "phpspec/phpspec": "^5.1 || ^6.1",
                 "puli/composer-plugin": "1.0.0-beta10"
             },
             "suggest": {
@@ -1259,7 +1259,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.7-dev"
+                    "dev-master": "1.9-dev"
                 }
             },
             "autoload": {
@@ -1288,7 +1288,7 @@
                 "message",
                 "psr7"
             ],
-            "time": "2020-01-03T11:25:47+00:00"
+            "time": "2020-07-13T15:44:45+00:00"
         },
         {
             "name": "php-http/guzzle6-adapter",
