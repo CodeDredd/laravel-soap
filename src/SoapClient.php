@@ -461,7 +461,7 @@ class SoapClient
             return function ($request, $options) use ($handler) {
                 $promise = $handler($this->runBeforeSendingCallbacks($request, $options), $options);
 
-                return $promise->then(function ($response) use ($request, $options) {
+                return $promise->then(function ($response) use ($request) {
                     optional($this->factory)->recordRequestResponsePair(
                         (new Request($request)),
                         new Response($response)
