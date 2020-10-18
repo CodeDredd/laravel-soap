@@ -1765,16 +1765,16 @@
         },
         {
             "name": "phpro/soap-client",
-            "version": "v1.3.0",
+            "version": "v1.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpro/soap-client.git",
-                "reference": "fd949b9ce1f25c25dbc2ab0980df25dd5a83386f"
+                "reference": "df5d3af128e0758269cc773b11a5d5e1757016d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpro/soap-client/zipball/fd949b9ce1f25c25dbc2ab0980df25dd5a83386f",
-                "reference": "fd949b9ce1f25c25dbc2ab0980df25dd5a83386f",
+                "url": "https://api.github.com/repos/phpro/soap-client/zipball/df5d3af128e0758269cc773b11a5d5e1757016d1",
+                "reference": "df5d3af128e0758269cc773b11a5d5e1757016d1",
                 "shasum": ""
             },
             "require": {
@@ -1852,7 +1852,7 @@
             "keywords": [
                 "soap"
             ],
-            "time": "2020-07-15T13:42:57+00:00"
+            "time": "2020-09-25T10:41:40+00:00"
         },
         {
             "name": "psr/container",
@@ -2995,16 +2995,16 @@
         },
         {
             "name": "symfony/filesystem",
-            "version": "v5.1.5",
+            "version": "v5.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
-                "reference": "f7b9ed6142a34252d219801d9767dedbd711da1a"
+                "reference": "1a8697545a8d87b9f2f6b1d32414199cc5e20aae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/filesystem/zipball/f7b9ed6142a34252d219801d9767dedbd711da1a",
-                "reference": "f7b9ed6142a34252d219801d9767dedbd711da1a",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/1a8697545a8d87b9f2f6b1d32414199cc5e20aae",
+                "reference": "1a8697545a8d87b9f2f6b1d32414199cc5e20aae",
                 "shasum": ""
             },
             "require": {
@@ -3055,7 +3055,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-08-21T17:19:47+00:00"
+            "time": "2020-09-27T14:02:37+00:00"
         },
         {
             "name": "symfony/finder",
@@ -3464,7 +3464,7 @@
         },
         {
             "name": "symfony/options-resolver",
-            "version": "v3.4.44",
+            "version": "v3.4.45",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/options-resolver.git",
