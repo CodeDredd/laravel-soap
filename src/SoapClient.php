@@ -9,7 +9,7 @@ use CodeDredd\Soap\Exceptions\NotFoundConfigurationException;
 use CodeDredd\Soap\Exceptions\SoapException;
 use CodeDredd\Soap\Middleware\WsseMiddleware;
 use GuzzleHttp\HandlerStack;
-use Http\Adapter\Guzzle6\Client;
+use Http\Adapter\Guzzle7\Client;
 use Http\Client\Exception\HttpException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Support\Str;
