@@ -7,6 +7,12 @@
 [![version](https://img.shields.io/github/v/release/codedredd/laravel-soap?style=flat-square)](https://github.com/CodeDredd/laravel-soap/releases)
 [![documentation](https://img.shields.io/github/workflow/status/codedredd/laravel-soap/documentation?label=docs&logo=read-the-docs&style=flat-square)](https://codedredd.github.io/laravel-soap/)
 
+## Versions
+Laravel SOAP Version | Laravel Support
+-------- | ------------------
+1.x | 5.6, 6.x, 7x
+2.x | 8.x
+
 <a name="installation"></a>
 ## Installation
 
