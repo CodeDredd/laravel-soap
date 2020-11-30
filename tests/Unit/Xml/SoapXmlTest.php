@@ -1,6 +1,6 @@
 <?php
 
-namespace CodeDredd\Soap\Xml;
+namespace CodeDredd\Soap\Tests\Unit\Xml;
 
 use CodeDredd\Soap\Tests\TestCase;
 use Phpro\SoapClient\Soap\Driver\ExtSoap\ExtSoapEngineFactory;

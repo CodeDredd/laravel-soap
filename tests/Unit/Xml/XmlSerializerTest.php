@@ -1,8 +1,10 @@
 <?php
 
-namespace CodeDredd\Soap\Xml;
+namespace CodeDredd\Soap\Tests\Unit\Xml;
 
 use CodeDredd\Soap\Tests\TestCase;
+use CodeDredd\Soap\Xml\SoapXml;
+use CodeDredd\Soap\Xml\XMLSerializer;
 
 class XmlSerializerTest extends TestCase
 {
