@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "55bc38c5bd48aa6e8eb76289eb1f25e7",
+    "content-hash": "cef235953a3e188152b2a57d371f4287",
     "packages": [
         {
             "name": "brick/math",
@@ -1826,56 +1826,55 @@
         },
         {
             "name": "phpro/soap-client",
-            "version": "v1.4.1",
+            "version": "v1.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpro/soap-client.git",
-                "reference": "c0985c4946c42e0af386179f6f56a5ccfe04c196"
+                "reference": "433f07aa017d197b6148b5617422a1b2c30132ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpro/soap-client/zipball/c0985c4946c42e0af386179f6f56a5ccfe04c196",
-                "reference": "c0985c4946c42e0af386179f6f56a5ccfe04c196",
+                "url": "https://api.github.com/repos/phpro/soap-client/zipball/433f07aa017d197b6148b5617422a1b2c30132ad",
+                "reference": "433f07aa017d197b6148b5617422a1b2c30132ad",
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
                 "ext-xml": "*",
-                "php": "^7.3 || ^8.0",
+                "php": "^7.2",
                 "psr/event-dispatcher": "^1.0",
                 "psr/log": "^1.0",
-                "symfony/console": "~4.0 || ~5.0",
-                "symfony/event-dispatcher": "~4.0 || ~5.0",
-                "symfony/filesystem": "~4.0 || ~5.0",
-                "symfony/options-resolver": "~4.0 || ~5.0"
+                "symfony/console": "~3.4 || ~4.0 || ~5.0",
+                "symfony/event-dispatcher": "~3.4 || ~4.0 || ~5.0",
+                "symfony/filesystem": "~3.4 || ~4.0 || ~5.0",
+                "symfony/options-resolver": "~3.4 || ~4.0 || ~5.0"
             },
             "require-dev": {
                 "ext-soap": "*",
-                "guzzlehttp/guzzle": "^7.2.0",
-                "guzzlehttp/promises": "^1.4.0",
-                "guzzlehttp/psr7": "^1.7.0",
+                "guzzlehttp/guzzle": "^6.4.1",
+                "guzzlehttp/promises": "^1.3.1",
+                "guzzlehttp/psr7": "^1.6.1",
                 "laminas/laminas-code": "^3.5.0",
                 "nyholm/psr7": "^1.3",
                 "php-http/client-common": "^2.1",
                 "php-http/discovery": "^1.7",
+                "php-http/guzzle6-adapter": "^2.0.1",
                 "php-http/httplug": "^2.1",
                 "php-http/message": "^1.8",
                 "php-http/message-factory": "^1.0",
                 "php-http/mock-client": "^1.3",
-                "php-parallel-lint/php-parallel-lint": "^1.2",
+                "php-parallel-lint/php-parallel-lint": "^1.0",
                 "php-vcr/php-vcr": "1.4.5",
-                "phpdocumentor/reflection-docblock": "^5.2.2",
-                "phpro/grumphp-shim": "~1.2.0",
-                "phpspec/phpspec": "~7.0",
-                "phpspec/prophecy-phpunit": "^2.0.1",
-                "phpstan/phpstan": "^0.12.57",
-                "phpunit/phpunit": "~9.4",
+                "phpro/grumphp-shim": "~0.19.0",
+                "phpspec/phpspec": "~6.1",
+                "phpstan/phpstan": "^0.11.19",
+                "phpunit/phpunit": "~8.5",
                 "psr/http-factory": "^1.0",
                 "psr/http-message": "^1.0.1",
                 "robrichards/wse-php": "^2.0.3",
                 "robrichards/xmlseclibs": "^3.0",
                 "squizlabs/php_codesniffer": "~3.5",
-                "symfony/validator": "~4.0 || ~5.0"
+                "symfony/validator": "~3.4 || ~4.0 || ~5.0"
             },
             "suggest": {
                 "ext-soap": "If you want to use PHP's ext-soap driver.",
@@ -1914,7 +1913,7 @@
             "keywords": [
                 "soap"
             ],
-            "time": "2020-12-18T13:48:49+00:00"
+            "time": "2020-11-27T11:21:11+00:00"
         },
         {
             "name": "psr/container",
@@ -3507,23 +3506,20 @@
         },
         {
             "name": "symfony/options-resolver",
-            "version": "v5.2.2",
+            "version": "v3.4.47",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/options-resolver.git",
-                "reference": "5d0f633f9bbfcf7ec642a2b5037268e61b0a62ce"
+                "reference": "c7efc97a47b2ebaabc19d5b6c6b50f5c37c92744"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/options-resolver/zipball/5d0f633f9bbfcf7ec642a2b5037268e61b0a62ce",
-                "reference": "5d0f633f9bbfcf7ec642a2b5037268e61b0a62ce",
+                "url": "https://api.github.com/repos/symfony/options-resolver/zipball/c7efc97a47b2ebaabc19d5b6c6b50f5c37c92744",
+                "reference": "c7efc97a47b2ebaabc19d5b6c6b50f5c37c92744",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.2.5",
-                "symfony/deprecation-contracts": "^2.1",
-                "symfony/polyfill-php73": "~1.0",
-                "symfony/polyfill-php80": "^1.15"
+                "php": "^5.5.9|>=7.0.8"
             },
             "type": "library",
             "autoload": {
@@ -3548,7 +3544,7 @@
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
-            "description": "Provides an improved replacement for the array_replace PHP function",
+            "description": "Symfony OptionsResolver Component",
             "homepage": "https://symfony.com",
             "keywords": [
                 "config",
@@ -3569,7 +3565,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-01-27T12:56:27+00:00"
+            "time": "2020-10-24T10:57:07+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -7769,41 +7765,34 @@
         },
         {
             "name": "wsdl2phpgenerator/wsdl2phpgenerator",
-            "version": "dev-master",
+            "version": "3.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wsdl2phpgenerator/wsdl2phpgenerator.git",
-                "reference": "c92d01beed99b26b75d8c514f386f39eb84454c1"
+                "reference": "558c8a66677c117de2db5f5a4ae7f327c4b67f67"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wsdl2phpgenerator/wsdl2phpgenerator/zipball/c92d01beed99b26b75d8c514f386f39eb84454c1",
-                "reference": "c92d01beed99b26b75d8c514f386f39eb84454c1",
+                "url": "https://api.github.com/repos/wsdl2phpgenerator/wsdl2phpgenerator/zipball/558c8a66677c117de2db5f5a4ae7f327c4b67f67",
+                "reference": "558c8a66677c117de2db5f5a4ae7f327c4b67f67",
                 "shasum": ""
             },
             "require": {
                 "ext-soap": "*",
-                "php": "^7.2",
-                "symfony/options-resolver": "^3.4 || ^4.3 || ^5.0",
-                "symfony/polyfill-iconv": "^1.13.1"
+                "php": ">=5.3.0",
+                "symfony/options-resolver": "~2.6|~3.0",
+                "symfony/polyfill-iconv": "^1.2"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.16",
                 "kasperg/phing-github": "0.2.*",
-                "phing/phing": "^2.16.3",
-                "php-vcr/php-vcr": "^1.4.4",
-                "php-vcr/phpunit-testlistener-vcr": "^3.2.1",
-                "phpstan/phpstan": "^0.12.9",
-                "phpunit/phpunit": "^8.5",
-                "psr/log": "^1.1.2",
-                "symfony/yaml": "^2.8.52"
+                "phing/phing": "~2.7",
+                "php-vcr/php-vcr": "1.2 - 1.2.7|^1.3.1",
+                "php-vcr/phpunit-testlistener-vcr": "~1.1.2",
+                "phpunit/phpunit": "~4.4",
+                "psr/log": "~1.0",
+                "symfony/yaml": "~2.1"
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.5.x-dev"
-                }
-            },
             "autoload": {
                 "psr-4": {
                     "Wsdl2PhpGenerator\\": [
@@ -7821,7 +7810,7 @@
                 "soap",
                 "wsdl"
             ],
-            "time": "2020-02-12T08:06:22+00:00"
+            "time": "2016-10-30T21:02:36+00:00"
         },
         {
             "name": "zbateson/mail-mime-parser",
