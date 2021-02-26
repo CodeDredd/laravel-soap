@@ -17,11 +17,11 @@ class SoapFactory
     }
 
     /**
-     * The client model class name.
+     * The client class name.
      *
      * @var string
      */
-    public static $clientModel = 'CodeDredd\Soap\SoapClient';
+    public static $clientClass = 'CodeDredd\Soap\SoapClient';
 
     /**
      * The stub callables that will handle requests.
@@ -261,22 +261,22 @@ class SoapFactory
     }
 
     /**
-     * Get a new client model instance.
+     * Get a new client class instance.
      *
      * @return SoapClient
      */
     public function client()
     {
-        return new static::$clientModel($this);
+        return new static::$clientClass($this);
     }
 
     /**
-     * Set the client model class name.
+     * Set the client class name.
      *
-     * @param string $clientModel
+     * @param string $clientClass
      */
-    public static function useClientModel(string $clientModel): void
+    public static function useClientClass(string $clientClass): void
     {
-        static::$clientModel = $clientModel;
+        static::$clientClass = $clientClass;
     }
 }

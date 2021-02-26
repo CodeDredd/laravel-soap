@@ -125,13 +125,13 @@ class SoapClientTest extends TestCase
             'with_fake_string' => ['Get_Post', $fakeResponse, ['response' => 'Test']],
         ];
     }
-    
-    public function testSoapClientModelMayBeCustomized(): void
+
+    public function testSoapClientClassMayBeCustomized(): void
     {
         Soap::fake();
         $client = Soap::buildClient('laravel_soap');
         $this->assertInstanceOf(SoapClient::class, $client);
-        SoapFactory::useClientModel(CustomSoapClient::class);
+        SoapFactory::useClientClass(CustomSoapClient::class);
         $client = Soap::buildClient('laravel_soap');
         $this->assertInstanceOf(CustomSoapClient::class, $client);
     }
