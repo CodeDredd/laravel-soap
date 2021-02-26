@@ -1,0 +1,1140 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Laravel SOAP Documentation">
+      
+      
+      
+        <meta name="author" content="Gregor Becker">
+      
+      
+      <link rel="shortcut icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-7.0.2">
+    
+    
+      
+        <title>Testing - Laravel SOAP Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.1655a90d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.7fa14f5b.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#00bdd6">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="cyan" data-md-color-accent="deep-orange">
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#testing" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Laravel SOAP Docs" class="md-header__button md-logo" aria-label="Laravel SOAP Docs">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Laravel SOAP Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Testing
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="md-header__options">
+      
+    </div>
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        
+<a href="https://github.com/codedredd/laravel-soap/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    codedredd/laravel-soap
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Laravel SOAP Docs" class="md-nav__button md-logo" aria-label="Laravel SOAP Docs">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    Laravel SOAP Docs
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/codedredd/laravel-soap/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    codedredd/laravel-soap
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Get started
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      <label class="md-nav__link" for="__nav_2">
+        Client
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Client" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Client
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../client/request/" class="md-nav__link">
+        Request
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../client/response/" class="md-nav__link">
+        Response
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../client/authentication/" class="md-nav__link">
+        authentication
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../client/configuration/" class="md-nav__link">
+        configuration
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../commands/" class="md-nav__link">
+        Commands
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Testing
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Testing
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#faking" class="md-nav__link">
+     Faking
+  </a>
+  
+    <nav class="md-nav" aria-label=" Faking">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fake" class="md-nav__link">
+     fake
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response" class="md-nav__link">
+     response
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sequence" class="md-nav__link">
+     sequence
+  </a>
+  
+    <nav class="md-nav" aria-label=" sequence">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#push" class="md-nav__link">
+     push
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pushresponse" class="md-nav__link">
+     pushResponse
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pushstatus" class="md-nav__link">
+     pushStatus
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dontfailwhenempty" class="md-nav__link">
+     dontFailWhenEmpty
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whenempty" class="md-nav__link">
+     whenEmpty
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pushfile" class="md-nav__link">
+     pushFile
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fakesequence" class="md-nav__link">
+     fakeSequence
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#asserts" class="md-nav__link">
+     Asserts
+  </a>
+  
+    <nav class="md-nav" aria-label=" Asserts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#assertsent" class="md-nav__link">
+     assertSent
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assertnotsent" class="md-nav__link">
+     assertNotSent
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assertactioncalled" class="md-nav__link">
+     assertActionCalled
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assertnothingsent" class="md-nav__link">
+     assertNothingSent
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assertsequencesareempty" class="md-nav__link">
+     assertSequencesAreEmpty
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assertsentcount" class="md-nav__link">
+     assertSentCount
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#faking" class="md-nav__link">
+     Faking
+  </a>
+  
+    <nav class="md-nav" aria-label=" Faking">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fake" class="md-nav__link">
+     fake
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response" class="md-nav__link">
+     response
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sequence" class="md-nav__link">
+     sequence
+  </a>
+  
+    <nav class="md-nav" aria-label=" sequence">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#push" class="md-nav__link">
+     push
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pushresponse" class="md-nav__link">
+     pushResponse
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pushstatus" class="md-nav__link">
+     pushStatus
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dontfailwhenempty" class="md-nav__link">
+     dontFailWhenEmpty
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whenempty" class="md-nav__link">
+     whenEmpty
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pushfile" class="md-nav__link">
+     pushFile
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fakesequence" class="md-nav__link">
+     fakeSequence
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#asserts" class="md-nav__link">
+     Asserts
+  </a>
+  
+    <nav class="md-nav" aria-label=" Asserts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#assertsent" class="md-nav__link">
+     assertSent
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assertnotsent" class="md-nav__link">
+     assertNotSent
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assertactioncalled" class="md-nav__link">
+     assertActionCalled
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assertnothingsent" class="md-nav__link">
+     assertNothingSent
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assertsequencesareempty" class="md-nav__link">
+     assertSequencesAreEmpty
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assertsentcount" class="md-nav__link">
+     assertSentCount
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/codedredd/laravel-soap/edit/master/docs/testing.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                <h1 id="testing"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M438.406 377.594c-3.203 12.812-3.203 57.61 0 73.61q9.586 9.585 9.594 19.202v16c0 16-12.797 25.594-25.594 25.594H96c-54.406 0-96-41.594-96-96V96C0 41.594 41.594 0 96 0h326.406C438.406 0 448 9.594 448 25.594v332.812q0 14.39-9.594 19.188zM380.796 384H96c-16 0-32 12.797-32 32s12.797 32 32 32h284.797zm-252.78-207.984c0 .515.14.984.14 1.5l37.11 32.468A8 8 0 0 1 160 224h-.016a9.177 9.177 0 0 1-5.25-1.984l-23.593-20.641C142.688 250.953 186.906 288 240 288s97.313-37.047 108.875-86.625l-23.594 20.64a8.025 8.025 0 0 1-5.265 1.97H320a9.146 9.146 0 0 1-6.016-2.72A9.265 9.265 0 0 1 312 216a9.097 9.097 0 0 1 2.734-6.016l37.11-32.468c.015-.532.156-1 .156-1.516 0-11.047-2.094-21.516-5.063-31.594l-21.265 21.25a8.005 8.005 0 0 1-11.328-11.312l26.422-26.407a111.815 111.815 0 0 0-46.36-49.265 63.023 63.023 0 0 1-14.062 82.64 55.838 55.838 0 0 1-28.719 93.422l-1.422-34.28 12.672 8.624a3.967 3.967 0 0 0 2.25.688 3.98 3.98 0 0 0 3.437-6.032l-8.53-14.312 17.906-3.719a4.006 4.006 0 0 0 0-7.844l-17.907-3.718 8.531-14.313a3.98 3.98 0 0 0-3.437-6.031 4.726 4.726 0 0 0-2.25.672l-14.188 9.656L244 71.828a4.004 4.004 0 0 0-8 0l-4.625 110.813-12-8.157a4.003 4.003 0 0 0-5.688 5.36l8.532 14.312-17.906 3.719a3.997 3.997 0 0 0 0 7.828l17.906 3.735-8.532 14.296a4.725 4.725 0 0 0-.562 2.047 4.595 4.595 0 0 0 1.25 2.906 4.01 4.01 0 0 0 2.75 1.094 4.09 4.09 0 0 0 2.25-.687l10.36-7.047-1.36 32.719a55.864 55.864 0 0 1-28.719-93.453 63.011 63.011 0 0 1-14.047-82.657 111.932 111.932 0 0 0-46.375 49.266l26.422 26.422a8 8 0 0 1-11.312 11.312l-21.266-21.265c-2.984 10.093-5.078 20.562-5.062 31.625z"/></svg></span> <strong>Testing</strong><a class="headerlink" href="#testing" title="Permanent link">&para;</a></h1>
+<hr />
+<p>Many Laravel services provide functionality to help you easily and expressively write tests, 
+and this SOAP wrapper is no exception.</p>
+<hr />
+<p><img alt="alt text" src="https://image.slidesharecdn.com/agilelessonsfromstarwarsapil17-170125183657/95/agile-lessons-to-learn-from-star-wars-15-638.jpg?cb=1485369462" style="height:auto;width:100%" title="Testing" /></p>
+<hr />
+<h2 id="faking"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M398.5 373.6c95.9-122.1 17.2-233.1 17.2-233.1 45.4 85.8-41.4 170.5-41.4 170.5 105-171.5-60.5-271.5-60.5-271.5 96.9 72.7-10.1 190.7-10.1 190.7 85.8 158.4-68.6 230.1-68.6 230.1s-.4-16.9-2.2-85.7c4.3 4.5 34.5 36.2 34.5 36.2l-24.2-47.4 62.6-9.1-62.6-9.1 20.2-55.5-31.4 45.9c-2.2-87.7-7.8-305.1-7.9-306.9v-2.4 1-1 2.4c0 1-5.6 219-7.9 306.9l-31.4-45.9 20.2 55.5-62.6 9.1 62.6 9.1-24.2 47.4 34.5-36.2c-1.8 68.8-2.2 85.7-2.2 85.7s-154.4-71.7-68.6-230.1c0 0-107-118.1-10.1-190.7 0 0-165.5 99.9-60.5 271.5 0 0-86.8-84.8-41.4-170.5 0 0-78.7 111 17.2 233.1 0 0-26.2-16.1-49.4-77.7 0 0 16.9 183.3 222 185.7h4.1c205-2.4 222-185.7 222-185.7-23.6 61.5-49.9 77.7-49.9 77.7z"/></svg></span> <strong>Faking</strong><a class="headerlink" href="#faking" title="Permanent link">&para;</a></h2>
+<p>Include <code class="highlight"><span class="k">use</span> <span class="nx">CodeDredd\Soap\Facades\Soap</span></code> in your testing class.
+The <code>Soap</code> facade's <code>fake</code> method allows you to instruct the SOAP client to return stubbed / dummy responses 
+when requests are made.</p>
+<h3 id="fake"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M535.953 352c-42.64 94.172-137.64 160-247.985 160q-6.398 0-12.843-.297C171.155 506.938 81.265 442.234 40.015 352h39.922l-58.61-58.594a264.825 264.825 0 0 1-5.11-39.422 273.665 273.665 0 0 1 .5-29.984h47.22l-41.391-41.375A269.798 269.798 0 0 1 130.515 20.547a16.064 16.064 0 0 1 9.281-3 16.363 16.363 0 0 1 13.5 7.25 16.027 16.027 0 0 1 1.625 15.094 138.387 138.387 0 0 0-9.844 51.265c0 45.11 21.047 86.578 57.72 113.735a16.3 16.3 0 0 1 1.202 25.39c-26.547 23.985-41.172 56.5-41.172 91.578 0 60.032 42.954 110.282 99.891 121.922l2.5-65.265L238.062 397a8.34 8.34 0 0 1-10-.75 8.025 8.025 0 0 1-1.39-9.938l20.124-33.765-42.062-8.735a7.99 7.99 0 0 1 0-15.656l42.062-8.719-20.109-33.734a7.991 7.991 0 0 1 11.36-10.719l30.39 20.657L279.953 7.67a7.971 7.971 0 0 1 8-7.671H288a8.02 8.02 0 0 1 7.953 7.703l11.53 287.922 30.392-20.672a8.083 8.083 0 0 1 10 .813 7.999 7.999 0 0 1 1.39 9.906l-20.14 33.765 42.078 8.735a7.994 7.994 0 0 1 0 15.656l-42.078 8.719 20.109 33.734a7.978 7.978 0 0 1-1.328 9.922 8.257 8.257 0 0 1-10.031.797l-27.172-18.469 2.5 65.344c48.484-9.406 87.578-48.156 97.312-96.5a123.527 123.527 0 0 0-38.562-117.078 16.306 16.306 0 0 1 1.203-25.422c36.656-27.172 57.688-68.61 57.688-113.734a138.017 138.017 0 0 0-9.86-51.313 15.981 15.981 0 0 1 1.61-15.094 16.37 16.37 0 0 1 13.5-7.234 16.025 16.025 0 0 1 9.25 2.984A271.27 271.27 0 0 1 553.25 182.766L512 224h46.953c.36 5.766 1.047 11.453 1.047 17.266a270.092 270.092 0 0 1-5.125 51.859L495.985 352z"/></svg></span> <strong><em>fake</em></strong><a class="headerlink" href="#fake" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p>Intercepts request with possible given responses</p>
+</blockquote>
+<div class="admonition info">
+<ul>
+<li><strong><code>Method</code></strong> : <code class="highlight"><span class="k">function</span> <span class="nf">fake</span><span class="p">(</span><span class="nv">$callback</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span></code></li>
+<li><strong><code>Param</code></strong> : <code class="highlight"><span class="nx">callable</span><span class="o">|</span><span class="k">array</span> <span class="nv">$callback</span></code></li>
+<li><strong><code>Return</code></strong> : <code class="highlight"><span class="nx">\CodeDredd\Soap\SoapFactory</span></code></li>
+</ul>
+</div>
+<div class="admonition example">
+<p class="admonition-title">Examples with Soap::response</p>
+<div class="tabbed-set" data-tabs="1:4"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><label for="__tabbed_1_1">simple</label><div class="tabbed-content">
+<p>For returning empty <code>200</code> status code responses for every request, you may call the <code>fake</code> method with no arguments
+<div class="highlight"><pre><span></span><code><span class="nx">Soap</span><span class="o">::</span><span class="na">fake</span><span class="p">();</span>
+</code></pre></div></p>
+</div>
+<input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><label for="__tabbed_1_2">with arguments</label><div class="tabbed-content">
+<p>You may pass an array to the <code>fake</code> method. The array's keys should represent ACTION patterns that you wish to fake and their associated responses. The <code>*</code> character may be used as a wildcard character. You may use the <code>response</code> method to construct stub / fake responses for these endpoints
+<div class="highlight"><pre><span></span><code><span class="nx">Soap</span><span class="o">::</span><span class="na">fake</span><span class="p">([</span>
+    <span class="c1">// Stub a JSON response for all Get_ actions...</span>
+    <span class="s1">&#39;Get_*&#39;</span> <span class="o">=&gt;</span> <span class="nx">Soap</span><span class="o">::</span><span class="na">response</span><span class="p">([</span><span class="s1">&#39;foo&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;bar&#39;</span><span class="p">],</span> <span class="mi">200</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Headers&#39;</span><span class="p">]),</span>
+
+    <span class="c1">// Stub a string response for Submit_User action</span>
+    <span class="s1">&#39;Submit_User&#39;</span> <span class="o">=&gt;</span> <span class="nx">Soap</span><span class="o">::</span><span class="na">response</span><span class="p">(</span><span class="s1">&#39;Hello World&#39;</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Headers&#39;</span><span class="p">]),</span>
+<span class="p">]);</span>
+</code></pre></div></p>
+<div class="admonition warning">
+<p class="admonition-title">Difference between Laravel Http</p>
+<p>The difference between Laravels HTTP wrapper is the fact that actions which are not defined in fake are also faked with a default 200 response!</p>
+</div>
+</div>
+<input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><label for="__tabbed_1_3">overwrite default response</label><div class="tabbed-content">
+<div class="highlight"><pre><span></span><code><span class="nx">Soap</span><span class="o">::</span><span class="na">fake</span><span class="p">([</span>
+    <span class="c1">// Stub a JSON response for all Get_ actions...</span>
+    <span class="s1">&#39;Get_*&#39;</span> <span class="o">=&gt;</span> <span class="nx">Soap</span><span class="o">::</span><span class="na">response</span><span class="p">([</span><span class="s1">&#39;foo&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;bar&#39;</span><span class="p">],</span> <span class="mi">200</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Headers&#39;</span><span class="p">]),</span>
+
+    <span class="c1">// Stub a string response for all other actions</span>
+    <span class="s1">&#39;*&#39;</span> <span class="o">=&gt;</span> <span class="nx">Soap</span><span class="o">::</span><span class="na">response</span><span class="p">(</span><span class="s1">&#39;Hello World&#39;</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Headers&#39;</span><span class="p">]),</span>
+<span class="p">]);</span>
+</code></pre></div>
+</div>
+<input id="__tabbed_1_4" name="__tabbed_1" type="radio" /><label for="__tabbed_1_4">with callback</label><div class="tabbed-content">
+<p>If you require more complicated logic to determine what responses to return for certain endpoints, you may pass a callback to the <code>fake</code> method. This callback will receive an instance of <code>CodeDredd\Soap\Client\Request</code> and should return a response instance:
+<div class="highlight"><pre><span></span><code><span class="nx">Soap</span><span class="o">::</span><span class="na">fake</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nv">$request</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">Soap</span><span class="o">::</span><span class="na">response</span><span class="p">(</span><span class="s1">&#39;Hello World&#39;</span><span class="p">,</span> <span class="mi">200</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></p>
+</div>
+</div>
+</div>
+<div class="admonition example">
+<p class="admonition-title">Examples with Soap::sequence</p>
+<div class="tabbed-set" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><label for="__tabbed_2_1">simple</label><div class="tabbed-content">
+<p>Sometimes you may need to specify that a single ACTION should return a series of fake responses in a specific order. You may accomplish this by using the <code>Soap::sequence</code> method to build the responses:
+<div class="highlight"><pre><span></span><code><span class="nx">Soap</span><span class="o">::</span><span class="na">fake</span><span class="p">([</span>
+    <span class="c1">// Stub a series of responses for Get_* actions...</span>
+    <span class="s1">&#39;Get_*&#39;</span> <span class="o">=&gt;</span> <span class="nx">Soap</span><span class="o">::</span><span class="na">sequence</span><span class="p">()</span>
+        <span class="o">-&gt;</span><span class="na">push</span><span class="p">(</span><span class="s1">&#39;Hello World&#39;</span><span class="p">)</span>
+        <span class="o">-&gt;</span><span class="na">push</span><span class="p">([</span><span class="s1">&#39;foo&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;bar&#39;</span><span class="p">])</span>
+        <span class="o">-&gt;</span><span class="na">pushStatus</span><span class="p">(</span><span class="mi">404</span><span class="p">)</span>
+<span class="p">]);</span>
+</code></pre></div></p>
+<div class="admonition warning">
+<p class="admonition-title">Throws exception if empty</p>
+<p>When all of the responses in a response sequence have been consumed, any further requests will cause the response sequence to throw an exception!</p>
+</div>
+</div>
+<input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><label for="__tabbed_2_2">wtih whenEmpty</label><div class="tabbed-content">
+<p>If you would like to specify a default response that should be returned when a sequence is empty, you may use the <code>whenEmpty</code> method
+<div class="highlight"><pre><span></span><code><span class="nx">Soap</span><span class="o">::</span><span class="na">fake</span><span class="p">([</span>
+    <span class="c1">// Stub a series of responses for Get_* actions...</span>
+    <span class="s1">&#39;Get_*&#39;</span> <span class="o">=&gt;</span> <span class="nx">Soap</span><span class="o">::</span><span class="na">sequence</span><span class="p">()</span>
+        <span class="o">-&gt;</span><span class="na">push</span><span class="p">(</span><span class="s1">&#39;Hello World&#39;</span><span class="p">)</span>
+        <span class="o">-&gt;</span><span class="na">push</span><span class="p">([</span><span class="s1">&#39;foo&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;bar&#39;</span><span class="p">])</span>
+        <span class="o">-&gt;</span><span class="na">whenEmpty</span><span class="p">(</span><span class="nx">Soap</span><span class="o">::</span><span class="na">response</span><span class="p">())</span>
+<span class="p">]);</span>
+</code></pre></div></p>
+</div>
+</div>
+</div>
+<h3 id="response"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M535.953 352c-42.64 94.172-137.64 160-247.985 160q-6.398 0-12.843-.297C171.155 506.938 81.265 442.234 40.015 352h39.922l-58.61-58.594a264.825 264.825 0 0 1-5.11-39.422 273.665 273.665 0 0 1 .5-29.984h47.22l-41.391-41.375A269.798 269.798 0 0 1 130.515 20.547a16.064 16.064 0 0 1 9.281-3 16.363 16.363 0 0 1 13.5 7.25 16.027 16.027 0 0 1 1.625 15.094 138.387 138.387 0 0 0-9.844 51.265c0 45.11 21.047 86.578 57.72 113.735a16.3 16.3 0 0 1 1.202 25.39c-26.547 23.985-41.172 56.5-41.172 91.578 0 60.032 42.954 110.282 99.891 121.922l2.5-65.265L238.062 397a8.34 8.34 0 0 1-10-.75 8.025 8.025 0 0 1-1.39-9.938l20.124-33.765-42.062-8.735a7.99 7.99 0 0 1 0-15.656l42.062-8.719-20.109-33.734a7.991 7.991 0 0 1 11.36-10.719l30.39 20.657L279.953 7.67a7.971 7.971 0 0 1 8-7.671H288a8.02 8.02 0 0 1 7.953 7.703l11.53 287.922 30.392-20.672a8.083 8.083 0 0 1 10 .813 7.999 7.999 0 0 1 1.39 9.906l-20.14 33.765 42.078 8.735a7.994 7.994 0 0 1 0 15.656l-42.078 8.719 20.109 33.734a7.978 7.978 0 0 1-1.328 9.922 8.257 8.257 0 0 1-10.031.797l-27.172-18.469 2.5 65.344c48.484-9.406 87.578-48.156 97.312-96.5a123.527 123.527 0 0 0-38.562-117.078 16.306 16.306 0 0 1 1.203-25.422c36.656-27.172 57.688-68.61 57.688-113.734a138.017 138.017 0 0 0-9.86-51.313 15.981 15.981 0 0 1 1.61-15.094 16.37 16.37 0 0 1 13.5-7.234 16.025 16.025 0 0 1 9.25 2.984A271.27 271.27 0 0 1 553.25 182.766L512 224h46.953c.36 5.766 1.047 11.453 1.047 17.266a270.092 270.092 0 0 1-5.125 51.859L495.985 352z"/></svg></span> <strong><em>response</em></strong><a class="headerlink" href="#response" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p>Create a new response instance for use during stubbing (for fake responses)</p>
+</blockquote>
+<div class="admonition info">
+<ul>
+<li><strong><code>Method</code></strong> : <code class="highlight"><span class="k">static</span> <span class="k">function</span> <span class="nf">response</span><span class="p">(</span><span class="nv">$body</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nv">$status</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span> <span class="nv">$headers</span> <span class="o">=</span> <span class="p">[])</span></code></li>
+<li><strong><code>Param</code></strong> : <code class="highlight"><span class="k">array</span><span class="o">|</span><span class="nx">string</span><span class="o">|</span><span class="k">null</span> <span class="nv">$body</span></code></li>
+<li><strong><code>Param</code></strong> : <code class="highlight"><span class="nx">int</span> <span class="nv">$status</span></code></li>
+<li><strong><code>Param</code></strong> : <code class="highlight"><span class="k">array</span> <span class="nv">$headers</span></code></li>
+<li><strong><code>Return</code></strong> : <code class="highlight"><span class="nx">\GuzzleHttp\Promise\PromiseInterface</span></code></li>
+</ul>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">When <code>$body</code> is string</p>
+<p>One important notice. Because a SOAP API doesn't return a single string value every response with only a string in the body is wrapped in an array with key <code>response</code>.</p>
+<div class="codehilite"><pre><span></span><code>[
+    &#39;response&#39; =&gt; &#39;Hello World&#39;
+]
+</code></pre></div>
+
+</div>
+<h3 id="sequence"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M535.953 352c-42.64 94.172-137.64 160-247.985 160q-6.398 0-12.843-.297C171.155 506.938 81.265 442.234 40.015 352h39.922l-58.61-58.594a264.825 264.825 0 0 1-5.11-39.422 273.665 273.665 0 0 1 .5-29.984h47.22l-41.391-41.375A269.798 269.798 0 0 1 130.515 20.547a16.064 16.064 0 0 1 9.281-3 16.363 16.363 0 0 1 13.5 7.25 16.027 16.027 0 0 1 1.625 15.094 138.387 138.387 0 0 0-9.844 51.265c0 45.11 21.047 86.578 57.72 113.735a16.3 16.3 0 0 1 1.202 25.39c-26.547 23.985-41.172 56.5-41.172 91.578 0 60.032 42.954 110.282 99.891 121.922l2.5-65.265L238.062 397a8.34 8.34 0 0 1-10-.75 8.025 8.025 0 0 1-1.39-9.938l20.124-33.765-42.062-8.735a7.99 7.99 0 0 1 0-15.656l42.062-8.719-20.109-33.734a7.991 7.991 0 0 1 11.36-10.719l30.39 20.657L279.953 7.67a7.971 7.971 0 0 1 8-7.671H288a8.02 8.02 0 0 1 7.953 7.703l11.53 287.922 30.392-20.672a8.083 8.083 0 0 1 10 .813 7.999 7.999 0 0 1 1.39 9.906l-20.14 33.765 42.078 8.735a7.994 7.994 0 0 1 0 15.656l-42.078 8.719 20.109 33.734a7.978 7.978 0 0 1-1.328 9.922 8.257 8.257 0 0 1-10.031.797l-27.172-18.469 2.5 65.344c48.484-9.406 87.578-48.156 97.312-96.5a123.527 123.527 0 0 0-38.562-117.078 16.306 16.306 0 0 1 1.203-25.422c36.656-27.172 57.688-68.61 57.688-113.734a138.017 138.017 0 0 0-9.86-51.313 15.981 15.981 0 0 1 1.61-15.094 16.37 16.37 0 0 1 13.5-7.234 16.025 16.025 0 0 1 9.25 2.984A271.27 271.27 0 0 1 553.25 182.766L512 224h46.953c.36 5.766 1.047 11.453 1.047 17.266a270.092 270.092 0 0 1-5.125 51.859L495.985 352z"/></svg></span> <strong><em>sequence</em></strong><a class="headerlink" href="#sequence" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p>Get an invokable object that returns a sequence of responses in order for use during stubbing</p>
+</blockquote>
+<div class="admonition info">
+<ul>
+<li><strong><code>Method</code></strong> : <code class="highlight"><span class="k">function</span> <span class="nf">sequence</span><span class="p">(</span><span class="k">array</span> <span class="nv">$responses</span> <span class="o">=</span> <span class="p">[])</span></code></li>
+<li><strong><code>Return</code></strong> : <code class="highlight"><span class="nx">\CodeDredd\Soap\Client\ResponseSequence</span></code></li>
+</ul>
+</div>
+<h4 id="push"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M248 504C111.25 504 0 392.75 0 256S111.25 8 248 8s248 111.25 248 248-111.25 248-248 248zm0-479.47C120.37 24.53 16.53 128.37 16.53 256S120.37 487.47 248 487.47 479.47 383.63 479.47 256 375.63 24.53 248 24.53zm27.62 21.81v24.62a185.933 185.933 0 0 1 83.57 34.54l17.39-17.36c-28.75-22.06-63.3-36.89-100.96-41.8zm-55.37.07c-37.64 4.94-72.16 19.8-100.88 41.85l17.28 17.36h.08c24.07-17.84 52.55-30.06 83.52-34.67V46.41zm12.25 50.17v82.87c-10.04 2.03-19.42 5.94-27.67 11.42l-58.62-58.59-21.93 21.93 58.67 58.67c-5.47 8.23-9.45 17.59-11.47 27.62h-82.9v31h82.9c2.02 10.02 6.01 19.31 11.47 27.54l-58.67 58.69 21.93 21.93 58.62-58.62a77.873 77.873 0 0 0 27.67 11.47v82.9h31v-82.9c10.05-2.03 19.37-6.06 27.62-11.55l58.67 58.69 21.93-21.93-58.67-58.69c5.46-8.23 9.47-17.52 11.5-27.54h82.87v-31h-82.87c-2.02-10.02-6.03-19.38-11.5-27.62l58.67-58.67-21.93-21.93-58.67 58.67c-8.25-5.49-17.57-9.47-27.62-11.5V96.58h-31zm183.24 30.72l-17.36 17.36a186.337 186.337 0 0 1 34.67 83.67h24.62c-4.95-37.69-19.83-72.29-41.93-101.03zm-335.55.13c-22.06 28.72-36.91 63.26-41.85 100.91h24.65c4.6-30.96 16.76-59.45 34.59-83.52l-17.39-17.39zM38.34 283.67c4.92 37.64 19.75 72.18 41.8 100.9l17.36-17.39c-17.81-24.07-29.92-52.57-34.51-83.52H38.34zm394.7 0c-4.61 30.99-16.8 59.5-34.67 83.6l17.36 17.36c22.08-28.74 36.98-63.29 41.93-100.96h-24.62zM136.66 406.38l-17.36 17.36c28.73 22.09 63.3 36.98 100.96 41.93v-24.64c-30.99-4.63-59.53-16.79-83.6-34.65zm222.53.05c-24.09 17.84-52.58 30.08-83.57 34.67v24.57c37.67-4.92 72.21-19.79 100.96-41.85l-17.31-17.39h-.08z"/></svg></span> <strong><em>push</em></strong><a class="headerlink" href="#push" title="Permanent link">&para;</a></h4>
+<blockquote>
+<p>Push a response to the sequence.</p>
+</blockquote>
+<div class="admonition info">
+<ul>
+<li><strong><code>Method</code></strong> : <code class="highlight"><span class="k">function</span> <span class="nf">push</span><span class="p">(</span><span class="nv">$body</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="nx">int</span> <span class="nv">$status</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span> <span class="k">array</span> <span class="nv">$headers</span> <span class="o">=</span> <span class="p">[])</span></code></li>
+<li><strong><code>Return</code></strong> : <code class="highlight"><span class="nx">\CodeDredd\Soap\Client\ResponseSequence</span></code></li>
+</ul>
+</div>
+<h4 id="pushresponse"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M248 504C111.25 504 0 392.75 0 256S111.25 8 248 8s248 111.25 248 248-111.25 248-248 248zm0-479.47C120.37 24.53 16.53 128.37 16.53 256S120.37 487.47 248 487.47 479.47 383.63 479.47 256 375.63 24.53 248 24.53zm27.62 21.81v24.62a185.933 185.933 0 0 1 83.57 34.54l17.39-17.36c-28.75-22.06-63.3-36.89-100.96-41.8zm-55.37.07c-37.64 4.94-72.16 19.8-100.88 41.85l17.28 17.36h.08c24.07-17.84 52.55-30.06 83.52-34.67V46.41zm12.25 50.17v82.87c-10.04 2.03-19.42 5.94-27.67 11.42l-58.62-58.59-21.93 21.93 58.67 58.67c-5.47 8.23-9.45 17.59-11.47 27.62h-82.9v31h82.9c2.02 10.02 6.01 19.31 11.47 27.54l-58.67 58.69 21.93 21.93 58.62-58.62a77.873 77.873 0 0 0 27.67 11.47v82.9h31v-82.9c10.05-2.03 19.37-6.06 27.62-11.55l58.67 58.69 21.93-21.93-58.67-58.69c5.46-8.23 9.47-17.52 11.5-27.54h82.87v-31h-82.87c-2.02-10.02-6.03-19.38-11.5-27.62l58.67-58.67-21.93-21.93-58.67 58.67c-8.25-5.49-17.57-9.47-27.62-11.5V96.58h-31zm183.24 30.72l-17.36 17.36a186.337 186.337 0 0 1 34.67 83.67h24.62c-4.95-37.69-19.83-72.29-41.93-101.03zm-335.55.13c-22.06 28.72-36.91 63.26-41.85 100.91h24.65c4.6-30.96 16.76-59.45 34.59-83.52l-17.39-17.39zM38.34 283.67c4.92 37.64 19.75 72.18 41.8 100.9l17.36-17.39c-17.81-24.07-29.92-52.57-34.51-83.52H38.34zm394.7 0c-4.61 30.99-16.8 59.5-34.67 83.6l17.36 17.36c22.08-28.74 36.98-63.29 41.93-100.96h-24.62zM136.66 406.38l-17.36 17.36c28.73 22.09 63.3 36.98 100.96 41.93v-24.64c-30.99-4.63-59.53-16.79-83.6-34.65zm222.53.05c-24.09 17.84-52.58 30.08-83.57 34.67v24.57c37.67-4.92 72.21-19.79 100.96-41.85l-17.31-17.39h-.08z"/></svg></span> <strong><em>pushResponse</em></strong><a class="headerlink" href="#pushresponse" title="Permanent link">&para;</a></h4>
+<blockquote>
+<p>Push a response to the sequence.</p>
+</blockquote>
+<div class="admonition info">
+<ul>
+<li><strong><code>Method</code></strong> : <code class="highlight"><span class="k">function</span> <span class="nf">pushResponse</span><span class="p">(</span><span class="nv">$response</span><span class="p">)</span></code></li>
+<li><strong><code>Param</code></strong> : <code class="highlight"><span class="nx">\GuzzleHttp\Promise\PromiseInterface</span><span class="o">|</span><span class="nx">\Closure</span> <span class="nv">$response</span></code></li>
+<li><strong><code>Return</code></strong> : <code class="highlight"><span class="nx">\CodeDredd\Soap\Client\ResponseSequence</span></code></li>
+</ul>
+</div>
+<h4 id="pushstatus"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M248 504C111.25 504 0 392.75 0 256S111.25 8 248 8s248 111.25 248 248-111.25 248-248 248zm0-479.47C120.37 24.53 16.53 128.37 16.53 256S120.37 487.47 248 487.47 479.47 383.63 479.47 256 375.63 24.53 248 24.53zm27.62 21.81v24.62a185.933 185.933 0 0 1 83.57 34.54l17.39-17.36c-28.75-22.06-63.3-36.89-100.96-41.8zm-55.37.07c-37.64 4.94-72.16 19.8-100.88 41.85l17.28 17.36h.08c24.07-17.84 52.55-30.06 83.52-34.67V46.41zm12.25 50.17v82.87c-10.04 2.03-19.42 5.94-27.67 11.42l-58.62-58.59-21.93 21.93 58.67 58.67c-5.47 8.23-9.45 17.59-11.47 27.62h-82.9v31h82.9c2.02 10.02 6.01 19.31 11.47 27.54l-58.67 58.69 21.93 21.93 58.62-58.62a77.873 77.873 0 0 0 27.67 11.47v82.9h31v-82.9c10.05-2.03 19.37-6.06 27.62-11.55l58.67 58.69 21.93-21.93-58.67-58.69c5.46-8.23 9.47-17.52 11.5-27.54h82.87v-31h-82.87c-2.02-10.02-6.03-19.38-11.5-27.62l58.67-58.67-21.93-21.93-58.67 58.67c-8.25-5.49-17.57-9.47-27.62-11.5V96.58h-31zm183.24 30.72l-17.36 17.36a186.337 186.337 0 0 1 34.67 83.67h24.62c-4.95-37.69-19.83-72.29-41.93-101.03zm-335.55.13c-22.06 28.72-36.91 63.26-41.85 100.91h24.65c4.6-30.96 16.76-59.45 34.59-83.52l-17.39-17.39zM38.34 283.67c4.92 37.64 19.75 72.18 41.8 100.9l17.36-17.39c-17.81-24.07-29.92-52.57-34.51-83.52H38.34zm394.7 0c-4.61 30.99-16.8 59.5-34.67 83.6l17.36 17.36c22.08-28.74 36.98-63.29 41.93-100.96h-24.62zM136.66 406.38l-17.36 17.36c28.73 22.09 63.3 36.98 100.96 41.93v-24.64c-30.99-4.63-59.53-16.79-83.6-34.65zm222.53.05c-24.09 17.84-52.58 30.08-83.57 34.67v24.57c37.67-4.92 72.21-19.79 100.96-41.85l-17.31-17.39h-.08z"/></svg></span> <strong><em>pushStatus</em></strong><a class="headerlink" href="#pushstatus" title="Permanent link">&para;</a></h4>
+<blockquote>
+<p>Push a response with the given status code to the sequence.</p>
+</blockquote>
+<div class="admonition info">
+<ul>
+<li><strong><code>Method</code></strong> : <code class="highlight"><span class="k">function</span> <span class="nf">pushStatus</span><span class="p">(</span><span class="nx">string</span> <span class="nv">$filePath</span><span class="p">,</span> <span class="nx">int</span> <span class="nv">$status</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span> <span class="k">array</span> <span class="nv">$headers</span> <span class="o">=</span> <span class="p">[])</span></code></li>
+<li><strong><code>Return</code></strong> : <code class="highlight"><span class="nx">\CodeDredd\Soap\Client\ResponseSequence</span></code></li>
+</ul>
+</div>
+<h4 id="dontfailwhenempty"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M248 504C111.25 504 0 392.75 0 256S111.25 8 248 8s248 111.25 248 248-111.25 248-248 248zm0-479.47C120.37 24.53 16.53 128.37 16.53 256S120.37 487.47 248 487.47 479.47 383.63 479.47 256 375.63 24.53 248 24.53zm27.62 21.81v24.62a185.933 185.933 0 0 1 83.57 34.54l17.39-17.36c-28.75-22.06-63.3-36.89-100.96-41.8zm-55.37.07c-37.64 4.94-72.16 19.8-100.88 41.85l17.28 17.36h.08c24.07-17.84 52.55-30.06 83.52-34.67V46.41zm12.25 50.17v82.87c-10.04 2.03-19.42 5.94-27.67 11.42l-58.62-58.59-21.93 21.93 58.67 58.67c-5.47 8.23-9.45 17.59-11.47 27.62h-82.9v31h82.9c2.02 10.02 6.01 19.31 11.47 27.54l-58.67 58.69 21.93 21.93 58.62-58.62a77.873 77.873 0 0 0 27.67 11.47v82.9h31v-82.9c10.05-2.03 19.37-6.06 27.62-11.55l58.67 58.69 21.93-21.93-58.67-58.69c5.46-8.23 9.47-17.52 11.5-27.54h82.87v-31h-82.87c-2.02-10.02-6.03-19.38-11.5-27.62l58.67-58.67-21.93-21.93-58.67 58.67c-8.25-5.49-17.57-9.47-27.62-11.5V96.58h-31zm183.24 30.72l-17.36 17.36a186.337 186.337 0 0 1 34.67 83.67h24.62c-4.95-37.69-19.83-72.29-41.93-101.03zm-335.55.13c-22.06 28.72-36.91 63.26-41.85 100.91h24.65c4.6-30.96 16.76-59.45 34.59-83.52l-17.39-17.39zM38.34 283.67c4.92 37.64 19.75 72.18 41.8 100.9l17.36-17.39c-17.81-24.07-29.92-52.57-34.51-83.52H38.34zm394.7 0c-4.61 30.99-16.8 59.5-34.67 83.6l17.36 17.36c22.08-28.74 36.98-63.29 41.93-100.96h-24.62zM136.66 406.38l-17.36 17.36c28.73 22.09 63.3 36.98 100.96 41.93v-24.64c-30.99-4.63-59.53-16.79-83.6-34.65zm222.53.05c-24.09 17.84-52.58 30.08-83.57 34.67v24.57c37.67-4.92 72.21-19.79 100.96-41.85l-17.31-17.39h-.08z"/></svg></span> <strong><em>dontFailWhenEmpty</em></strong><a class="headerlink" href="#dontfailwhenempty" title="Permanent link">&para;</a></h4>
+<blockquote>
+<p>Make the sequence return a default response when it is empty.</p>
+</blockquote>
+<div class="admonition info">
+<ul>
+<li><strong><code>Method</code></strong> : <code class="highlight"><span class="k">function</span> <span class="nf">dontFailWhenEmpty</span><span class="p">()</span></code></li>
+<li><strong><code>Return</code></strong> : <code class="highlight"><span class="nx">\CodeDredd\Soap\Client\ResponseSequence</span></code></li>
+</ul>
+</div>
+<h4 id="whenempty"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M248 504C111.25 504 0 392.75 0 256S111.25 8 248 8s248 111.25 248 248-111.25 248-248 248zm0-479.47C120.37 24.53 16.53 128.37 16.53 256S120.37 487.47 248 487.47 479.47 383.63 479.47 256 375.63 24.53 248 24.53zm27.62 21.81v24.62a185.933 185.933 0 0 1 83.57 34.54l17.39-17.36c-28.75-22.06-63.3-36.89-100.96-41.8zm-55.37.07c-37.64 4.94-72.16 19.8-100.88 41.85l17.28 17.36h.08c24.07-17.84 52.55-30.06 83.52-34.67V46.41zm12.25 50.17v82.87c-10.04 2.03-19.42 5.94-27.67 11.42l-58.62-58.59-21.93 21.93 58.67 58.67c-5.47 8.23-9.45 17.59-11.47 27.62h-82.9v31h82.9c2.02 10.02 6.01 19.31 11.47 27.54l-58.67 58.69 21.93 21.93 58.62-58.62a77.873 77.873 0 0 0 27.67 11.47v82.9h31v-82.9c10.05-2.03 19.37-6.06 27.62-11.55l58.67 58.69 21.93-21.93-58.67-58.69c5.46-8.23 9.47-17.52 11.5-27.54h82.87v-31h-82.87c-2.02-10.02-6.03-19.38-11.5-27.62l58.67-58.67-21.93-21.93-58.67 58.67c-8.25-5.49-17.57-9.47-27.62-11.5V96.58h-31zm183.24 30.72l-17.36 17.36a186.337 186.337 0 0 1 34.67 83.67h24.62c-4.95-37.69-19.83-72.29-41.93-101.03zm-335.55.13c-22.06 28.72-36.91 63.26-41.85 100.91h24.65c4.6-30.96 16.76-59.45 34.59-83.52l-17.39-17.39zM38.34 283.67c4.92 37.64 19.75 72.18 41.8 100.9l17.36-17.39c-17.81-24.07-29.92-52.57-34.51-83.52H38.34zm394.7 0c-4.61 30.99-16.8 59.5-34.67 83.6l17.36 17.36c22.08-28.74 36.98-63.29 41.93-100.96h-24.62zM136.66 406.38l-17.36 17.36c28.73 22.09 63.3 36.98 100.96 41.93v-24.64c-30.99-4.63-59.53-16.79-83.6-34.65zm222.53.05c-24.09 17.84-52.58 30.08-83.57 34.67v24.57c37.67-4.92 72.21-19.79 100.96-41.85l-17.31-17.39h-.08z"/></svg></span> <strong><em>whenEmpty</em></strong><a class="headerlink" href="#whenempty" title="Permanent link">&para;</a></h4>
+<blockquote>
+<p>Make the sequence return a custom default response when it is empty.</p>
+</blockquote>
+<div class="admonition info">
+<ul>
+<li><strong><code>Method</code></strong> : <code class="highlight"><span class="k">function</span> <span class="nf">whenEmpty</span><span class="p">(</span><span class="nv">$response</span><span class="p">)</span></code></li>
+<li><strong><code>Param</code></strong> : <code class="highlight"><span class="nx">\GuzzleHttp\Promise\PromiseInterface</span><span class="o">|</span><span class="nx">\Closure</span> <span class="nv">$response</span></code></li>
+<li><strong><code>Return</code></strong> : <code class="highlight"><span class="nx">\CodeDredd\Soap\Client\ResponseSequence</span></code></li>
+</ul>
+</div>
+<h4 id="pushfile"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M248 504C111.25 504 0 392.75 0 256S111.25 8 248 8s248 111.25 248 248-111.25 248-248 248zm0-479.47C120.37 24.53 16.53 128.37 16.53 256S120.37 487.47 248 487.47 479.47 383.63 479.47 256 375.63 24.53 248 24.53zm27.62 21.81v24.62a185.933 185.933 0 0 1 83.57 34.54l17.39-17.36c-28.75-22.06-63.3-36.89-100.96-41.8zm-55.37.07c-37.64 4.94-72.16 19.8-100.88 41.85l17.28 17.36h.08c24.07-17.84 52.55-30.06 83.52-34.67V46.41zm12.25 50.17v82.87c-10.04 2.03-19.42 5.94-27.67 11.42l-58.62-58.59-21.93 21.93 58.67 58.67c-5.47 8.23-9.45 17.59-11.47 27.62h-82.9v31h82.9c2.02 10.02 6.01 19.31 11.47 27.54l-58.67 58.69 21.93 21.93 58.62-58.62a77.873 77.873 0 0 0 27.67 11.47v82.9h31v-82.9c10.05-2.03 19.37-6.06 27.62-11.55l58.67 58.69 21.93-21.93-58.67-58.69c5.46-8.23 9.47-17.52 11.5-27.54h82.87v-31h-82.87c-2.02-10.02-6.03-19.38-11.5-27.62l58.67-58.67-21.93-21.93-58.67 58.67c-8.25-5.49-17.57-9.47-27.62-11.5V96.58h-31zm183.24 30.72l-17.36 17.36a186.337 186.337 0 0 1 34.67 83.67h24.62c-4.95-37.69-19.83-72.29-41.93-101.03zm-335.55.13c-22.06 28.72-36.91 63.26-41.85 100.91h24.65c4.6-30.96 16.76-59.45 34.59-83.52l-17.39-17.39zM38.34 283.67c4.92 37.64 19.75 72.18 41.8 100.9l17.36-17.39c-17.81-24.07-29.92-52.57-34.51-83.52H38.34zm394.7 0c-4.61 30.99-16.8 59.5-34.67 83.6l17.36 17.36c22.08-28.74 36.98-63.29 41.93-100.96h-24.62zM136.66 406.38l-17.36 17.36c28.73 22.09 63.3 36.98 100.96 41.93v-24.64c-30.99-4.63-59.53-16.79-83.6-34.65zm222.53.05c-24.09 17.84-52.58 30.08-83.57 34.67v24.57c37.67-4.92 72.21-19.79 100.96-41.85l-17.31-17.39h-.08z"/></svg></span> <strong><em>pushFile</em></strong><a class="headerlink" href="#pushfile" title="Permanent link">&para;</a></h4>
+<blockquote>
+<p>Push response with the contents of a file as the body to the sequence.</p>
+</blockquote>
+<div class="admonition info">
+<ul>
+<li><strong><code>Method</code></strong> : <code class="highlight"><span class="k">function</span> <span class="nf">pushFile</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$status</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span> <span class="k">array</span> <span class="nv">$headers</span> <span class="o">=</span> <span class="p">[])</span></code></li>
+<li><strong><code>Return</code></strong> : <code class="highlight"><span class="nx">\CodeDredd\Soap\Client\ResponseSequence</span></code></li>
+</ul>
+</div>
+<h3 id="fakesequence"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M535.953 352c-42.64 94.172-137.64 160-247.985 160q-6.398 0-12.843-.297C171.155 506.938 81.265 442.234 40.015 352h39.922l-58.61-58.594a264.825 264.825 0 0 1-5.11-39.422 273.665 273.665 0 0 1 .5-29.984h47.22l-41.391-41.375A269.798 269.798 0 0 1 130.515 20.547a16.064 16.064 0 0 1 9.281-3 16.363 16.363 0 0 1 13.5 7.25 16.027 16.027 0 0 1 1.625 15.094 138.387 138.387 0 0 0-9.844 51.265c0 45.11 21.047 86.578 57.72 113.735a16.3 16.3 0 0 1 1.202 25.39c-26.547 23.985-41.172 56.5-41.172 91.578 0 60.032 42.954 110.282 99.891 121.922l2.5-65.265L238.062 397a8.34 8.34 0 0 1-10-.75 8.025 8.025 0 0 1-1.39-9.938l20.124-33.765-42.062-8.735a7.99 7.99 0 0 1 0-15.656l42.062-8.719-20.109-33.734a7.991 7.991 0 0 1 11.36-10.719l30.39 20.657L279.953 7.67a7.971 7.971 0 0 1 8-7.671H288a8.02 8.02 0 0 1 7.953 7.703l11.53 287.922 30.392-20.672a8.083 8.083 0 0 1 10 .813 7.999 7.999 0 0 1 1.39 9.906l-20.14 33.765 42.078 8.735a7.994 7.994 0 0 1 0 15.656l-42.078 8.719 20.109 33.734a7.978 7.978 0 0 1-1.328 9.922 8.257 8.257 0 0 1-10.031.797l-27.172-18.469 2.5 65.344c48.484-9.406 87.578-48.156 97.312-96.5a123.527 123.527 0 0 0-38.562-117.078 16.306 16.306 0 0 1 1.203-25.422c36.656-27.172 57.688-68.61 57.688-113.734a138.017 138.017 0 0 0-9.86-51.313 15.981 15.981 0 0 1 1.61-15.094 16.37 16.37 0 0 1 13.5-7.234 16.025 16.025 0 0 1 9.25 2.984A271.27 271.27 0 0 1 553.25 182.766L512 224h46.953c.36 5.766 1.047 11.453 1.047 17.266a270.092 270.092 0 0 1-5.125 51.859L495.985 352z"/></svg></span> <strong><em>fakeSequence</em></strong><a class="headerlink" href="#fakesequence" title="Permanent link">&para;</a></h3>
+<p>If you would like to fake a sequence of responses but do not need to specify a specific ACTION pattern that should be faked, you may use the <code>Soap::fakeSequence</code> method.</p>
+<blockquote>
+<p>Register a response sequence for the given URL pattern.</p>
+</blockquote>
+<div class="admonition info">
+<ul>
+<li><strong><code>Method</code></strong> : <code class="highlight"><span class="k">function</span> <span class="nf">fakeSequence</span><span class="p">(</span><span class="nx">string</span> <span class="nv">$url</span> <span class="o">=</span> <span class="s1">&#39;*&#39;</span><span class="p">)</span></code></li>
+<li><strong><code>Return</code></strong> : <code class="highlight"><span class="nx">\CodeDredd\Soap\Client\ResponseSequence</span></code></li>
+</ul>
+</div>
+<div class="admonition example">
+<p class="admonition-title">Example</p>
+<div class="highlight"><pre><span></span><code><span class="nx">Soap</span><span class="o">::</span><span class="na">fakeSequence</span><span class="p">()</span>
+    <span class="o">-&gt;</span><span class="na">push</span><span class="p">(</span><span class="s1">&#39;Hello World&#39;</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="na">whenEmpty</span><span class="p">(</span><span class="nx">Soap</span><span class="o">::</span><span class="na">response</span><span class="p">());</span>
+</code></pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p><code>fakeSequence</code> has the same methods as <a href="#response"><code>Soap::response</code></a>.
+So in most cases <code>fakeSequence</code> will be the better choice to fake response because its an easier and shorter
+way to define fake responses.</p>
+</div>
+<hr />
+<h2 id="asserts"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M398.5 373.6c95.9-122.1 17.2-233.1 17.2-233.1 45.4 85.8-41.4 170.5-41.4 170.5 105-171.5-60.5-271.5-60.5-271.5 96.9 72.7-10.1 190.7-10.1 190.7 85.8 158.4-68.6 230.1-68.6 230.1s-.4-16.9-2.2-85.7c4.3 4.5 34.5 36.2 34.5 36.2l-24.2-47.4 62.6-9.1-62.6-9.1 20.2-55.5-31.4 45.9c-2.2-87.7-7.8-305.1-7.9-306.9v-2.4 1-1 2.4c0 1-5.6 219-7.9 306.9l-31.4-45.9 20.2 55.5-62.6 9.1 62.6 9.1-24.2 47.4 34.5-36.2c-1.8 68.8-2.2 85.7-2.2 85.7s-154.4-71.7-68.6-230.1c0 0-107-118.1-10.1-190.7 0 0-165.5 99.9-60.5 271.5 0 0-86.8-84.8-41.4-170.5 0 0-78.7 111 17.2 233.1 0 0-26.2-16.1-49.4-77.7 0 0 16.9 183.3 222 185.7h4.1c205-2.4 222-185.7 222-185.7-23.6 61.5-49.9 77.7-49.9 77.7z"/></svg></span> <strong>Asserts</strong><a class="headerlink" href="#asserts" title="Permanent link">&para;</a></h2>
+<p>When faking responses, you may occasionally wish to inspect the requests the client receives in order to make sure your application is sending the correct data or headers.</p>
+<h3 id="assertsent"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M535.953 352c-42.64 94.172-137.64 160-247.985 160q-6.398 0-12.843-.297C171.155 506.938 81.265 442.234 40.015 352h39.922l-58.61-58.594a264.825 264.825 0 0 1-5.11-39.422 273.665 273.665 0 0 1 .5-29.984h47.22l-41.391-41.375A269.798 269.798 0 0 1 130.515 20.547a16.064 16.064 0 0 1 9.281-3 16.363 16.363 0 0 1 13.5 7.25 16.027 16.027 0 0 1 1.625 15.094 138.387 138.387 0 0 0-9.844 51.265c0 45.11 21.047 86.578 57.72 113.735a16.3 16.3 0 0 1 1.202 25.39c-26.547 23.985-41.172 56.5-41.172 91.578 0 60.032 42.954 110.282 99.891 121.922l2.5-65.265L238.062 397a8.34 8.34 0 0 1-10-.75 8.025 8.025 0 0 1-1.39-9.938l20.124-33.765-42.062-8.735a7.99 7.99 0 0 1 0-15.656l42.062-8.719-20.109-33.734a7.991 7.991 0 0 1 11.36-10.719l30.39 20.657L279.953 7.67a7.971 7.971 0 0 1 8-7.671H288a8.02 8.02 0 0 1 7.953 7.703l11.53 287.922 30.392-20.672a8.083 8.083 0 0 1 10 .813 7.999 7.999 0 0 1 1.39 9.906l-20.14 33.765 42.078 8.735a7.994 7.994 0 0 1 0 15.656l-42.078 8.719 20.109 33.734a7.978 7.978 0 0 1-1.328 9.922 8.257 8.257 0 0 1-10.031.797l-27.172-18.469 2.5 65.344c48.484-9.406 87.578-48.156 97.312-96.5a123.527 123.527 0 0 0-38.562-117.078 16.306 16.306 0 0 1 1.203-25.422c36.656-27.172 57.688-68.61 57.688-113.734a138.017 138.017 0 0 0-9.86-51.313 15.981 15.981 0 0 1 1.61-15.094 16.37 16.37 0 0 1 13.5-7.234 16.025 16.025 0 0 1 9.25 2.984A271.27 271.27 0 0 1 553.25 182.766L512 224h46.953c.36 5.766 1.047 11.453 1.047 17.266a270.092 270.092 0 0 1-5.125 51.859L495.985 352z"/></svg></span> <strong><em>assertSent</em></strong><a class="headerlink" href="#assertsent" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p>Assert that a request / response pair was recorded matching a given truth test.</p>
+</blockquote>
+<div class="admonition info">
+<ul>
+<li><strong><code>Method</code></strong> : <code class="highlight"><span class="k">function</span> <span class="nf">assertSent</span><span class="p">(</span><span class="nx">callable</span> <span class="nv">$callback</span><span class="p">)</span></code></li>
+<li><strong><code>Return</code></strong> : <code class="highlight"><span class="nx">void</span></code></li>
+</ul>
+</div>
+<div class="admonition example">
+<p class="admonition-title">Examples</p>
+<div class="tabbed-set" data-tabs="3:3"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><label for="__tabbed_3_1">simple</label><div class="tabbed-content">
+<div class="highlight"><pre><span></span><code><span class="nx">Soap</span><span class="o">::</span><span class="na">assertSent</span><span class="p">(</span><span class="k">function</span><span class="p">(</span><span class="nv">$request</span><span class="p">){</span>
+    <span class="k">return</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">action</span><span class="p">()</span> <span class="o">===</span> <span class="s1">&#39;YourAction&#39;</span>
+<span class="p">});</span>
+</code></pre></div>
+</div>
+<input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><label for="__tabbed_3_2">with arguments</label><div class="tabbed-content">
+<div class="highlight"><pre><span></span><code><span class="nx">Soap</span><span class="o">::</span><span class="na">assertSent</span><span class="p">(</span><span class="k">function</span><span class="p">(</span><span class="nv">$request</span><span class="p">){</span>
+    <span class="k">return</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">action</span><span class="p">()</span> <span class="o">===</span> <span class="s1">&#39;YourAction&#39;</span> <span class="o">&amp;&amp;</span>
+        <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">arguments</span><span class="p">()</span> <span class="o">===</span> <span class="p">[</span><span class="s1">&#39;argument&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;value&#39;</span><span class="p">]</span>
+<span class="p">});</span>
+</code></pre></div>
+</div>
+<input id="__tabbed_3_3" name="__tabbed_3" type="radio" /><label for="__tabbed_3_3">full</label><div class="tabbed-content">
+<div class="highlight"><pre><span></span><code><span class="nx">Soap</span><span class="o">::</span><span class="na">fake</span><span class="p">();</span>
+
+<span class="nx">Soap</span><span class="o">::</span><span class="na">baseWsdl</span><span class="p">(</span><span class="s1">&#39;https://test/v1?wsdl&#39;</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">call</span><span class="p">(</span><span class="s1">&#39;YourAction&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;argument&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;value&#39;</span><span class="p">]);</span>
+
+<span class="nx">Soap</span><span class="o">::</span><span class="na">assertSent</span><span class="p">(</span><span class="k">function</span><span class="p">(</span><span class="nv">$request</span><span class="p">){</span>
+    <span class="k">return</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">action</span><span class="p">()</span> <span class="o">===</span> <span class="s1">&#39;YourAction&#39;</span> <span class="o">&amp;&amp;</span>
+        <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">arguments</span><span class="p">()</span> <span class="o">===</span> <span class="p">[</span><span class="s1">&#39;argument&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;value&#39;</span><span class="p">]</span>
+<span class="p">});</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h3 id="assertnotsent"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M535.953 352c-42.64 94.172-137.64 160-247.985 160q-6.398 0-12.843-.297C171.155 506.938 81.265 442.234 40.015 352h39.922l-58.61-58.594a264.825 264.825 0 0 1-5.11-39.422 273.665 273.665 0 0 1 .5-29.984h47.22l-41.391-41.375A269.798 269.798 0 0 1 130.515 20.547a16.064 16.064 0 0 1 9.281-3 16.363 16.363 0 0 1 13.5 7.25 16.027 16.027 0 0 1 1.625 15.094 138.387 138.387 0 0 0-9.844 51.265c0 45.11 21.047 86.578 57.72 113.735a16.3 16.3 0 0 1 1.202 25.39c-26.547 23.985-41.172 56.5-41.172 91.578 0 60.032 42.954 110.282 99.891 121.922l2.5-65.265L238.062 397a8.34 8.34 0 0 1-10-.75 8.025 8.025 0 0 1-1.39-9.938l20.124-33.765-42.062-8.735a7.99 7.99 0 0 1 0-15.656l42.062-8.719-20.109-33.734a7.991 7.991 0 0 1 11.36-10.719l30.39 20.657L279.953 7.67a7.971 7.971 0 0 1 8-7.671H288a8.02 8.02 0 0 1 7.953 7.703l11.53 287.922 30.392-20.672a8.083 8.083 0 0 1 10 .813 7.999 7.999 0 0 1 1.39 9.906l-20.14 33.765 42.078 8.735a7.994 7.994 0 0 1 0 15.656l-42.078 8.719 20.109 33.734a7.978 7.978 0 0 1-1.328 9.922 8.257 8.257 0 0 1-10.031.797l-27.172-18.469 2.5 65.344c48.484-9.406 87.578-48.156 97.312-96.5a123.527 123.527 0 0 0-38.562-117.078 16.306 16.306 0 0 1 1.203-25.422c36.656-27.172 57.688-68.61 57.688-113.734a138.017 138.017 0 0 0-9.86-51.313 15.981 15.981 0 0 1 1.61-15.094 16.37 16.37 0 0 1 13.5-7.234 16.025 16.025 0 0 1 9.25 2.984A271.27 271.27 0 0 1 553.25 182.766L512 224h46.953c.36 5.766 1.047 11.453 1.047 17.266a270.092 270.092 0 0 1-5.125 51.859L495.985 352z"/></svg></span> <strong><em>assertNotSent</em></strong><a class="headerlink" href="#assertnotsent" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p>Assert that a request / response pair was not recorded matching a given truth test.</p>
+</blockquote>
+<div class="admonition info">
+<ul>
+<li><strong><code>Method</code></strong> : <code class="highlight"><span class="k">function</span> <span class="nf">assertNotSent</span><span class="p">(</span><span class="nx">callable</span> <span class="nv">$callback</span><span class="p">)</span></code></li>
+<li><strong><code>Return</code></strong> : <code class="highlight"><span class="nx">void</span></code></li>
+</ul>
+</div>
+<div class="admonition example">
+<p class="admonition-title">Examples</p>
+<div class="tabbed-set" data-tabs="4:3"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><label for="__tabbed_4_1">simple</label><div class="tabbed-content">
+<div class="highlight"><pre><span></span><code><span class="nx">Soap</span><span class="o">::</span><span class="na">assertNotSent</span><span class="p">(</span><span class="k">function</span><span class="p">(</span><span class="nv">$request</span><span class="p">){</span>
+    <span class="k">return</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">action</span><span class="p">()</span> <span class="o">===</span> <span class="s1">&#39;YourAction&#39;</span>
+<span class="p">});</span>
+</code></pre></div>
+</div>
+<input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><label for="__tabbed_4_2">with arguments</label><div class="tabbed-content">
+<div class="highlight"><pre><span></span><code><span class="nx">Soap</span><span class="o">::</span><span class="na">assertNotSent</span><span class="p">(</span><span class="k">function</span><span class="p">(</span><span class="nv">$request</span><span class="p">){</span>
+    <span class="k">return</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">action</span><span class="p">()</span> <span class="o">===</span> <span class="s1">&#39;YourAction&#39;</span> <span class="o">&amp;&amp;</span>
+        <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">arguments</span><span class="p">()</span> <span class="o">===</span> <span class="p">[</span><span class="s1">&#39;argument&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;value&#39;</span><span class="p">]</span>
+<span class="p">});</span>
+</code></pre></div>
+</div>
+<input id="__tabbed_4_3" name="__tabbed_4" type="radio" /><label for="__tabbed_4_3">full</label><div class="tabbed-content">
+<div class="highlight"><pre><span></span><code><span class="nx">Soap</span><span class="o">::</span><span class="na">fake</span><span class="p">();</span>
+
+<span class="nx">Soap</span><span class="o">::</span><span class="na">baseWsdl</span><span class="p">(</span><span class="s1">&#39;https://test/v1?wsdl&#39;</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">call</span><span class="p">(</span><span class="s1">&#39;YourAction&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;argument&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;value&#39;</span><span class="p">]);</span>
+
+<span class="nx">Soap</span><span class="o">::</span><span class="na">assertNotSent</span><span class="p">(</span><span class="k">function</span><span class="p">(</span><span class="nv">$request</span><span class="p">){</span>
+    <span class="k">return</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">action</span><span class="p">()</span> <span class="o">===</span> <span class="s1">&#39;YourAction&#39;</span> <span class="o">&amp;&amp;</span>
+        <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">arguments</span><span class="p">()</span> <span class="o">===</span> <span class="p">[</span><span class="s1">&#39;argument&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;NotThisValue&#39;</span><span class="p">]</span>
+<span class="p">});</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h3 id="assertactioncalled"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M535.953 352c-42.64 94.172-137.64 160-247.985 160q-6.398 0-12.843-.297C171.155 506.938 81.265 442.234 40.015 352h39.922l-58.61-58.594a264.825 264.825 0 0 1-5.11-39.422 273.665 273.665 0 0 1 .5-29.984h47.22l-41.391-41.375A269.798 269.798 0 0 1 130.515 20.547a16.064 16.064 0 0 1 9.281-3 16.363 16.363 0 0 1 13.5 7.25 16.027 16.027 0 0 1 1.625 15.094 138.387 138.387 0 0 0-9.844 51.265c0 45.11 21.047 86.578 57.72 113.735a16.3 16.3 0 0 1 1.202 25.39c-26.547 23.985-41.172 56.5-41.172 91.578 0 60.032 42.954 110.282 99.891 121.922l2.5-65.265L238.062 397a8.34 8.34 0 0 1-10-.75 8.025 8.025 0 0 1-1.39-9.938l20.124-33.765-42.062-8.735a7.99 7.99 0 0 1 0-15.656l42.062-8.719-20.109-33.734a7.991 7.991 0 0 1 11.36-10.719l30.39 20.657L279.953 7.67a7.971 7.971 0 0 1 8-7.671H288a8.02 8.02 0 0 1 7.953 7.703l11.53 287.922 30.392-20.672a8.083 8.083 0 0 1 10 .813 7.999 7.999 0 0 1 1.39 9.906l-20.14 33.765 42.078 8.735a7.994 7.994 0 0 1 0 15.656l-42.078 8.719 20.109 33.734a7.978 7.978 0 0 1-1.328 9.922 8.257 8.257 0 0 1-10.031.797l-27.172-18.469 2.5 65.344c48.484-9.406 87.578-48.156 97.312-96.5a123.527 123.527 0 0 0-38.562-117.078 16.306 16.306 0 0 1 1.203-25.422c36.656-27.172 57.688-68.61 57.688-113.734a138.017 138.017 0 0 0-9.86-51.313 15.981 15.981 0 0 1 1.61-15.094 16.37 16.37 0 0 1 13.5-7.234 16.025 16.025 0 0 1 9.25 2.984A271.27 271.27 0 0 1 553.25 182.766L512 224h46.953c.36 5.766 1.047 11.453 1.047 17.266a270.092 270.092 0 0 1-5.125 51.859L495.985 352z"/></svg></span> <strong><em>assertActionCalled</em></strong><a class="headerlink" href="#assertactioncalled" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p>Assert that a given soap action is called with optional arguments.</p>
+</blockquote>
+<div class="admonition info">
+<ul>
+<li><strong><code>Method</code></strong> : <code class="highlight"><span class="k">function</span> <span class="nf">assertActionCalled</span><span class="p">(</span><span class="nx">string</span> <span class="nv">$action</span><span class="p">)</span></code></li>
+<li><strong><code>Return</code></strong> : <code class="highlight"><span class="nx">void</span></code></li>
+</ul>
+</div>
+<div class="admonition example">
+<p class="admonition-title">Examples</p>
+<div class="tabbed-set" data-tabs="5:2"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><label for="__tabbed_5_1">simple</label><div class="tabbed-content">
+<div class="highlight"><pre><span></span><code><span class="nx">Soap</span><span class="o">::</span><span class="na">assertActionCalled</span><span class="p">(</span><span class="s1">&#39;YourAction&#39;</span><span class="p">);</span>
+</code></pre></div>
+</div>
+<input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><label for="__tabbed_5_2">full</label><div class="tabbed-content">
+<div class="highlight"><pre><span></span><code><span class="nx">Soap</span><span class="o">::</span><span class="na">fake</span><span class="p">();</span>
+
+<span class="nx">Soap</span><span class="o">::</span><span class="na">baseWsdl</span><span class="p">(</span><span class="s1">&#39;https://test/v1?wsdl&#39;</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">call</span><span class="p">(</span><span class="s1">&#39;YourAction&#39;</span><span class="p">);</span>
+
+<span class="nx">Soap</span><span class="o">::</span><span class="na">assertActionCalled</span><span class="p">(</span><span class="s1">&#39;YourAction&#39;</span><span class="p">);</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h3 id="assertnothingsent"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M535.953 352c-42.64 94.172-137.64 160-247.985 160q-6.398 0-12.843-.297C171.155 506.938 81.265 442.234 40.015 352h39.922l-58.61-58.594a264.825 264.825 0 0 1-5.11-39.422 273.665 273.665 0 0 1 .5-29.984h47.22l-41.391-41.375A269.798 269.798 0 0 1 130.515 20.547a16.064 16.064 0 0 1 9.281-3 16.363 16.363 0 0 1 13.5 7.25 16.027 16.027 0 0 1 1.625 15.094 138.387 138.387 0 0 0-9.844 51.265c0 45.11 21.047 86.578 57.72 113.735a16.3 16.3 0 0 1 1.202 25.39c-26.547 23.985-41.172 56.5-41.172 91.578 0 60.032 42.954 110.282 99.891 121.922l2.5-65.265L238.062 397a8.34 8.34 0 0 1-10-.75 8.025 8.025 0 0 1-1.39-9.938l20.124-33.765-42.062-8.735a7.99 7.99 0 0 1 0-15.656l42.062-8.719-20.109-33.734a7.991 7.991 0 0 1 11.36-10.719l30.39 20.657L279.953 7.67a7.971 7.971 0 0 1 8-7.671H288a8.02 8.02 0 0 1 7.953 7.703l11.53 287.922 30.392-20.672a8.083 8.083 0 0 1 10 .813 7.999 7.999 0 0 1 1.39 9.906l-20.14 33.765 42.078 8.735a7.994 7.994 0 0 1 0 15.656l-42.078 8.719 20.109 33.734a7.978 7.978 0 0 1-1.328 9.922 8.257 8.257 0 0 1-10.031.797l-27.172-18.469 2.5 65.344c48.484-9.406 87.578-48.156 97.312-96.5a123.527 123.527 0 0 0-38.562-117.078 16.306 16.306 0 0 1 1.203-25.422c36.656-27.172 57.688-68.61 57.688-113.734a138.017 138.017 0 0 0-9.86-51.313 15.981 15.981 0 0 1 1.61-15.094 16.37 16.37 0 0 1 13.5-7.234 16.025 16.025 0 0 1 9.25 2.984A271.27 271.27 0 0 1 553.25 182.766L512 224h46.953c.36 5.766 1.047 11.453 1.047 17.266a270.092 270.092 0 0 1-5.125 51.859L495.985 352z"/></svg></span> <strong><em>assertNothingSent</em></strong><a class="headerlink" href="#assertnothingsent" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p>Assert that no request / response pair was recorded.</p>
+</blockquote>
+<div class="admonition info">
+<ul>
+<li><strong><code>Method</code></strong> : <code class="highlight"><span class="k">function</span> <span class="nf">assertNothingSent</span><span class="p">()</span></code></li>
+<li><strong><code>Return</code></strong> : <code class="highlight"><span class="nx">void</span></code></li>
+</ul>
+</div>
+<div class="admonition example">
+<p class="admonition-title">Examples</p>
+<div class="tabbed-set" data-tabs="6:2"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio" /><label for="__tabbed_6_1">simple</label><div class="tabbed-content">
+<div class="highlight"><pre><span></span><code><span class="nx">Soap</span><span class="o">::</span><span class="na">assertNothingSent</span><span class="p">();</span>
+</code></pre></div>
+</div>
+<input id="__tabbed_6_2" name="__tabbed_6" type="radio" /><label for="__tabbed_6_2">full</label><div class="tabbed-content">
+<div class="highlight"><pre><span></span><code><span class="nx">Soap</span><span class="o">::</span><span class="na">fake</span><span class="p">();</span>
+
+<span class="nx">Soap</span><span class="o">::</span><span class="na">assertNothingSent</span><span class="p">();</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h3 id="assertsequencesareempty"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M535.953 352c-42.64 94.172-137.64 160-247.985 160q-6.398 0-12.843-.297C171.155 506.938 81.265 442.234 40.015 352h39.922l-58.61-58.594a264.825 264.825 0 0 1-5.11-39.422 273.665 273.665 0 0 1 .5-29.984h47.22l-41.391-41.375A269.798 269.798 0 0 1 130.515 20.547a16.064 16.064 0 0 1 9.281-3 16.363 16.363 0 0 1 13.5 7.25 16.027 16.027 0 0 1 1.625 15.094 138.387 138.387 0 0 0-9.844 51.265c0 45.11 21.047 86.578 57.72 113.735a16.3 16.3 0 0 1 1.202 25.39c-26.547 23.985-41.172 56.5-41.172 91.578 0 60.032 42.954 110.282 99.891 121.922l2.5-65.265L238.062 397a8.34 8.34 0 0 1-10-.75 8.025 8.025 0 0 1-1.39-9.938l20.124-33.765-42.062-8.735a7.99 7.99 0 0 1 0-15.656l42.062-8.719-20.109-33.734a7.991 7.991 0 0 1 11.36-10.719l30.39 20.657L279.953 7.67a7.971 7.971 0 0 1 8-7.671H288a8.02 8.02 0 0 1 7.953 7.703l11.53 287.922 30.392-20.672a8.083 8.083 0 0 1 10 .813 7.999 7.999 0 0 1 1.39 9.906l-20.14 33.765 42.078 8.735a7.994 7.994 0 0 1 0 15.656l-42.078 8.719 20.109 33.734a7.978 7.978 0 0 1-1.328 9.922 8.257 8.257 0 0 1-10.031.797l-27.172-18.469 2.5 65.344c48.484-9.406 87.578-48.156 97.312-96.5a123.527 123.527 0 0 0-38.562-117.078 16.306 16.306 0 0 1 1.203-25.422c36.656-27.172 57.688-68.61 57.688-113.734a138.017 138.017 0 0 0-9.86-51.313 15.981 15.981 0 0 1 1.61-15.094 16.37 16.37 0 0 1 13.5-7.234 16.025 16.025 0 0 1 9.25 2.984A271.27 271.27 0 0 1 553.25 182.766L512 224h46.953c.36 5.766 1.047 11.453 1.047 17.266a270.092 270.092 0 0 1-5.125 51.859L495.985 352z"/></svg></span> <strong><em>assertSequencesAreEmpty</em></strong><a class="headerlink" href="#assertsequencesareempty" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p>Assert that every created response sequence is empty.</p>
+</blockquote>
+<div class="admonition info">
+<ul>
+<li><strong><code>Method</code></strong> : <code class="highlight"><span class="k">function</span> <span class="nf">assertSequencesAreEmpty</span><span class="p">()</span></code></li>
+<li><strong><code>Return</code></strong> : <code class="highlight"><span class="nx">void</span></code></li>
+</ul>
+</div>
+<div class="admonition example">
+<p class="admonition-title">Examples</p>
+<div class="tabbed-set" data-tabs="7:2"><input checked="checked" id="__tabbed_7_1" name="__tabbed_7" type="radio" /><label for="__tabbed_7_1">simple</label><div class="tabbed-content">
+<div class="highlight"><pre><span></span><code><span class="nx">Soap</span><span class="o">::</span><span class="na">assertSequencesAreEmpty</span><span class="p">();</span>
+</code></pre></div>
+</div>
+<input id="__tabbed_7_2" name="__tabbed_7" type="radio" /><label for="__tabbed_7_2">full</label><div class="tabbed-content">
+<div class="highlight"><pre><span></span><code><span class="nx">Soap</span><span class="o">::</span><span class="na">fake</span><span class="p">();</span>
+
+<span class="nx">Soap</span><span class="o">::</span><span class="na">assertSequencesAreEmpty</span><span class="p">();</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h3 id="assertsentcount"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M535.953 352c-42.64 94.172-137.64 160-247.985 160q-6.398 0-12.843-.297C171.155 506.938 81.265 442.234 40.015 352h39.922l-58.61-58.594a264.825 264.825 0 0 1-5.11-39.422 273.665 273.665 0 0 1 .5-29.984h47.22l-41.391-41.375A269.798 269.798 0 0 1 130.515 20.547a16.064 16.064 0 0 1 9.281-3 16.363 16.363 0 0 1 13.5 7.25 16.027 16.027 0 0 1 1.625 15.094 138.387 138.387 0 0 0-9.844 51.265c0 45.11 21.047 86.578 57.72 113.735a16.3 16.3 0 0 1 1.202 25.39c-26.547 23.985-41.172 56.5-41.172 91.578 0 60.032 42.954 110.282 99.891 121.922l2.5-65.265L238.062 397a8.34 8.34 0 0 1-10-.75 8.025 8.025 0 0 1-1.39-9.938l20.124-33.765-42.062-8.735a7.99 7.99 0 0 1 0-15.656l42.062-8.719-20.109-33.734a7.991 7.991 0 0 1 11.36-10.719l30.39 20.657L279.953 7.67a7.971 7.971 0 0 1 8-7.671H288a8.02 8.02 0 0 1 7.953 7.703l11.53 287.922 30.392-20.672a8.083 8.083 0 0 1 10 .813 7.999 7.999 0 0 1 1.39 9.906l-20.14 33.765 42.078 8.735a7.994 7.994 0 0 1 0 15.656l-42.078 8.719 20.109 33.734a7.978 7.978 0 0 1-1.328 9.922 8.257 8.257 0 0 1-10.031.797l-27.172-18.469 2.5 65.344c48.484-9.406 87.578-48.156 97.312-96.5a123.527 123.527 0 0 0-38.562-117.078 16.306 16.306 0 0 1 1.203-25.422c36.656-27.172 57.688-68.61 57.688-113.734a138.017 138.017 0 0 0-9.86-51.313 15.981 15.981 0 0 1 1.61-15.094 16.37 16.37 0 0 1 13.5-7.234 16.025 16.025 0 0 1 9.25 2.984A271.27 271.27 0 0 1 553.25 182.766L512 224h46.953c.36 5.766 1.047 11.453 1.047 17.266a270.092 270.092 0 0 1-5.125 51.859L495.985 352z"/></svg></span> <strong><em>assertSentCount</em></strong><a class="headerlink" href="#assertsentcount" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p>Assert how many requests have been recorded.</p>
+</blockquote>
+<div class="admonition info">
+<ul>
+<li><strong><code>Method</code></strong> : <code class="highlight"><span class="k">function</span> <span class="nf">assertSentCount</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$count</span><span class="p">)</span></code></li>
+<li><strong><code>Return</code></strong> : <code class="highlight"><span class="nx">void</span></code></li>
+</ul>
+</div>
+<div class="admonition example">
+<p class="admonition-title">Examples</p>
+<div class="tabbed-set" data-tabs="8:2"><input checked="checked" id="__tabbed_8_1" name="__tabbed_8" type="radio" /><label for="__tabbed_8_1">simple</label><div class="tabbed-content">
+<div class="highlight"><pre><span></span><code><span class="nx">Soap</span><span class="o">::</span><span class="na">assertSentCount</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+</code></pre></div>
+</div>
+<input id="__tabbed_8_2" name="__tabbed_8" type="radio" /><label for="__tabbed_8_2">full</label><div class="tabbed-content">
+<div class="highlight"><pre><span></span><code><span class="nx">Soap</span><span class="o">::</span><span class="na">fake</span><span class="p">();</span>
+
+<span class="nv">$client</span> <span class="o">=</span> <span class="nx">Soap</span><span class="o">::</span><span class="na">buildClient</span><span class="p">(</span><span class="s1">&#39;laravlel_soap&#39;</span><span class="p">);</span>
+<span class="nv">$response</span> <span class="o">=</span> <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">call</span><span class="p">(</span><span class="s1">&#39;YourAction&#39;</span><span class="p">);</span>
+<span class="nv">$response2</span> <span class="o">=</span> <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">call</span><span class="p">(</span><span class="s1">&#39;YourOtherAction&#39;</span><span class="p">);</span>
+
+<span class="nx">Soap</span><span class="o">::</span><span class="na">assertSentCount</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        <a href="../commands/" class="md-footer__link md-footer__link--prev" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Commands
+            </div>
+          </div>
+        </a>
+      
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+          <div class="md-footer-copyright__highlight">
+            Copyright &copy; 2020 - 2020 Gregor Becker
+          </div>
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}, "search": "../assets/javascripts/workers/search.f5903571.min.js", "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.3981fc68.min.js"></script>
+      
+    
+  </body>
+</html>
