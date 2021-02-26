@@ -129,7 +129,7 @@ class SoapClient
      * @param  HandlerInterface|null  $handler
      * @return $this
      */
-    private function setHandler(HandlerInterface $handler = null)
+    protected function setHandler(HandlerInterface $handler = null)
     {
         $this->handler = $handler ?? HttPlugHandle::createForClient(
                 Client::createWithConfig($this->handlerOptions)
@@ -142,7 +142,7 @@ class SoapClient
     /**
      * Adds middleware to the handler.
      */
-    private function addMiddleware()
+    protected function addMiddleware()
     {
         foreach ($this->middlewares as $middleware) {
             $this->handler->addMiddleware($middleware);
@@ -194,12 +194,16 @@ class SoapClient
     }
 
     /**
-     * @param  string  $username
-     * @param  string  $password
+     * @param  string|array  $username
+     * @param  string|null  $password
      * @return $this
      */
-    public function withBasicAuth(string $username, string $password)
+    public function withBasicAuth($username, ?string $password = null)
     {
+        if (is_array($username)) {
+            ['username' => $username, 'password' => $password] = $username;
+        }
+
         $this->middlewares = array_merge_recursive($this->middlewares, [
             'basic' => new BasicAuthMiddleware($username, $password),
         ]);
@@ -395,7 +399,7 @@ class SoapClient
      * @param  array  $items
      * @return array
      */
-    private function arrayKeysToCamel(array $items)
+    protected function arrayKeysToCamel(array $items)
     {
         $changedItems = [];
         foreach ($items as $key => $value) {
@@ -501,7 +505,7 @@ class SoapClient
     /**
      * @return $this
      */
-    private function refreshEngine()
+    protected function refreshEngine()
     {
         $this->refreshExtSoapOptions();
         $this->engine = ExtSoapEngineFactory::fromOptionsWithHandler(
@@ -513,7 +517,7 @@ class SoapClient
         return $this;
     }
 
-    private function refreshExtSoapOptions()
+    protected function refreshExtSoapOptions()
     {
         if ($this->factory->isRecording()) {
             $this->baseWsdl($this->factory->getFakeWsdl());
