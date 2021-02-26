@@ -17,6 +17,13 @@ class SoapFactory
     }
 
     /**
+     * The client model class name.
+     *
+     * @var string
+     */
+    public static $clientModel = 'CodeDredd\Soap\SoapClient';
+
+    /**
      * The stub callables that will handle requests.
      *
      * @var \Illuminate\Support\Collection
@@ -74,7 +81,7 @@ class SoapFactory
             return (new SoapTesting($this))->{$method}(...$parameters);
         }
 
-        return tap(new SoapClient($this), function ($request) {
+        return tap($this->client(), function ($request) {
             $request->stub($this->stubCallbacks);
         })->{$method}(...$parameters);
     }
@@ -251,5 +258,25 @@ class SoapFactory
         return collect($this->recorded)->filter(function ($pair) use ($callback) {
             return $callback($pair[0], $pair[1]);
         });
+    }
+
+    /**
+     * Get a new client model instance.
+     *
+     * @return SoapClient
+     */
+    public function client()
+    {
+        return new static::$clientModel($this);
+    }
+
+    /**
+     * Set the client model class name.
+     *
+     * @param string $clientModel
+     */
+    public static function useClientModel(string $clientModel): void
+    {
+        static::$clientModel = $clientModel;
     }
 }
