@@ -30,3 +30,27 @@ Headers may be added to requests using the `withHeaders` method. This `withHeade
         'X-First' => 'foo',
         'X-Second' => 'bar'
     ])->baseWsdl('http://test.com'/v1?wsdl)->call('Get_Users');
+
+## Custom Client Class
+
+You are free to extend the SOAP client class used internally by this 
+package, by defining your own class and extending the package client:
+
+    use CodeDredd\Soap\SoapClient as BaseClient;
+    
+    class SoapClient extends BaseClient
+    {
+        // ...
+    }
+
+After defining your class, you may instruct the factory to use your 
+custom class. Typically, this will happen in the `boot` method of 
+your application's `App\Providers\AppServiceProvider` class:
+
+    use App\Soap\SoapClient;
+    use CodeDredd\Soap\SoapFactory;
+    
+    public function boot()
+    {
+        SoapFactory::useClientClass(SoapClient::class);
+    }

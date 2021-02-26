@@ -5,6 +5,9 @@ namespace CodeDredd\Soap\Tests\Unit;
 use CodeDredd\Soap\Client\Request;
 use CodeDredd\Soap\Client\Response;
 use CodeDredd\Soap\Facades\Soap;
+use CodeDredd\Soap\SoapClient;
+use CodeDredd\Soap\SoapFactory;
+use CodeDredd\Soap\Tests\Fixtures\CustomSoapClient;
 use CodeDredd\Soap\Tests\TestCase;
 
 class SoapClientTest extends TestCase
@@ -121,5 +124,15 @@ class SoapClientTest extends TestCase
             'with_fake_array' => ['Get_Users', $fakeResponse, $fakeResponse['Get_Users']],
             'with_fake_string' => ['Get_Post', $fakeResponse, ['response' => 'Test']],
         ];
+    }
+
+    public function testSoapClientClassMayBeCustomized(): void
+    {
+        Soap::fake();
+        $client = Soap::buildClient('laravel_soap');
+        $this->assertInstanceOf(SoapClient::class, $client);
+        SoapFactory::useClientClass(CustomSoapClient::class);
+        $client = Soap::buildClient('laravel_soap');
+        $this->assertInstanceOf(CustomSoapClient::class, $client);
     }
 }
