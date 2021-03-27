@@ -20,7 +20,7 @@ class AbusedClient extends PhproAbusedClient
     {
         $xml = SoapXml::fromString($request);
         $action = $action ?? $xml->getBody()->firstChild->localName;
-        $this->storedRequest = new SoapRequest($request, $location, $action, $version, $oneWay);
+        $this->storedRequest = new SoapRequest($request, $location, $action, $version, (int) $oneWay);
 
         return $this->storedResponse ? $this->storedResponse->getResponse() : '';
     }
