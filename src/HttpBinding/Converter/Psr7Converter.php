@@ -2,18 +2,16 @@
 
 namespace CodeDredd\Soap\HttpBinding\Converter;
 
+use CodeDredd\Soap\HttpBinding\Builder\Psr7RequestBuilder;
 use Http\Message\MessageFactory;
 use Http\Message\StreamFactory;
-use CodeDredd\Soap\HttpBinding\Builder\Psr7RequestBuilder;
 use Phpro\SoapClient\Soap\HttpBinding\SoapRequest;
 use Phpro\SoapClient\Soap\HttpBinding\SoapResponse;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class Psr7Converter
- *
- * @package CodeDredd\Soap\HttpBinding\Converter
+ * Class Psr7Converter.
  */
 class Psr7Converter
 {

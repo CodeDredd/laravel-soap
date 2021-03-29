@@ -105,7 +105,7 @@ class Psr7RequestBuilder
     }
 
     /**
-     * Mark as SOAP 1.1
+     * Mark as SOAP 1.1.
      */
     public function isSOAP11()
     {
@@ -113,13 +113,12 @@ class Psr7RequestBuilder
     }
 
     /**
-     * Mark as SOAP 1.2
+     * Mark as SOAP 1.2.
      */
     public function isSOAP12()
     {
         $this->soapVersion = self::SOAP12;
     }
-
 
     /**
      * @param string $soapAction
@@ -152,11 +151,11 @@ class Psr7RequestBuilder
      */
     private function validate()
     {
-        if (!$this->endpoint) {
+        if (! $this->endpoint) {
             throw new RequestException('There is no endpoint specified.');
         }
 
-        if (!$this->hasSoapMessage && $this->httpMethod === 'POST') {
+        if (! $this->hasSoapMessage && $this->httpMethod === 'POST') {
             throw new RequestException('There is no SOAP message specified.');
         }
 
@@ -172,7 +171,7 @@ class Psr7RequestBuilder
          * SOAP 1.2 only defines HTTP binding with POST and GET methods.
          * @link https://www.w3.org/TR/2007/REC-soap12-part0-20070427/#L10309
          */
-        if ($this->soapVersion === self::SOAP12 && !in_array($this->httpMethod, ['GET', 'POST'])) {
+        if ($this->soapVersion === self::SOAP12 && ! in_array($this->httpMethod, ['GET', 'POST'])) {
             throw new RequestException('Invalid SOAP method specified for SOAP 1.2. Expeted: GET or POST.');
         }
     }
@@ -214,11 +213,12 @@ class Psr7RequestBuilder
         $headers = [];
         if ($this->httpMethod !== 'POST') {
             $headers['Accept'] = 'application/soap+xml';
+
             return $headers;
         }
 
         $headers['Content-Length'] = (string) $this->soapMessage->getSize();
-        $headers['Content-Type'] = 'application/soap+xml; charset="utf-8"' . '; action="' . $this->soapAction . '"';
+        $headers['Content-Type'] = 'application/soap+xml; charset="utf-8"'.'; action="'.$this->soapAction.'"';
 
         return $headers;
     }
