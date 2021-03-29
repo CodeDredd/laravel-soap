@@ -8,8 +8,8 @@ use CodeDredd\Soap\Driver\ExtSoap\ExtSoapEngineFactory;
 use CodeDredd\Soap\Exceptions\NotFoundConfigurationException;
 use CodeDredd\Soap\Exceptions\SoapException;
 use CodeDredd\Soap\Middleware\WsseMiddleware;
+use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
-use Http\Adapter\Guzzle7\Client;
 use Http\Client\Exception\HttpException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Support\Str;
@@ -132,7 +132,7 @@ class SoapClient
     protected function setHandler(HandlerInterface $handler = null)
     {
         $this->handler = $handler ?? HttPlugHandle::createForClient(
-                Client::createWithConfig($this->handlerOptions)
+                new Client($this->handlerOptions)
             );
         $this->addMiddleware();
 
