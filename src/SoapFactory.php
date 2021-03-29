@@ -3,9 +3,8 @@
 namespace CodeDredd\Soap;
 
 use Closure;
-use CodeDredd\Soap\Client\Request;
 use CodeDredd\Soap\Client\ResponseSequence;
-use function GuzzleHttp\Promise\promise_for;
+use GuzzleHttp\Promise\Create;
 use GuzzleHttp\Psr7\Response as Psr7Response;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
@@ -216,7 +215,7 @@ class SoapFactory
             ]);
         }
 
-        return promise_for(new Psr7Response($status, $headers, $body));
+        return Create::promiseFor(new Psr7Response($status, $headers, $body));
     }
 
     /**

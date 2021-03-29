@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static \CodeDredd\Soap\SoapClient stub(callable $callback)
  * @method static \CodeDredd\Soap\SoapClient buildClient(string $setup = '')
  * @method static \CodeDredd\Soap\SoapClient byConfig(string $setup = '')
- * @method static \CodeDredd\Soap\SoapClient options(array $options)
+ * @method static \CodeDredd\Soap\SoapClient withOptions(array $options)
  * @method static \CodeDredd\Soap\SoapClient handlerOptions(array $options)
  * @method static \CodeDredd\Soap\SoapClient withWsse(array $config)
  * @method static \CodeDredd\Soap\SoapClient withWsa()
