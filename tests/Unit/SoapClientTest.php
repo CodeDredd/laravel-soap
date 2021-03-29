@@ -102,7 +102,7 @@ class SoapClientTest extends TestCase
         self::assertEquals($exspected, $response->json());
     }
 
-    public function soapActionProvider()
+    public function soapActionProvider(): array
     {
         $fakeResponse = [
             'Get_Users' => [
@@ -123,6 +123,35 @@ class SoapClientTest extends TestCase
             'with_fake_array_wrong_method' => ['Get_User', $fakeResponse, null],
             'with_fake_array' => ['Get_Users', $fakeResponse, $fakeResponse['Get_Users']],
             'with_fake_string' => ['Get_Post', $fakeResponse, ['response' => 'Test']],
+        ];
+    }
+
+    /**
+     * @dataProvider soapHeaderProvider
+     * @param $header
+     * @param $exspected
+     */
+    public function testSoapWithDifferentHeaders($header, $exspected): void
+    {
+        Soap::fake();
+        $client = Soap::withHeaders($header)->baseWsdl('https://laravel-soap.wsdl');
+        $response = $client->call('Get_User');
+        $lastRequestInfo = $client->getEngine()->collectLastRequestInfo();
+
+        self::assertTrue($response->ok());
+        self::assertStringContainsString($exspected, $lastRequestInfo->getLastRequestHeaders());
+        Soap::assertActionCalled('Get_User');
+    }
+
+    public function soapHeaderProvider(): array
+    {
+        $header = [
+            'Content-Type' => 'application/soap+xml; charset="utf-8"',
+        ];
+
+        return [
+            'without_header' => [[], 'text/xml; charset="utf-8"'],
+            'with_header' => [$header, $header['Content-Type']],
         ];
     }
 
