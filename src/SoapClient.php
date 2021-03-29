@@ -20,7 +20,7 @@ use Phpro\SoapClient\Middleware\WsaMiddleware;
 use Phpro\SoapClient\Soap\Driver\ExtSoap\ExtSoapOptions;
 use Phpro\SoapClient\Soap\Engine\EngineInterface;
 use Phpro\SoapClient\Soap\Handler\HandlerInterface;
-use Phpro\SoapClient\Soap\Handler\HttPlugHandle;
+use CodeDredd\Soap\Handler\HttPlugHandle;
 use Phpro\SoapClient\Type\ResultInterface;
 use Phpro\SoapClient\Type\ResultProviderInterface;
 use Phpro\SoapClient\Util\XmlFormatter;
@@ -132,7 +132,8 @@ class SoapClient
     protected function setHandler(HandlerInterface $handler = null)
     {
         $this->handler = $handler ?? HttPlugHandle::createForClient(
-                new Client($this->handlerOptions)
+                new Client($this->handlerOptions),
+                $this->handlerOptions['headers'] ?? []
             );
         $this->addMiddleware();
 
