@@ -2,6 +2,7 @@
 
 namespace CodeDredd\Soap\Handler;
 
+use CodeDredd\Soap\HttpBinding\Converter\Psr7Converter;
 use Http\Client\Common\PluginClient;
 use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\MessageFactoryDiscovery;
@@ -11,7 +12,6 @@ use Phpro\SoapClient\Middleware\MiddlewareInterface;
 use Phpro\SoapClient\Middleware\MiddlewareSupportingInterface;
 use Phpro\SoapClient\Soap\Handler\HandlerInterface;
 use Phpro\SoapClient\Soap\Handler\LastRequestInfoCollectorInterface;
-use CodeDredd\Soap\HttpBinding\Converter\Psr7Converter;
 use Phpro\SoapClient\Soap\HttpBinding\LastRequestInfo;
 use Phpro\SoapClient\Soap\HttpBinding\SoapRequest;
 use Phpro\SoapClient\Soap\HttpBinding\SoapResponse;
