@@ -56,7 +56,7 @@ class CisDhlMiddleware extends Middleware
 
         $envelope->insertBefore($header, $envelope->firstChild);
 
-        if (!empty($this->user) && !empty($this->signature)) {
+        if (! empty($this->user) && ! empty($this->signature)) {
             $cisUser = $domDoc->createElementNS(self::CIS_NS, 'cis:user', $this->user);
             $cisSig = $domDoc->createElementNS(self::CIS_NS, 'cis:signature', $this->signature);
             $cisAuth->appendChild($cisUser);
