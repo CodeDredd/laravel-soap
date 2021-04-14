@@ -8,6 +8,7 @@ use CodeDredd\Soap\Driver\ExtSoap\ExtSoapEngineFactory;
 use CodeDredd\Soap\Exceptions\NotFoundConfigurationException;
 use CodeDredd\Soap\Exceptions\SoapException;
 use CodeDredd\Soap\Handler\HttPlugHandle;
+use CodeDredd\Soap\Middleware\CisDhlMiddleware;
 use CodeDredd\Soap\Middleware\WsseMiddleware;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
@@ -207,6 +208,24 @@ class SoapClient
 
         $this->middlewares = array_merge_recursive($this->middlewares, [
             'basic' => new BasicAuthMiddleware($username, $password),
+        ]);
+
+        return $this;
+    }
+
+    /**
+     * @param  string|array  $user
+     * @param  string|null  $signature
+     * @return $this
+     */
+    public function withCisDHLAuth($user, ?string $signature = null)
+    {
+        if (is_array($user)) {
+            ['username' => $user, 'password' => $signature] = $user;
+        }
+
+        $this->middlewares = array_merge_recursive($this->middlewares, [
+            'dhl' => new CisDhlMiddleware($user, $signature),
         ]);
 
         return $this;
