@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static \CodeDredd\Soap\SoapClient withWsa()
  * @method static \CodeDredd\Soap\SoapClient withRemoveEmptyNodes()
  * @method static \CodeDredd\Soap\SoapClient withBasicAuth(string $username, string $password)
+ * @method static \CodeDredd\Soap\SoapClient withCisDHLAuth($user, ?string $signature = null)
  * @method \CodeDredd\Soap\Client\Response call(string $method, array $arguments = [])
  * @method static \GuzzleHttp\Promise\PromiseInterface response($body = null, $status = 200, array $headers = [])
  * @method static \CodeDredd\Soap\Client\ResponseSequence sequence(array $responses = [])
