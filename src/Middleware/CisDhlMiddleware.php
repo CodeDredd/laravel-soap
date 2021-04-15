@@ -52,7 +52,7 @@ class CisDhlMiddleware extends Middleware
         $domDoc->documentElement->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:cis', self::CIS_NS);
 
         $header = $domDoc->createElementNS('http://schemas.xmlsoap.org/soap/envelope/', 'SOAP-ENV:Header');
-        $cisAuth = $domDoc->createElementNS(self::CIS_NS, 'cis:Authentication');
+        $cisAuth = $domDoc->createElementNS(self::CIS_NS, 'cis:Authentification');
 
         $envelope->insertBefore($header, $envelope->firstChild);
 
