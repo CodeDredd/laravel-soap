@@ -15,6 +15,6 @@ class CisDhlMiddlewareTest extends TestCase
         $lastRequest = $client->getEngine()->collectLastRequestInfo()->getLastRequest();
 
         self::assertTrue($response->ok());
-        self::assertStringContainsString('<cis:Authentication>', $lastRequest);
+        self::assertStringContainsString('<cis:Authentification>', $lastRequest);
     }
 }
