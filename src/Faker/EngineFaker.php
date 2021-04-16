@@ -65,7 +65,7 @@ class EngineFaker implements EngineInterface
     public function request(string $method, array $arguments)
     {
         $options = $this->options->getOptions();
-        $request = new SoapRequest(XMLSerializer::arrayToSoapXml($arguments), $this->options->getWsdl(), $method, $options['soap_version']);
+        $request = new SoapRequest(XMLSerializer::arrayToSoapXml($arguments), $this->options->getWsdl(), $method, $options['soap_version'] ?? SOAP_1_1);
         $response = $this->handler->request($request);
 
         return json_decode($response->getResponse());

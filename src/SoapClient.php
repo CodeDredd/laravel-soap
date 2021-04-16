@@ -327,7 +327,7 @@ class SoapClient
             return $this->macroCall($method, $parameters);
         }
 
-        return $this->call($method, $parameters[0]);
+        return $this->call($method, $parameters[0] ?? $parameters);
     }
 
     /**

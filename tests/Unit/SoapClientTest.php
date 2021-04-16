@@ -150,6 +150,11 @@ class SoapClientTest extends TestCase
             'Fahrenheit' => 75,
         ]);
         self::assertArrayHasKey('FahrenheitToCelsiusResult', $result->json());
+
+        $result = $client->FahrenheitToCelsius([
+            'Fahrenheit' => 75,
+        ]);
+        self::assertArrayHasKey('FahrenheitToCelsiusResult', $result->json());
     }
 
     /**
