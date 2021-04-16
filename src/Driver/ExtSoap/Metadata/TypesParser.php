@@ -30,7 +30,7 @@ class TypesParser
         foreach ($soapTypes as $soapType) {
             $properties = [];
             $lines = explode("\n", $soapType);
-            if (!preg_match('/struct (?P<typeName>.*) {/', $lines[0], $matches)) {
+            if (! preg_match('/struct (?P<typeName>.*) {/', $lines[0], $matches)) {
                 continue;
             }
             $xsdType = XsdType::create($matches['typeName']);

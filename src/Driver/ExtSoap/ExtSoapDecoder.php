@@ -34,6 +34,7 @@ class ExtSoapDecoder implements DecoderInterface
         } finally {
             $this->client->cleanUpTemporaryState();
         }
+
         return $decoded;
     }
 }

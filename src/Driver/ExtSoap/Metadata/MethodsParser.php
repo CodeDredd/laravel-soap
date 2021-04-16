@@ -36,6 +36,7 @@ class MethodsParser
     private function parseMethodFromString(string $methodString): Method
     {
         $methodString = $this->transformListResponseToArray($methodString);
+
         return new Method(
             $this->parseName($methodString),
             $this->parseParameters($methodString),
@@ -54,7 +55,7 @@ class MethodsParser
     private function parseParameters(string $methodString): array
     {
         preg_match('/\((.*)\)/', $methodString, $properties);
-        if (!$properties[1]) {
+        if (! $properties[1]) {
             return [];
         }
 
@@ -62,7 +63,7 @@ class MethodsParser
 
         return array_map(
             function (string $parameter): Parameter {
-                list($type, $name) = explode(' ', trim($parameter));
+                [$type, $name] = explode(' ', trim($parameter));
 
                 return new Parameter(
                     ltrim($name, '$'),
