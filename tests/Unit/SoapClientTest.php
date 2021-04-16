@@ -137,9 +137,6 @@ class SoapClientTest extends TestCase
         self::assertStringContainsString('application/soap+xml; charset="utf-8', $lastRequestInfo->getLastRequestHeaders());
     }
 
-    /**
-     *
-     */
     public function testRealSoapCall(): void
     {
         $this->markTestSkipped('Real Soap Call Testing. Comment the line out for testing');
@@ -147,10 +144,10 @@ class SoapClientTest extends TestCase
         $client = Soap::baseWsdl('https://www.w3schools.com/xml/tempconvert.asmx?wsdl')
                       ->withOptions([
                           'soap_version' => SOAP_1_2,
-                          'location' => 'https://www.w3schools.com/xml/tempconvert.asmx?wsdl'
+                          'location' => 'https://www.w3schools.com/xml/tempconvert.asmx?wsdl',
                       ]);
         $result = $client->call('FahrenheitToCelsius', [
-            'Fahrenheit' => 75
+            'Fahrenheit' => 75,
         ]);
         self::assertArrayHasKey('FahrenheitToCelsiusResult', $result->json());
     }

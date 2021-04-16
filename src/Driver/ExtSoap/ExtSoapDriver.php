@@ -40,7 +40,6 @@ class ExtSoapDriver implements DriverInterface
         DecoderInterface $decoder,
         MetadataInterface $metadata
     ) {
-
         $this->client = $client;
         $this->encoder = $encoder;
         $this->decoder = $decoder;

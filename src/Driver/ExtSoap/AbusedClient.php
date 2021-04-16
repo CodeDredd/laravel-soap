@@ -62,7 +62,7 @@ class AbusedClient extends \SoapClient
 
     public function collectRequest(): SoapRequest
     {
-        if (!$this->storedRequest) {
+        if (! $this->storedRequest) {
             throw new \RuntimeException('No request has been registered yet.');
         }
 
@@ -80,12 +80,12 @@ class AbusedClient extends \SoapClient
         $this->storedResponse = null;
     }
 
-    public function __getLastRequest() : string
+    public function __getLastRequest(): string
     {
         return $this->__last_request;
     }
 
-    public function __getLastResponse() : string
+    public function __getLastResponse(): string
     {
         return $this->__last_response;
     }
