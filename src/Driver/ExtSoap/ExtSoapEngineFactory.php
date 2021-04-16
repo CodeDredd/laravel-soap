@@ -18,6 +18,6 @@ class ExtSoapEngineFactory
     ) {
         $driver = ExtSoapDriver::createFromOptions($options);
 
-        return $withMocking ? new EngineFaker($driver, $handler, $options->getWsdl()) : new Engine($driver, $handler);
+        return $withMocking ? new EngineFaker($driver, $handler, $options) : new Engine($driver, $handler);
     }
 }
