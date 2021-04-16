@@ -6,6 +6,7 @@ use ArrayAccess;
 use CodeDredd\Soap\Exceptions\RequestException;
 use CodeDredd\Soap\Xml\SoapXml;
 use GuzzleHttp\Psr7\Response as Psr7Response;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
 use LogicException;
@@ -65,17 +66,6 @@ class Response implements ResultInterface, ArrayAccess
     }
 
     /**
-     * Get the full SOAP enveloppe response.
-     *
-     * @deprecated removed in v2 and replaced by toPsrResponse
-     * @return string
-     */
-    public function getResponse(): string
-    {
-        return $this->response;
-    }
-
-    /**
      * Get the underlying PSR response for the response.
      *
      * @return \Psr\Http\Message\ResponseInterface
@@ -93,6 +83,17 @@ class Response implements ResultInterface, ArrayAccess
     public function object()
     {
         return json_decode($this->body(), false);
+    }
+
+    /**
+     * Get the JSON decoded body of the response as a collection.
+     *
+     * @param  string|null  $key
+     * @return \Illuminate\Support\Collection
+     */
+    public function collect($key = null)
+    {
+        return Collection::make($this->json($key));
     }
 
     /**
@@ -167,14 +168,21 @@ class Response implements ResultInterface, ArrayAccess
     /**
      * Throw an exception if a server or client error occurred.
      *
+     * @param  \Closure|null  $callback
      * @return $this
      *
      * @throws \CodeDredd\Soap\Exceptions\RequestException
      */
     public function throw()
     {
+        $callback = func_get_args()[0] ?? null;
+
         if ($this->failed()) {
-            throw new RequestException($this);
+            throw tap(new RequestException($this), function ($exception) use ($callback) {
+                if ($callback && is_callable($callback)) {
+                    $callback($this, $exception);
+                }
+            });
         }
 
         return $this;
@@ -198,6 +206,21 @@ class Response implements ResultInterface, ArrayAccess
     public function clientError()
     {
         return $this->status() >= 400 && $this->status() < 500;
+    }
+
+    /**
+     * Execute the given callback if there was a server or client error.
+     *
+     * @param  \Closure|callable $callback
+     * @return \CodeDredd\Soap\Client\Response
+     */
+    public function onError(callable $callback)
+    {
+        if ($this->failed()) {
+            $callback($this);
+        }
+
+        return $this;
     }
 
     /**

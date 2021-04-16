@@ -347,3 +347,11 @@ When faking responses, you may occasionally wish to inspect the requests the cli
         
         Soap::assertSentCount(2);
         ```
+
+### :fontawesome-solid-jedi: ***assertSentInOrder***
+
+> Assert that the given request was sent in the given order.
+
+!!! info ""
+- **`Method`** : `#!php-inline function assertSentInOrder($callbacks)`
+- **`Return`** : `#!php-inline void`
