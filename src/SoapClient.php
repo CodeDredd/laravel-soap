@@ -327,7 +327,7 @@ class SoapClient
             return $this->macroCall($method, $parameters);
         }
 
-        return $this->call($method, $parameters);
+        return $this->call($method, $parameters[0] ?? $parameters);
     }
 
     /**
@@ -347,6 +347,7 @@ class SoapClient
                 }
                 $arguments = $arguments->validated();
             }
+            $arguments = [$arguments];
             $result = $this->engine->request($method, $arguments);
             if ($result instanceof ResultProviderInterface) {
                 $result = Response::fromSoapResponse($result->getResult());

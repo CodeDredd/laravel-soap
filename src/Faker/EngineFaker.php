@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace CodeDredd\Soap\Faker;
 
 use CodeDredd\Soap\Xml\XMLSerializer;
+use Phpro\SoapClient\Soap\Driver\ExtSoap\ExtSoapOptions;
 use Phpro\SoapClient\Soap\Engine\DriverInterface;
 use Phpro\SoapClient\Soap\Engine\EngineInterface;
 use Phpro\SoapClient\Soap\Engine\Metadata\MetadataInterface;
@@ -28,24 +29,24 @@ class EngineFaker implements EngineInterface
     private $handler;
 
     /**
-     * @var string
+     * @var ExtSoapOptions
      */
-    private $wsdl;
+    private $options;
 
     /**
      * EngineFaker constructor.
      * @param  DriverInterface  $driver
      * @param  HandlerInterface  $handler
-     * @param  string  $wsdl
+     * @param  ExtSoapOptions  $options
      */
     public function __construct(
         DriverInterface $driver,
         HandlerInterface $handler,
-        $wsdl = ''
+        ExtSoapOptions $options
     ) {
         $this->driver = $driver;
         $this->handler = $handler;
-        $this->wsdl = $wsdl;
+        $this->options = $options;
     }
 
     /**
@@ -63,7 +64,8 @@ class EngineFaker implements EngineInterface
      */
     public function request(string $method, array $arguments)
     {
-        $request = new SoapRequest(XMLSerializer::arrayToSoapXml($arguments), $this->wsdl, $method, 1);
+        $options = $this->options->getOptions();
+        $request = new SoapRequest(XMLSerializer::arrayToSoapXml($arguments), $this->options->getWsdl(), $method, $options['soap_version'] ?? SOAP_1_1);
         $response = $this->handler->request($request);
 
         return json_decode($response->getResponse());

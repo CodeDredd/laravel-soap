@@ -126,6 +126,37 @@ class SoapClientTest extends TestCase
         ];
     }
 
+    public function testSoapOptions(): void
+    {
+        Soap::fake();
+        $client = Soap::withOptions(['soap_version' => SOAP_1_2])->baseWsdl('https://laravel-soap.wsdl');
+        $response = $client->call('Get_User');
+        $lastRequestInfo = $client->getEngine()->collectLastRequestInfo();
+
+        self::assertTrue($response->ok());
+        self::assertStringContainsString('application/soap+xml; charset="utf-8', $lastRequestInfo->getLastRequestHeaders());
+    }
+
+    public function testRealSoapCall(): void
+    {
+        $this->markTestSkipped('Real Soap Call Testing. Comment the line out for testing');
+        // location has to be set because the wsdl has a wrong location declaration
+        $client = Soap::baseWsdl('https://www.w3schools.com/xml/tempconvert.asmx?wsdl')
+                      ->withOptions([
+                          'soap_version' => SOAP_1_2,
+                          'location' => 'https://www.w3schools.com/xml/tempconvert.asmx?wsdl',
+                      ]);
+        $result = $client->call('FahrenheitToCelsius', [
+            'Fahrenheit' => 75,
+        ]);
+        self::assertArrayHasKey('FahrenheitToCelsiusResult', $result->json());
+
+        $result = $client->FahrenheitToCelsius([
+            'Fahrenheit' => 75,
+        ]);
+        self::assertArrayHasKey('FahrenheitToCelsiusResult', $result->json());
+    }
+
     /**
      * @dataProvider soapHeaderProvider
      * @param $header
