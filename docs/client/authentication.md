@@ -41,3 +41,9 @@ Like Wss/Wsse it uses the same package:
     $response = Soap::baseWsdl(...)
         ->withWsa()
         ->call(...)
+
+### DHL Cis Authentication
+
+DHL uses his own authentication header
+
+    $client = Soap::withCisDHLAuth('user', 'signature')

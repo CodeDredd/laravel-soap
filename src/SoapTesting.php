@@ -102,4 +102,26 @@ class SoapTesting
     {
         PHPUnit::assertCount($count, $this->factory->getRecorded());
     }
+
+    /**
+     * Assert that the given request was sent in the given order.
+     *
+     * @param  array  $callbacks
+     * @return void
+     */
+    public function assertSentInOrder($callbacks)
+    {
+        $this->assertSentCount(count($callbacks));
+
+        foreach ($callbacks as $index => $url) {
+            $callback = is_callable($url) ? $url : function ($request) use ($url) {
+                return $request->url() == $url;
+            };
+
+            PHPUnit::assertTrue($callback(
+                $this->factory->getRecorded()[$index][0],
+                $this->factory->getRecorded()[$index][1]
+            ), 'An expected request (#'.($index + 1).') was not recorded.');
+        }
+    }
 }

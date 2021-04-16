@@ -11,6 +11,8 @@ The `call` method returns an instance of `CodeDredd\Soap\Client\Response`, which
     $response->successful() : bool;
     $response->serverError() : bool;
     $response->clientError() : bool;
+    $response->onError(callable $callback): \CodeDredd\Soap\Client\Response;
+    $response->collect(): \Illuminate\Support\Collection;
 
 The `CodeDredd\Soap\Client\Response` object also implements the PHP `ArrayAccess` interface, allowing you to access your response data directly on the response:
 
