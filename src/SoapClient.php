@@ -5,11 +5,13 @@ namespace CodeDredd\Soap;
 use CodeDredd\Soap\Client\Request;
 use CodeDredd\Soap\Client\Response;
 use CodeDredd\Soap\Driver\ExtSoap\ExtSoapEngineFactory;
+use CodeDredd\Soap\Events\RequestHandled;
 use CodeDredd\Soap\Exceptions\NotFoundConfigurationException;
 use CodeDredd\Soap\Exceptions\SoapException;
 use CodeDredd\Soap\Handler\HttPlugHandle;
 use CodeDredd\Soap\Middleware\CisDhlMiddleware;
 use CodeDredd\Soap\Middleware\WsseMiddleware;
+use CodeDredd\Soap\Xml\XMLSerializer;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use Http\Client\Exception\HttpException;
@@ -22,6 +24,7 @@ use Phpro\SoapClient\Middleware\WsaMiddleware;
 use Phpro\SoapClient\Soap\Driver\ExtSoap\ExtSoapOptions;
 use Phpro\SoapClient\Soap\Engine\EngineInterface;
 use Phpro\SoapClient\Soap\Handler\HandlerInterface;
+use Phpro\SoapClient\Soap\HttpBinding\SoapRequest;
 use Phpro\SoapClient\Type\ResultInterface;
 use Phpro\SoapClient\Type\ResultProviderInterface;
 use Phpro\SoapClient\Util\XmlFormatter;
@@ -358,15 +361,20 @@ class SoapClient
         } catch (\Exception $exception) {
             if ($exception instanceof \SoapFault) {
                 /** @var \SoapFault $exception */
-                return Response::fromSoapFault($exception);
+                $result = Response::fromSoapFault($exception);
+            } else {
+                $previous = $exception->getPrevious();
+                if ($previous instanceof HttpException) {
+                    /** @var HttpException $previous */
+                    $result = new Response($previous->getResponse());
+                } else {
+                    throw SoapException::fromThrowable($exception);
+                }
             }
-            $previous = $exception->getPrevious();
-            if ($previous instanceof HttpException) {
-                /** @var HttpException $previous */
-                return new Response($previous->getResponse());
-            }
-            throw SoapException::fromThrowable($exception);
         }
+        $request = new SoapRequest(XMLSerializer::arrayToSoapXml($arguments), $this->wsdl, $method, $this->options['soap_version'] ?? SOAP_1_1);
+
+        RequestHandled::dispatch($request, $result);
 
         return $result;
     }

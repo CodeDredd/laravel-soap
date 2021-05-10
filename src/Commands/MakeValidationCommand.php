@@ -13,7 +13,7 @@ class MakeValidationCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'soap:make:validation {--dry-run}';
+    protected $signature = 'soap:make:validation {--dry-run} {--return}';
 
     /**
      * The console command description.
@@ -50,6 +50,6 @@ class MakeValidationCommand extends Command
             $validationClasses = Arr::wrap($this->anticipate('Which method do you want to generate?', $methods->keys()->toArray()));
         }
         $validationCode = new Validation($service, $configName, $this->option('dry-run'));
-        $validationCode->generateValidationFiles($validationClasses);
+        $validationCode->generateValidationFiles($validationClasses, $this->option('return'));
     }
 }

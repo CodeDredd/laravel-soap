@@ -81,17 +81,29 @@ class Validation extends Base
     }
 
     /**
-     * @param  array  $actionNames
+     * @param array $actionNames
+     * @param boolean $returnCode
+     *
+     * @return array|boolean
      */
-    public function generateValidationFiles(array $actionNames = [])
+    public function generateValidationFiles(array $actionNames = [], bool $returnCode = false)
     {
+        $code = [];
         foreach ($actionNames as $actionName) {
             $action = $this->actions->get($actionName);
             if (! empty($action)) {
                 $this->codeClass = $this->createNewValidation($action);
-                $this->dryRun ? print_r($this->getCode()) : $this->save();
+                if ($returnCode) {
+                    $code[] = $this->getCode();
+                } else {
+                    $this->dryRun ? print_r($this->getCode()) : $this->save();
+                }
             }
         }
+        if ($returnCode) {
+            return $code;
+        }
+        return true;
     }
 
     /**

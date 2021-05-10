@@ -4,11 +4,13 @@ namespace CodeDredd\Soap\Tests\Unit;
 
 use CodeDredd\Soap\Client\Request;
 use CodeDredd\Soap\Client\Response;
+use CodeDredd\Soap\Events\RequestHandled;
 use CodeDredd\Soap\Facades\Soap;
 use CodeDredd\Soap\SoapClient;
 use CodeDredd\Soap\SoapFactory;
 use CodeDredd\Soap\Tests\Fixtures\CustomSoapClient;
 use CodeDredd\Soap\Tests\TestCase;
+use Illuminate\Support\Facades\Event;
 
 class SoapClientTest extends TestCase
 {
@@ -19,6 +21,7 @@ class SoapClientTest extends TestCase
      */
     public function testSimpleCall()
     {
+        Event::fake();
         Soap::fake();
         Soap::assertNothingSent();
         $response = Soap::baseWsdl('https://laravel-soap.wsdl')
@@ -31,6 +34,7 @@ class SoapClientTest extends TestCase
             return $request->action() === 'Get_User';
         });
         Soap::assertActionCalled('Get_Users');
+        Event::assertDispatched(RequestHandled::class);
     }
 
     public function testMagicCallByConfig()

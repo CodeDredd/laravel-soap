@@ -14,7 +14,7 @@ class MakeClientCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'soap:make:client {--dry-run}';
+    protected $signature = 'soap:make:client {--dry-run} {--return}';
 
     /**
      * The console command description.
@@ -44,6 +44,9 @@ class MakeClientCommand extends Command
         $service = $this->getGeneratorService($wsdl);
 
         $client = new Client($service, $configName);
+        if($this->option('return')) {
+            return $client->getCode();
+        }
         if ($this->option('dry-run')) {
             echo $client->getCode();
         } else {
