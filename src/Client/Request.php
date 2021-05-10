@@ -31,7 +31,7 @@ class Request
     }
 
     /**
-     * Get the soap action for soap 1.1 and 1.2
+     * Get the soap action for soap 1.1 and 1.2.
      * @return string
      */
     public function action(): string
@@ -41,6 +41,7 @@ class Request
         if (empty($soapAction)) {
             return Str::of($contentType)->afterLast('action=')->remove('"');
         }
+
         return $this->request->getHeaderLine('SOAPAction');
     }
 
