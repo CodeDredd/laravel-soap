@@ -5,6 +5,7 @@ namespace CodeDredd\Soap\Client;
 use CodeDredd\Soap\Xml\SoapXml;
 use CodeDredd\Soap\Xml\XMLSerializer;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 /**
  * Class Request.
@@ -30,10 +31,17 @@ class Request
     }
 
     /**
+     * Get the soap action for soap 1.1 and 1.2.
      * @return string
      */
     public function action(): string
     {
+        $contentType = $this->request->getHeaderLine('Content-Type');
+        $soapAction = $this->request->getHeaderLine('SOAPAction');
+        if (empty($soapAction)) {
+            return Str::of($contentType)->afterLast('action=')->remove('"');
+        }
+
         return $this->request->getHeaderLine('SOAPAction');
     }
 
