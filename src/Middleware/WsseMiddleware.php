@@ -65,6 +65,11 @@ class WsseMiddleware extends Middleware
     /**
      * @var bool
      */
+    private $mustUnderstand = true;
+
+    /**
+     * @var bool
+     */
     private $serverCertificateHasSubjectKeyIdentifier = true;
 
     public function __construct(array $properties)
@@ -127,7 +132,7 @@ class WsseMiddleware extends Middleware
     public function beforeRequest(callable $handler, RequestInterface $request): Promise
     {
         $xml = SoapXml::fromStream($request->getBody());
-        $wsse = new WSSESoap($xml->getXmlDocument());
+        $wsse = new WSSESoap($xml->getXmlDocument(), $this->mustUnderstand);
 
         // Prepare the WSSE soap class:
         $wsse->signAllHeaders = $this->signAllHeaders;
