@@ -135,6 +135,7 @@ class SoapClientTest extends TestCase
 
         self::assertTrue($response->ok());
         self::assertStringContainsString('application/soap+xml; charset="utf-8', $lastRequestInfo->getLastRequestHeaders());
+        Soap::assertActionCalled('Get_User');
     }
 
     public function testRealSoapCall(): void
