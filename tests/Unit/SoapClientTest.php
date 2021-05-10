@@ -46,11 +46,11 @@ class SoapClientTest extends TestCase
         $client = Soap::baseWsdl('https://laravel-soap.wsdl')->withWsse([
             'userTokenName' => 'Test',
             'userTokenPassword' => 'passwordTest',
-            'mustUnderstand' => false
+            'mustUnderstand' => false,
         ])->withWsa();
         $response = $client->Get_User();
         $lastRequestInfo = $client->getEngine()->collectLastRequestInfo();
-        self::assertStringNotContainsString( 'mustUnderstand', $lastRequestInfo->getLastRequest());
+        self::assertStringNotContainsString('mustUnderstand', $lastRequestInfo->getLastRequest());
 //        dd($client->debugLastSoapRequest());
         self::assertTrue($response->ok());
     }
