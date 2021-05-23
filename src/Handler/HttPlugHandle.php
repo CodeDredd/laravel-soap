@@ -3,6 +3,7 @@
 namespace CodeDredd\Soap\Handler;
 
 use CodeDredd\Soap\HttpBinding\Converter\Psr7Converter;
+use GuzzleHttp\Client;
 use Http\Client\Common\PluginClient;
 use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\MessageFactoryDiscovery;
@@ -15,12 +16,11 @@ use Phpro\SoapClient\Soap\Handler\LastRequestInfoCollectorInterface;
 use Phpro\SoapClient\Soap\HttpBinding\LastRequestInfo;
 use Phpro\SoapClient\Soap\HttpBinding\SoapRequest;
 use Phpro\SoapClient\Soap\HttpBinding\SoapResponse;
-use Psr\Http\Client\ClientInterface;
 
 class HttPlugHandle implements HandlerInterface, MiddlewareSupportingInterface
 {
     /**
-     * @var ClientInterface
+     * @var Client
      */
     private $client;
 
@@ -45,7 +45,7 @@ class HttPlugHandle implements HandlerInterface, MiddlewareSupportingInterface
     private $requestHeaders = [];
 
     public function __construct(
-        ClientInterface $client,
+        Client $client,
         Psr7Converter $converter,
         CollectLastRequestInfoMiddleware $lastRequestInfoCollector,
         $requestHeaders = []
@@ -61,7 +61,7 @@ class HttPlugHandle implements HandlerInterface, MiddlewareSupportingInterface
         return self::createForClient(HttpClientDiscovery::find());
     }
 
-    public static function createForClient(ClientInterface $client, $requestHeaders = []): HttPlugHandle
+    public static function createForClient(Client $client, $requestHeaders = []): HttPlugHandle
     {
         return new self(
             $client,
@@ -93,6 +93,11 @@ class HttPlugHandle implements HandlerInterface, MiddlewareSupportingInterface
         $psr7Response = $client->sendRequest($psr7Request);
 
         return $this->converter->convertSoapResponse($psr7Response);
+    }
+
+    public function getClient(): Client
+    {
+        return $this->client;
     }
 
     public function collectLastRequestInfo(): LastRequestInfo

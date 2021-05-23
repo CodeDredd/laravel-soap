@@ -8,13 +8,14 @@ use Illuminate\Support\Facades\Facade;
 /**
  * Class Soap.
  *
+ * @method static \CodeDredd\Soap\Handler\HttPlugHandle getHandler()
  * @method static \CodeDredd\Soap\SoapClient baseWsdl(string $wsdl)
  * @method static \CodeDredd\Soap\SoapClient stub(callable $callback)
  * @method static \CodeDredd\Soap\SoapClient buildClient(string $setup = '')
  * @method static \CodeDredd\Soap\SoapClient byConfig(string $setup = '')
  * @method static \CodeDredd\Soap\SoapClient withOptions(array $options)
  * @method static \CodeDredd\Soap\SoapClient withHeaders(array $options)
- * @method static \CodeDredd\Soap\SoapClient handlerOptions(array $options)
+ * @method static \CodeDredd\Soap\SoapClient withHandlerOptions(array $options)
  * @method static \CodeDredd\Soap\SoapClient withWsse(array $config)
  * @method static \CodeDredd\Soap\SoapClient withWsa()
  * @method static \CodeDredd\Soap\SoapClient withRemoveEmptyNodes()
