@@ -9,6 +9,7 @@ use CodeDredd\Soap\SoapClient;
 use CodeDredd\Soap\SoapFactory;
 use CodeDredd\Soap\Tests\Fixtures\CustomSoapClient;
 use CodeDredd\Soap\Tests\TestCase;
+use GuzzleHttp\RedirectMiddleware;
 
 class SoapClientTest extends TestCase
 {
@@ -77,7 +78,7 @@ class SoapClientTest extends TestCase
         self::assertTrue($response->ok());
         Soap::assertSent(function (Request $request) use ($arguments) {
             return $request->arguments() === $arguments &&
-               $request->action() === 'Submit_User';
+                $request->action() === 'Submit_User';
         });
     }
 
@@ -149,7 +150,8 @@ class SoapClientTest extends TestCase
         $lastRequestInfo = $client->getEngine()->collectLastRequestInfo();
 
         self::assertTrue($response->ok());
-        self::assertStringContainsString('application/soap+xml; charset="utf-8', $lastRequestInfo->getLastRequestHeaders());
+        self::assertStringContainsString('application/soap+xml; charset="utf-8',
+            $lastRequestInfo->getLastRequestHeaders());
         Soap::assertActionCalled('Get_User');
     }
 
@@ -158,10 +160,10 @@ class SoapClientTest extends TestCase
         $this->markTestSkipped('Real Soap Call Testing. Comment the line out for testing');
         // location has to be set because the wsdl has a wrong location declaration
         $client = Soap::baseWsdl('https://www.w3schools.com/xml/tempconvert.asmx?wsdl')
-                      ->withOptions([
-                          'soap_version' => SOAP_1_2,
-                          'location' => 'https://www.w3schools.com/xml/tempconvert.asmx?wsdl',
-                      ]);
+            ->withOptions([
+                'soap_version' => SOAP_1_2,
+                'location' => 'https://www.w3schools.com/xml/tempconvert.asmx?wsdl',
+            ]);
         $result = $client->call('FahrenheitToCelsius', [
             'Fahrenheit' => 75,
         ]);
@@ -210,5 +212,25 @@ class SoapClientTest extends TestCase
         SoapFactory::useClientClass(CustomSoapClient::class);
         $client = Soap::buildClient('laravel_soap');
         $this->assertInstanceOf(CustomSoapClient::class, $client);
+    }
+
+    public function testHandlerOptions(): void
+    {
+        Soap::fake();
+        $client = Soap::baseWsdl('https://laravel-soap.wsdl');
+        $response = $client->call('Get_User');
+        self::assertTrue($response->ok());
+        self::assertEquals(true, $client->getHandler()->getClient()->getConfig()['verify']);
+        $client = $client->withHandlerOptions([
+            'allow_redirects' => RedirectMiddleware::$defaultSettings,
+            'http_errors' => true,
+            'decode_content' => true,
+            'verify' => false,
+            'cookies' => false,
+            'idn_conversion' => false,
+        ]);
+        $response = $client->call('Get_User');
+        self::assertTrue($response->ok());
+        self::assertEquals(false, $client->getHandler()->getClient()->getConfig()['verify']);
     }
 }

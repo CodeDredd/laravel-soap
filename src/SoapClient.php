@@ -53,7 +53,7 @@ class SoapClient
     protected $extSoapOptions;
 
     /**
-     * @var
+     * @var HttPlugHandle
      */
     protected $handler;
 
@@ -162,6 +162,11 @@ class SoapClient
         return $this->withHandlerOptions(array_merge_recursive($this->options, [
             'headers' => $headers,
         ]));
+    }
+
+    public function getHandler(): HttPlugHandle
+    {
+        return $this->handler;
     }
 
     /**
