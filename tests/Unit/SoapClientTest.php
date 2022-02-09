@@ -103,6 +103,7 @@ class SoapClientTest extends TestCase
 
     /**
      * @dataProvider soapActionProvider
+     *
      * @param $action
      * @param $fake
      * @param $exspected
@@ -177,6 +178,7 @@ class SoapClientTest extends TestCase
 
     /**
      * @dataProvider soapHeaderProvider
+     *
      * @param $header
      * @param $exspected
      */

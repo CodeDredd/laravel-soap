@@ -211,7 +211,7 @@ class Response implements ResultInterface, ArrayAccess
     /**
      * Execute the given callback if there was a server or client error.
      *
-     * @param  \Closure|callable $callback
+     * @param  \Closure|callable  $callback
      * @return \CodeDredd\Soap\Client\Response
      */
     public function onError(callable $callback)

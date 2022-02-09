@@ -32,6 +32,7 @@ class Request
 
     /**
      * Get the soap action for soap 1.1 and 1.2.
+     *
      * @return string
      */
     public function action(): string
