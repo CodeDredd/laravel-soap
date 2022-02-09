@@ -7,6 +7,7 @@ use CodeDredd\Soap\Client\Response;
 use CodeDredd\Soap\Driver\ExtSoap\ExtSoapEngineFactory;
 use CodeDredd\Soap\Exceptions\NotFoundConfigurationException;
 use CodeDredd\Soap\Exceptions\SoapException;
+use CodeDredd\Soap\Middleware\BasicAuthMiddleware;
 use CodeDredd\Soap\Middleware\CisDhlMiddleware;
 use CodeDredd\Soap\Middleware\WsseMiddleware;
 use GuzzleHttp\Client;
@@ -27,6 +28,7 @@ use Soap\ExtSoapEngine\ExtSoapOptions;
 use Soap\ExtSoapEngine\Transport\TraceableTransport;
 use Soap\ExtSoapEngine\Wsdl\PassThroughWsdlProvider;
 use Soap\ExtSoapEngine\Wsdl\WsdlProvider;
+use Soap\Psr18Transport\Middleware\RemoveEmptyNodesMiddleware;
 use Soap\Psr18Transport\Psr18Transport;
 use Soap\Psr18Transport\Wsdl\Psr18Loader;
 use Soap\Psr18WsseMiddleware\WsaMiddleware;
@@ -196,8 +198,10 @@ class SoapClient
             ['username' => $username, 'password' => $password] = $username;
         }
 
-        $this->middlewares = array_merge_recursive($this->middlewares, [
-            new BasicAuthMiddleware($username, $password),
+        $this->withHeaders([
+           'Authorization' => sprintf('Basic %s', base64_encode(
+               sprintf('%s:%s', $username, $password)
+           ))
         ]);
 
         return $this;
