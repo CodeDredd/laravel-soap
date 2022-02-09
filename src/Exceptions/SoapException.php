@@ -9,7 +9,6 @@ class SoapException extends \RuntimeException
 {
     /**
      * @param  \Throwable  $throwable
-     *
      * @return SoapException
      */
     public static function fromThrowable(\Throwable $throwable): self

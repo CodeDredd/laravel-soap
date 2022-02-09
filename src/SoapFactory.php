@@ -272,7 +272,7 @@ class SoapFactory
     /**
      * Set the client class name.
      *
-     * @param string $clientClass
+     * @param  string  $clientClass
      */
     public static function useClientClass(string $clientClass): void
     {

@@ -34,7 +34,6 @@ class Psr7Converter
     /**
      * @param  SoapRequest  $request
      * @param  array  $requestHeaders
-     *
      * @return RequestInterface
      */
     public function convertSoapRequest(SoapRequest $request, $requestHeaders = []): RequestInterface
@@ -51,8 +50,7 @@ class Psr7Converter
     }
 
     /**
-     * @param ResponseInterface $response
-     *
+     * @param  ResponseInterface  $response
      * @return SoapResponse
      */
     public function convertSoapResponse(ResponseInterface $response): SoapResponse
