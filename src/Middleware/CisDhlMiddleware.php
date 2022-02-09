@@ -5,15 +5,15 @@ namespace CodeDredd\Soap\Middleware;
 use Http\Client\Common\Plugin;
 use Http\Promise\Promise;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use Soap\Psr18Transport\Xml\XmlMessageManipulator;
 use Soap\Xml\Builder\SoapHeader;
 use Soap\Xml\Builder\SoapHeaders;
 use Soap\Xml\Manipulator\PrependSoapHeaders;
-use VeeWee\Xml\Dom\Document;
-use Psr\Http\Message\ResponseInterface;
 use function VeeWee\Xml\Dom\Builder\children;
 use function VeeWee\Xml\Dom\Builder\namespaced_element;
 use function VeeWee\Xml\Dom\Builder\value;
+use VeeWee\Xml\Dom\Document;
 
 class CisDhlMiddleware implements Plugin
 {
@@ -48,7 +48,7 @@ class CisDhlMiddleware implements Plugin
         return $next(
             (new XmlMessageManipulator)(
                 $request,
-                function (Document $document) use ($request) {
+                function (Document $document) {
                     $builder = new SoapHeaders(
                         new SoapHeader(
                             self::CIS_NS,

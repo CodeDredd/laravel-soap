@@ -10,7 +10,6 @@ use CodeDredd\Soap\SoapFactory;
 use CodeDredd\Soap\Tests\Fixtures\CustomSoapClient;
 use CodeDredd\Soap\Tests\TestCase;
 use GuzzleHttp\RedirectMiddleware;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 class SoapClientTest extends TestCase
@@ -24,7 +23,7 @@ class SoapClientTest extends TestCase
     {
         Soap::fake();
         Soap::assertNothingSent();
-        $response = Soap::baseWsdl(dirname(__DIR__, 1) . '/Fixtures/Wsdl/weather.wsdl')
+        $response = Soap::baseWsdl(dirname(__DIR__, 1).'/Fixtures/Wsdl/weather.wsdl')
             ->call('GetWeatherInformation');
         self::assertTrue($response->ok());
         Soap::assertSent(function (Request $request) {
@@ -46,14 +45,14 @@ class SoapClientTest extends TestCase
     public function testWsseWithWsaCall()
     {
         Soap::fake();
-        $client = Soap::baseWsdl(dirname(__DIR__, 1) . '/Fixtures/Wsdl/weather.wsdl')->withWsse([
+        $client = Soap::baseWsdl(dirname(__DIR__, 1).'/Fixtures/Wsdl/weather.wsdl')->withWsse([
             'userTokenName' => 'Test',
             'userTokenPassword' => 'passwordTest',
             'mustUnderstand' => false,
         ])->withWsa();
         $response = $client->GetWeatherInformation();
         Soap::assertSent(function (Request $request) {
-            return !Str::contains($request->xmlContent(), 'mustUnderstand');
+            return ! Str::contains($request->xmlContent(), 'mustUnderstand');
         });
         self::assertTrue($response->ok());
     }
@@ -116,7 +115,7 @@ class SoapClientTest extends TestCase
             return Soap::response($item);
         })->all();
         Soap::fake($fake);
-        $response = Soap::baseWsdl(dirname(__DIR__, 1) . '/Fixtures/Wsdl/weather.wsdl')
+        $response = Soap::baseWsdl(dirname(__DIR__, 1).'/Fixtures/Wsdl/weather.wsdl')
             ->call($action);
         self::assertEquals($exspected, $response->json());
     }
@@ -149,10 +148,10 @@ class SoapClientTest extends TestCase
     {
         Soap::fake();
         $client = Soap::withOptions(['soap_version' => SOAP_1_2])
-            ->baseWsdl(dirname(__DIR__, 1) . '/Fixtures/Wsdl/weather.wsdl');
+            ->baseWsdl(dirname(__DIR__, 1).'/Fixtures/Wsdl/weather.wsdl');
         $response = $client->call('GetWeatherInformation');
         self::assertTrue($response->ok());
-        Soap::assertSent(function (Request $request)  {
+        Soap::assertSent(function (Request $request) {
             return Str::contains(
                 $request->getRequest()->getHeaderLine('Content-Type'),
                 'application/soap+xml; charset="utf-8"'
@@ -190,9 +189,9 @@ class SoapClientTest extends TestCase
     public function testSoapWithDifferentHeaders($header, $exspected): void
     {
         Soap::fake();
-        $client = Soap::withHeaders($header)->baseWsdl(dirname(__DIR__, 1) . '/Fixtures/Wsdl/weather.wsdl');
+        $client = Soap::withHeaders($header)->baseWsdl(dirname(__DIR__, 1).'/Fixtures/Wsdl/weather.wsdl');
         $response = $client->call('GetWeatherInformation');
-        Soap::assertSent(function (Request $request) use ($exspected)  {
+        Soap::assertSent(function (Request $request) use ($exspected) {
             return $request->getRequest()->getHeaderLine('test') === $exspected;
         });
         self::assertTrue($response->ok());
@@ -224,7 +223,7 @@ class SoapClientTest extends TestCase
     public function testHandlerOptions(): void
     {
         Soap::fake();
-        $client = Soap::baseWsdl(dirname(__DIR__, 1) . '/Fixtures/Wsdl/weather.wsdl');
+        $client = Soap::baseWsdl(dirname(__DIR__, 1).'/Fixtures/Wsdl/weather.wsdl');
         $response = $client->call('GetWeatherInformation');
         self::assertTrue($response->ok());
         self::assertEquals(true, $client->getClient()->getConfig()['verify']);

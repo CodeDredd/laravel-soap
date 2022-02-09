@@ -96,7 +96,8 @@ class SoapClient
         ]);
     }
 
-    public function refreshWsdlProvider(){
+    public function refreshWsdlProvider()
+    {
         $this->wsdlProvider = new FlatteningLoader(Psr18Loader::createForClient($this->pluginClient));
 
         return $this;
@@ -128,7 +129,6 @@ class SoapClient
                 $soapClient,
                 $transport
             );
-
 
         return $this;
     }
@@ -164,9 +164,9 @@ class SoapClient
     {
         $this->guzzleClientOptions = array_merge_recursive($this->guzzleClientOptions, $options);
         $this->client = new Client($this->guzzleClientOptions);
+
         return $this;
     }
-
 
     public function getEngine(): Engine
     {
@@ -328,7 +328,7 @@ class SoapClient
     public function call(string $method, $arguments = []): Response
     {
         try {
-            if (!$this->isClientBuilded) {
+            if (! $this->isClientBuilded) {
                 $this->buildClient();
             }
             $this->refreshEngine();
@@ -343,7 +343,7 @@ class SoapClient
             if ($result instanceof ResultProviderInterface) {
                 $result = Response::fromSoapResponse($result->getResult());
             }
-            if (!$result instanceof ResultInterface) {
+            if (! $result instanceof ResultInterface) {
                 $result = Response::fromSoapResponse($result);
             }
         } catch (\Exception $exception) {
@@ -389,9 +389,9 @@ class SoapClient
      */
     public function byConfig(string $setup)
     {
-        if (!empty($setup)) {
+        if (! empty($setup)) {
             $setup = config()->get('soap.clients.'.$setup);
-            if (!$setup) {
+            if (! $setup) {
                 throw new NotFoundConfigurationException($setup);
             }
             foreach ($setup as $setupItem => $setupItemConfig) {
