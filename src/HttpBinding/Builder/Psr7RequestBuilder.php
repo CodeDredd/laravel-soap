@@ -66,6 +66,7 @@ class Psr7RequestBuilder
 
     /**
      * @return RequestInterface
+     *
      * @throws RequestException
      */
     public function getHttpRequest(): RequestInterface
@@ -89,7 +90,7 @@ class Psr7RequestBuilder
     }
 
     /**
-     * @param string $endpoint
+     * @param  string  $endpoint
      */
     public function setEndpoint(string $endpoint)
     {
@@ -97,7 +98,7 @@ class Psr7RequestBuilder
     }
 
     /**
-     * @param array $headers
+     * @param  array  $headers
      */
     public function setHeaders(array $headers)
     {
@@ -121,7 +122,7 @@ class Psr7RequestBuilder
     }
 
     /**
-     * @param string $soapAction
+     * @param  string  $soapAction
      */
     public function setSoapAction(string $soapAction)
     {
@@ -129,7 +130,7 @@ class Psr7RequestBuilder
     }
 
     /**
-     * @param string $content
+     * @param  string  $content
      */
     public function setSoapMessage(string $content)
     {
@@ -138,7 +139,7 @@ class Psr7RequestBuilder
     }
 
     /**
-     * @param string $method
+     * @param  string  $method
      */
     public function setHttpMethod(string $method)
     {
@@ -147,6 +148,7 @@ class Psr7RequestBuilder
 
     /**
      * @return void
+     *
      * @throws \Phpro\SoapClient\Exception\RequestException
      */
     private function validate()
@@ -161,6 +163,7 @@ class Psr7RequestBuilder
 
         /**
          * SOAP 1.1 only defines HTTP binding with POST method.
+         *
          * @link https://www.w3.org/TR/2000/NOTE-SOAP-20000508/#_Toc478383527
          */
         if ($this->soapVersion === self::SOAP11 && $this->httpMethod !== 'POST') {
@@ -169,6 +172,7 @@ class Psr7RequestBuilder
 
         /**
          * SOAP 1.2 only defines HTTP binding with POST and GET methods.
+         *
          * @link https://www.w3.org/TR/2007/REC-soap12-part0-20070427/#L10309
          */
         if ($this->soapVersion === self::SOAP12 && ! in_array($this->httpMethod, ['GET', 'POST'])) {
@@ -190,6 +194,7 @@ class Psr7RequestBuilder
 
     /**
      * @link https://www.w3.org/TR/2000/NOTE-SOAP-20000508/#_Toc478383526
+     *
      * @return array
      */
     private function prepareSoap11Headers(): array
@@ -205,7 +210,9 @@ class Psr7RequestBuilder
     /**
      * SOAPAction header is removed in SOAP 1.2 and now expressed as a value of
      * an (optional) "action" parameter of the "application/soap+xml" media type.
+     *
      * @link https://www.w3.org/TR/soap12-part0/#L4697
+     *
      * @return array
      */
     private function prepareSoap12Headers(): array

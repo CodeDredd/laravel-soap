@@ -37,9 +37,8 @@ class CisDhlMiddleware extends Middleware
     }
 
     /**
-     * @param callable         $handler
-     * @param RequestInterface $request
-     *
+     * @param  callable  $handler
+     * @param  RequestInterface  $request
      * @return Promise
      */
     public function beforeRequest(callable $handler, RequestInterface $request): Promise
@@ -68,8 +67,7 @@ class CisDhlMiddleware extends Middleware
     }
 
     /**
-     * @param ResponseInterface $response
-     *
+     * @param  ResponseInterface  $response
      * @return ResponseInterface
      */
     public function afterResponse(ResponseInterface $response): ResponseInterface

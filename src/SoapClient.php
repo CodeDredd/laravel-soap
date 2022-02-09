@@ -381,6 +381,7 @@ class SoapClient
      *
      * @param  string  $setup
      * @return SoapClient
+     *
      * @throws NotFoundConfigurationException
      */
     public function buildClient(string $setup = '')
@@ -398,6 +399,7 @@ class SoapClient
     /**
      * @param  string  $setup
      * @return $this
+     *
      * @throws NotFoundConfigurationException
      */
     public function byConfig(string $setup)
