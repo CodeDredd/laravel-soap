@@ -8,7 +8,6 @@ class NotFoundConfigurationException extends RuntimeException
 {
     /**
      * @param  \Throwable  $throwable
-     *
      * @return NotFoundConfigurationException
      */
     public static function fromThrowable(\Throwable $throwable): self
