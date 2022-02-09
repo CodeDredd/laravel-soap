@@ -6,6 +6,8 @@ use CodeDredd\Soap\Xml\SoapXml;
 use CodeDredd\Soap\Xml\XMLSerializer;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Soap\Xml\Locator\SoapBodyLocator;
+use VeeWee\Xml\Dom\Document;
 
 /**
  * Class Request.
@@ -43,7 +45,7 @@ class Request
             return Str::of($contentType)->afterLast('action=')->remove('"');
         }
 
-        return $this->request->getHeaderLine('SOAPAction');
+        return Str::of($this->request->getHeaderLine('SOAPAction'))->remove('"');
     }
 
     /**
@@ -71,8 +73,8 @@ class Request
      */
     public function arguments(): array
     {
-        $xml = SoapXml::fromString($this->xmlContent());
-        $arguments = Arr::first(XMLSerializer::domNodeToArray($xml->getBody()));
+        $doc = Document::fromXmlString($this->xmlContent());
+        $arguments = Arr::first(XMLSerializer::domNodeToArray($doc->locate(new SoapBodyLocator())));
 
         return $arguments ?? [];
     }

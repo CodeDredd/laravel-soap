@@ -29,12 +29,4 @@ XML;
 
         self::assertXmlStringEqualsXmlString($this->xml, $soapXml);
     }
-
-    public function testDomNodeToArray()
-    {
-        $xmlDocument = SoapXml::fromString($this->xml);
-        $xmlBodyAsArray = XMLSerializer::domNodeToArray($xmlDocument->getBody());
-
-        self::assertEquals($this->array, $xmlBodyAsArray);
-    }
 }

@@ -60,7 +60,7 @@ class SoapFactory
     public function __construct()
     {
         $this->stubCallbacks = collect();
-        $this->fakeWsdlLocation = __DIR__.'/Faker/fake.wsdl';
+//        $this->fakeWsdlLocation = __DIR__.'/Faker/fake.wsdl';
     }
 
     /**

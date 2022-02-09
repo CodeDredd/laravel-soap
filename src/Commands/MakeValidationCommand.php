@@ -39,17 +39,17 @@ class MakeValidationCommand extends Command
      */
     public function handle()
     {
-        $clientCommand = new MakeClientCommand();
-        [$wsdl, $configName] = $clientCommand->getWsdlAndConfigName($this);
-        $service = $clientCommand->getGeneratorService($wsdl, $this);
-
-        $generateAllClassMaps = $this->confirm('Do you want to generate for every client method a validation?');
-        $methods = collect($service->getOperations());
-        $validationClasses = $methods->keys()->toArray();
-        if (! $generateAllClassMaps) {
-            $validationClasses = Arr::wrap($this->anticipate('Which method do you want to generate?', $methods->keys()->toArray()));
-        }
-        $validationCode = new Validation($service, $configName, $this->option('dry-run'));
-        $validationCode->generateValidationFiles($validationClasses);
+//        $clientCommand = new MakeClientCommand();
+//        [$wsdl, $configName] = $clientCommand->getWsdlAndConfigName($this);
+//        $service = $clientCommand->getGeneratorService($wsdl, $this);
+//
+//        $generateAllClassMaps = $this->confirm('Do you want to generate for every client method a validation?');
+//        $methods = collect($service->getOperations());
+//        $validationClasses = $methods->keys()->toArray();
+//        if (! $generateAllClassMaps) {
+//            $validationClasses = Arr::wrap($this->anticipate('Which method do you want to generate?', $methods->keys()->toArray()));
+//        }
+//        $validationCode = new Validation($service, $configName, $this->option('dry-run'));
+//        $validationCode->generateValidationFiles($validationClasses);
     }
 }

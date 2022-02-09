@@ -41,24 +41,25 @@ class MakeClientCommand extends Command
     public function handle()
     {
         [$wsdl, $configName] = $this->getWsdlAndConfigName();
-        $service = $this->getGeneratorService($wsdl);
-
-        $client = new Client($service, $configName);
-        if ($this->option('dry-run')) {
-            echo $client->getCode();
-        } else {
-            $client->save();
-        }
+//        $service = $this->getGeneratorService($wsdl);
+//
+//        $client = new Client($service, $configName);
+//        if ($this->option('dry-run')) {
+//            echo $client->getCode();
+//        } else {
+//            $client->save();
+//        }
     }
 
     public function getGeneratorService($wsdl, Command $commandInstance = null)
     {
         $commandInstance = $commandInstance ?? $this;
         $commandInstance->line('Loading wsdl configuration ...');
-        $generator = new Generator();
-        $generator->setConfigByWsdl($wsdl, $this->output);
-
-        return $generator->getService();
+        // Refactor code generation
+//        $generator = new Generator();
+//        $generator->setConfigByWsdl($wsdl, $this->output);
+//
+//        return $generator->getService();
     }
 
     public function getWsdlAndConfigName(Command $commandInstance = null)

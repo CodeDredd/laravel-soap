@@ -7,26 +7,32 @@ use CodeDredd\Soap\Client\Response;
 use CodeDredd\Soap\Driver\ExtSoap\ExtSoapEngineFactory;
 use CodeDredd\Soap\Exceptions\NotFoundConfigurationException;
 use CodeDredd\Soap\Exceptions\SoapException;
-use CodeDredd\Soap\Handler\HttPlugHandle;
+use CodeDredd\Soap\Faker\EngineFaker;
 use CodeDredd\Soap\Middleware\CisDhlMiddleware;
 use CodeDredd\Soap\Middleware\WsseMiddleware;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
+use Http\Client\Common\PluginClient;
 use Http\Client\Exception\HttpException;
+use Http\Client\HttpClient;
+use Http\Discovery\Psr17FactoryDiscovery;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
-use Phpro\SoapClient\Middleware\BasicAuthMiddleware;
-use Phpro\SoapClient\Middleware\RemoveEmptyNodesMiddleware;
-use Phpro\SoapClient\Middleware\WsaMiddleware;
-use Phpro\SoapClient\Soap\Driver\ExtSoap\ExtSoapOptions;
-use Phpro\SoapClient\Soap\Engine\EngineInterface;
-use Phpro\SoapClient\Soap\Handler\HandlerInterface;
 use Phpro\SoapClient\Type\ResultInterface;
 use Phpro\SoapClient\Type\ResultProviderInterface;
-use Phpro\SoapClient\Util\XmlFormatter;
-use Phpro\SoapClient\Wsdl\Provider\LocalWsdlProvider;
-use Phpro\SoapClient\Wsdl\Provider\WsdlProviderInterface;
+use Psr\Http\Client\ClientInterface;
+use Soap\Engine\Engine;
+use Soap\Engine\Transport;
+use Soap\ExtSoapEngine\ExtSoapOptions;
+use Soap\ExtSoapEngine\Transport\TraceableTransport;
+use Soap\ExtSoapEngine\Wsdl\InMemoryWsdlProvider;
+use Soap\ExtSoapEngine\Wsdl\PassThroughWsdlProvider;
+use Soap\ExtSoapEngine\Wsdl\WsdlProvider;
+use Soap\Psr18Transport\Psr18Transport;
+use Soap\Psr18Transport\Wsdl\Psr18Loader;
+use Soap\Psr18WsseMiddleware\WsaMiddleware;
 
 /**
  * Class SoapClient.
@@ -37,8 +43,12 @@ class SoapClient
         __call as macroCall;
     }
 
+    protected ClientInterface $client;
+
+    protected PluginClient $pluginClient;
+
     /**
-     * @var EngineInterface
+     * @var Engine
      */
     protected $engine;
 
@@ -53,14 +63,14 @@ class SoapClient
     protected $extSoapOptions;
 
     /**
-     * @var HttPlugHandle
+     * @var TraceableTransport
      */
-    protected $handler;
+    protected $transport;
 
     /**
      * @var array
      */
-    protected $handlerOptions = [];
+    protected $guzzleClientOptions = [];
 
     /**
      * @var string
@@ -83,7 +93,7 @@ class SoapClient
     protected $factory;
 
     /**
-     * @var WsdlProviderInterface
+     * @var Psr18Loader|WsdlProvider
      */
     protected $wsdlProvider;
 
@@ -117,8 +127,9 @@ class SoapClient
     public function __construct(SoapFactory $factory = null)
     {
         $this->factory = $factory;
-        $this->setHandler();
-        $this->wsdlProvider = LocalWsdlProvider::create();
+        $this->client = new Client($this->guzzleClientOptions);
+        $this->pluginClient = new PluginClient($this->client, $this->middlewares);
+        $this->wsdlProvider = Psr18Loader::createForClient($this->pluginClient);
         $this->beforeSendingCallbacks = collect([
             function (Request $request, array $options) {
                 $this->cookies = $options['cookies'];
@@ -126,29 +137,41 @@ class SoapClient
         ]);
     }
 
-    /**
-     * @param  HandlerInterface|null  $handler
-     * @return $this
-     */
-    protected function setHandler(HandlerInterface $handler = null)
-    {
-        $this->handler = $handler ?? HttPlugHandle::createForClient(
-                new Client($this->handlerOptions),
-                $this->handlerOptions['headers'] ?? []
-            );
-        $this->addMiddleware();
+    public function refreshWsdlProvider(){
+        $this->wsdlProvider = Psr18Loader::createForClient($this->pluginClient);
 
         return $this;
     }
 
-    /**
-     * Adds middleware to the handler.
-     */
-    protected function addMiddleware()
+    public function refreshPluginClient(): static
     {
-        foreach ($this->middlewares as $middleware) {
-            $this->handler->addMiddleware($middleware);
-        }
+//        if ($this->factory->isRecording()) {
+//            $this->client = new \Http\Mock\Client(Psr17FactoryDiscovery::findResponseFactory());
+//        }
+        $this->pluginClient = new PluginClient($this->client, $this->middlewares);
+
+        return $this;
+    }
+
+    public function getPluginClient(): PluginClient
+    {
+        return $this->pluginClient;
+    }
+
+    protected function setTransport(Transport $handler = null): static
+    {
+        $soapClient = \Soap\ExtSoapEngine\AbusedClient::createFromOptions(
+            ExtSoapOptions::defaults($this->wsdl, $this->options)
+        );
+        $transport = $handler ?? Psr18Transport::createForClient($this->pluginClient);
+
+        $this->transport = $handler ?? new TraceableTransport(
+                $soapClient,
+                $transport
+            );
+
+
+        return $this;
     }
 
     /**
@@ -159,31 +182,34 @@ class SoapClient
      */
     public function withHeaders(array $headers)
     {
-        return $this->withHandlerOptions(array_merge_recursive($this->options, [
+        return $this->withGuzzleClientOptions(array_merge_recursive($this->options, [
             'headers' => $headers,
         ]));
     }
 
-    public function getHandler(): HttPlugHandle
+    public function getTransport(): TraceableTransport
     {
-        return $this->handler;
+        return $this->transport;
+    }
+
+    public function getClient(): Client
+    {
+        return $this->client;
     }
 
     /**
      * @param $options
      * @return $this
      */
-    public function withHandlerOptions($options)
+    public function withGuzzleClientOptions($options)
     {
-        $this->handlerOptions = array_merge_recursive($this->handlerOptions, $options);
-
-        return $this->setHandler();
+        $this->guzzleClientOptions = array_merge_recursive($this->guzzleClientOptions, $options);
+        $this->client = new Client($this->guzzleClientOptions);
+        return $this;
     }
 
-    /**
-     * @return EngineInterface
-     */
-    public function getEngine()
+
+    public function getEngine(): Engine
     {
         return $this->engine;
     }
@@ -194,7 +220,7 @@ class SoapClient
     public function withRemoveEmptyNodes()
     {
         $this->middlewares = array_merge_recursive($this->middlewares, [
-            'empty_nodes' => new RemoveEmptyNodesMiddleware(),
+            new RemoveEmptyNodesMiddleware(),
         ]);
 
         return $this;
@@ -212,7 +238,7 @@ class SoapClient
         }
 
         $this->middlewares = array_merge_recursive($this->middlewares, [
-            'basic' => new BasicAuthMiddleware($username, $password),
+            new BasicAuthMiddleware($username, $password),
         ]);
 
         return $this;
@@ -230,7 +256,7 @@ class SoapClient
         }
 
         $this->middlewares = array_merge_recursive($this->middlewares, [
-            'dhl' => new CisDhlMiddleware($user, $signature),
+            new CisDhlMiddleware($user, $signature),
         ]);
 
         return $this;
@@ -242,7 +268,7 @@ class SoapClient
     public function withWsa()
     {
         $this->middlewares = array_merge_recursive($this->middlewares, [
-            'wsa' => new WsaMiddleware(),
+            new WsaMiddleware(),
         ]);
 
         return $this;
@@ -255,7 +281,7 @@ class SoapClient
     public function withWsse($options)
     {
         $this->middlewares = array_merge_recursive($this->middlewares, [
-            'wsse' => new WsseMiddleware($options),
+            new WsseMiddleware($options),
         ]);
 
         return $this;
@@ -343,9 +369,10 @@ class SoapClient
     public function call(string $method, $arguments = []): Response
     {
         try {
-            if (! $this->isClientBuilded) {
+            if (!$this->isClientBuilded) {
                 $this->buildClient();
             }
+            $this->refreshEngine();
             if ($arguments instanceof Validator) {
                 if ($arguments->fails()) {
                     return $this->failedValidation($arguments);
@@ -357,7 +384,7 @@ class SoapClient
             if ($result instanceof ResultProviderInterface) {
                 $result = Response::fromSoapResponse($result->getResult());
             }
-            if (! $result instanceof ResultInterface) {
+            if (!$result instanceof ResultInterface) {
                 $result = Response::fromSoapResponse($result);
             }
         } catch (\Exception $exception) {
@@ -387,10 +414,9 @@ class SoapClient
     public function buildClient(string $setup = '')
     {
         $this->byConfig($setup);
-        $this->withHandlerOptions([
+        $this->withGuzzleClientOptions([
             'handler' => $this->buildHandlerStack(),
         ]);
-        $this->refreshEngine();
         $this->isClientBuilded = true;
 
         return $this;
@@ -404,9 +430,9 @@ class SoapClient
      */
     public function byConfig(string $setup)
     {
-        if (! empty($setup)) {
+        if (!empty($setup)) {
             $setup = config()->get('soap.clients.'.$setup);
-            if (! $setup) {
+            if (!$setup) {
                 throw new NotFoundConfigurationException($setup);
             }
             foreach ($setup as $setupItem => $setupItemConfig) {
@@ -535,24 +561,24 @@ class SoapClient
      */
     protected function refreshEngine()
     {
+        $this->refreshPluginClient();
+        $this->setTransport();
         $this->refreshExtSoapOptions();
         $this->engine = ExtSoapEngineFactory::fromOptionsWithHandler(
             $this->extSoapOptions,
-            $this->handler,
+            $this->transport,
             $this->factory->isRecording()
         );
+        $this->refreshWsdlProvider();
 
         return $this;
     }
 
     protected function refreshExtSoapOptions()
     {
-        if ($this->factory->isRecording()) {
-            $this->baseWsdl($this->factory->getFakeWsdl());
-        }
         $this->extSoapOptions = ExtSoapOptions::defaults($this->wsdl, $this->options);
         if ($this->factory->isRecording()) {
-            $this->wsdlProvider->provide($this->factory->getFakeWsdl());
+            $this->wsdlProvider = new PassThroughWsdlProvider();
             $this->extSoapOptions->withWsdlProvider($this->wsdlProvider);
         }
     }

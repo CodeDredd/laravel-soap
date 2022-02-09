@@ -8,11 +8,11 @@
 [![documentation](https://img.shields.io/github/workflow/status/codedredd/laravel-soap/documentation?label=docs&logo=read-the-docs&style=flat-square)](https://codedredd.github.io/laravel-soap/)
 
 ## Versions
-Laravel SOAP Version | Laravel Support
--------- | ------------------
-1.x | 5.6, 6.x, 7x
-2.x | 8.x
-
+Laravel SOAP Version | Laravel Support | PHP Version
+-------- | ------------------ | -------------
+1.x | 5.6, 6.x, 7x | 7.3 - 8.0
+2.x | 8.x | 7.3 - 8.0
+3.x | 8.x, 9.x | 8.0 - 8.1
 <a name="installation"></a>
 ## Installation
 

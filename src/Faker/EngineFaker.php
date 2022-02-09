@@ -5,78 +5,43 @@ declare(strict_types=1);
 namespace CodeDredd\Soap\Faker;
 
 use CodeDredd\Soap\Xml\XMLSerializer;
-use Phpro\SoapClient\Soap\Driver\ExtSoap\ExtSoapOptions;
-use Phpro\SoapClient\Soap\Engine\DriverInterface;
-use Phpro\SoapClient\Soap\Engine\EngineInterface;
-use Phpro\SoapClient\Soap\Engine\Metadata\MetadataInterface;
-use Phpro\SoapClient\Soap\Handler\HandlerInterface;
-use Phpro\SoapClient\Soap\HttpBinding\LastRequestInfo;
-use Phpro\SoapClient\Soap\HttpBinding\SoapRequest;
+use Soap\Engine\Driver;
+use Soap\Engine\Engine;
+use Soap\Engine\HttpBinding\SoapRequest;
+use Soap\Engine\Metadata\Metadata;
+use Soap\Engine\Transport;
+use Soap\ExtSoapEngine\ExtSoapOptions;
 
 /**
  * Class EngineFaker.
  */
-class EngineFaker implements EngineInterface
+class EngineFaker implements Engine
 {
-    /**
-     * @var DriverInterface
-     */
-    private $driver;
+    private Driver $driver;
+    private Transport $transport;
+    private ExtSoapOptions $options;
 
-    /**
-     * @var HandlerInterface
-     */
-    private $handler;
-
-    /**
-     * @var ExtSoapOptions
-     */
-    private $options;
-
-    /**
-     * EngineFaker constructor.
-     *
-     * @param  DriverInterface  $driver
-     * @param  HandlerInterface  $handler
-     * @param  ExtSoapOptions  $options
-     */
     public function __construct(
-        DriverInterface $driver,
-        HandlerInterface $handler,
+        Driver $driver,
+        Transport $transport,
         ExtSoapOptions $options
     ) {
         $this->driver = $driver;
-        $this->handler = $handler;
+        $this->transport = $transport;
         $this->options = $options;
     }
 
-    /**
-     * @return MetadataInterface
-     */
-    public function getMetadata(): MetadataInterface
+    public function request(string $method, array $arguments)
+    {
+        $request = new SoapRequest(XMLSerializer::arrayToSoapXml($arguments), $this->options->getWsdl(), $method, $this->options->getOptions()['soap_version'] ?? SOAP_1_1);
+        $response = $this->transport->request($request);
+
+        return json_decode($response->getPayload());
+    }
+
+    public function getMetadata(): Metadata
     {
         return $this->driver->getMetadata();
     }
 
-    /**
-     * @param  string  $method
-     * @param  array  $arguments
-     * @return mixed
-     */
-    public function request(string $method, array $arguments)
-    {
-        $options = $this->options->getOptions();
-        $request = new SoapRequest(XMLSerializer::arrayToSoapXml($arguments), $this->options->getWsdl(), $method, $options['soap_version'] ?? SOAP_1_1);
-        $response = $this->handler->request($request);
-
-        return json_decode($response->getResponse());
-    }
-
-    /**
-     * @return LastRequestInfo
-     */
-    public function collectLastRequestInfo(): LastRequestInfo
-    {
-        return $this->handler->collectLastRequestInfo();
-    }
 }
