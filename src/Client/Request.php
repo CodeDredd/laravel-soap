@@ -9,10 +9,6 @@ use Psr\Http\Message\RequestInterface;
 use Soap\Psr18Transport\HttpBinding\SoapActionDetector;
 use Soap\Xml\Locator\SoapBodyLocator;
 use VeeWee\Xml\Dom\Document;
-use function VeeWee\Xml\Dom\Configurator\optimize_namespaces;
-use function VeeWee\Xml\Dom\Configurator\pretty_print;
-use function VeeWee\Xml\Dom\Configurator\utf8;
-use function VeeWee\Xml\Encoding\xml_decode;
 
 /**
  * Class Request.
