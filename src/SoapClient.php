@@ -7,17 +7,14 @@ use CodeDredd\Soap\Client\Response;
 use CodeDredd\Soap\Driver\ExtSoap\ExtSoapEngineFactory;
 use CodeDredd\Soap\Exceptions\NotFoundConfigurationException;
 use CodeDredd\Soap\Exceptions\SoapException;
-use CodeDredd\Soap\Faker\EngineFaker;
 use CodeDredd\Soap\Middleware\CisDhlMiddleware;
 use CodeDredd\Soap\Middleware\WsseMiddleware;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use Http\Client\Common\PluginClient;
 use Http\Client\Exception\HttpException;
-use Http\Client\HttpClient;
-use Http\Discovery\Psr17FactoryDiscovery;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
 use Phpro\SoapClient\Type\ResultInterface;
@@ -25,14 +22,15 @@ use Phpro\SoapClient\Type\ResultProviderInterface;
 use Psr\Http\Client\ClientInterface;
 use Soap\Engine\Engine;
 use Soap\Engine\Transport;
+use Soap\ExtSoapEngine\AbusedClient;
 use Soap\ExtSoapEngine\ExtSoapOptions;
 use Soap\ExtSoapEngine\Transport\TraceableTransport;
-use Soap\ExtSoapEngine\Wsdl\InMemoryWsdlProvider;
 use Soap\ExtSoapEngine\Wsdl\PassThroughWsdlProvider;
 use Soap\ExtSoapEngine\Wsdl\WsdlProvider;
 use Soap\Psr18Transport\Psr18Transport;
 use Soap\Psr18Transport\Wsdl\Psr18Loader;
 use Soap\Psr18WsseMiddleware\WsaMiddleware;
+use Soap\Wsdl\Loader\FlatteningLoader;
 
 /**
  * Class SoapClient.
@@ -47,76 +45,37 @@ class SoapClient
 
     protected PluginClient $pluginClient;
 
-    /**
-     * @var Engine
-     */
-    protected $engine;
+    protected Engine $engine;
 
-    /**
-     * @var array
-     */
-    protected $options = [];
+    protected array $options = [];
 
-    /**
-     * @var ExtSoapOptions
-     */
-    protected $extSoapOptions;
+    protected ExtSoapOptions $extSoapOptions;
 
-    /**
-     * @var TraceableTransport
-     */
-    protected $transport;
+    protected TraceableTransport $transport;
 
-    /**
-     * @var array
-     */
-    protected $guzzleClientOptions = [];
+    protected array $guzzleClientOptions = [];
 
-    /**
-     * @var string
-     */
-    protected $wsdl = '';
+    protected string $wsdl = '';
 
-    /**
-     * @var bool
-     */
-    protected $isClientBuilded = false;
+    protected bool $isClientBuilded = false;
 
-    /**
-     * @var array
-     */
-    protected $middlewares = [];
+    protected array $middlewares = [];
 
-    /**
-     * @var SoapFactory|null
-     */
-    protected $factory;
+    protected SoapFactory|null $factory;
 
-    /**
-     * @var Psr18Loader|WsdlProvider
-     */
-    protected $wsdlProvider;
+    protected FlatteningLoader|WsdlProvider $wsdlProvider;
 
-    /**
-     * The request cookies.
-     *
-     * @var array
-     */
-    protected $cookies;
+    protected array $cookies;
 
     /**
      * The callbacks that should execute before the request is sent.
-     *
-     * @var array
      */
-    protected $beforeSendingCallbacks;
+    protected \Illuminate\Support\Collection $beforeSendingCallbacks;
 
     /**
      * The stub callables that will handle requests.
-     *
-     * @var \Illuminate\Support\Collection|null
      */
-    protected $stubCallbacks;
+    protected \Illuminate\Support\Collection|null $stubCallbacks;
 
     /**
      * Create a new Soap Client instance.
@@ -129,16 +88,16 @@ class SoapClient
         $this->factory = $factory;
         $this->client = new Client($this->guzzleClientOptions);
         $this->pluginClient = new PluginClient($this->client, $this->middlewares);
-        $this->wsdlProvider = Psr18Loader::createForClient($this->pluginClient);
+        $this->wsdlProvider = new FlatteningLoader(Psr18Loader::createForClient($this->pluginClient));
         $this->beforeSendingCallbacks = collect([
             function (Request $request, array $options) {
-                $this->cookies = $options['cookies'];
+                $this->cookies = Arr::wrap($options['cookies']);
             },
         ]);
     }
 
     public function refreshWsdlProvider(){
-        $this->wsdlProvider = Psr18Loader::createForClient($this->pluginClient);
+        $this->wsdlProvider = new FlatteningLoader(Psr18Loader::createForClient($this->pluginClient));
 
         return $this;
     }
@@ -160,7 +119,7 @@ class SoapClient
 
     protected function setTransport(Transport $handler = null): static
     {
-        $soapClient = \Soap\ExtSoapEngine\AbusedClient::createFromOptions(
+        $soapClient = AbusedClient::createFromOptions(
             ExtSoapOptions::defaults($this->wsdl, $this->options)
         );
         $transport = $handler ?? Psr18Transport::createForClient($this->pluginClient);
