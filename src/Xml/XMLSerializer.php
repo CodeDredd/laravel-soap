@@ -15,7 +15,7 @@ class XMLSerializer
     /**
      * Recursive function to turn a DOMDocument element to an array.
      *
-     * @param DOMDocument|DomNode $node the document (might also be a DOMElement/DOMNode?)
+     * @param  DOMDocument|DomNode  $node  the document (might also be a DOMElement/DOMNode?)
      * @return array
      */
     public static function domNodeToArray($node)

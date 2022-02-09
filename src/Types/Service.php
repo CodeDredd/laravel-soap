@@ -29,8 +29,7 @@ class Service extends \Wsdl2PhpGenerator\Service
     /**
      * Returns an operation provided by the service based on its name.
      *
-     * @param string $operationName the name of the operation
-     *
+     * @param  string  $operationName  the name of the operation
      * @return Operation|null the operation or null if it does not exist
      */
     public function getOperation($operationName)
@@ -41,7 +40,7 @@ class Service extends \Wsdl2PhpGenerator\Service
     /**
      * Add an operation to the service.
      *
-     * @param Operation $operation the operation to be added
+     * @param  Operation  $operation  the operation to be added
      */
     public function addOperation(Operation $operation)
     {

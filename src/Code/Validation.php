@@ -31,6 +31,7 @@ class Validation extends Base
 
     /**
      * Validation constructor.
+     *
      * @param  Service  $engine
      * @param $configName
      * @param  bool  $dryRun
