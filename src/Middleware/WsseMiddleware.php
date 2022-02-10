@@ -2,75 +2,30 @@
 
 namespace CodeDredd\Soap\Middleware;
 
+use Http\Client\Common\Plugin;
 use Http\Promise\Promise;
-use Phpro\SoapClient\Middleware\Middleware;
-use Phpro\SoapClient\Xml\SoapXml;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use RobRichards\WsePhp\WSSESoap;
 use RobRichards\XMLSecLibs\XMLSecurityKey;
+use Soap\Psr18Transport\Xml\XmlMessageManipulator;
+use VeeWee\Xml\Dom\Document;
 
-class WsseMiddleware extends Middleware
+class WsseMiddleware implements Plugin
 {
-    /**
-     * @var string
-     */
-    private $privateKeyFile;
-
-    /**
-     * @var string
-     */
-    private $publicKeyFile;
-
-    /**
-     * @var string
-     */
-    private $serverCertificateFile = '';
-
-    /**
-     * @var int
-     */
-    private $timestamp = 3600;
-
-    /**
-     * @var bool
-     */
-    private $signAllHeaders = false;
-
-    /**
-     * @var string
-     */
-    private $digitalSignMethod = XMLSecurityKey::RSA_SHA1;
-
-    /**
-     * @var string
-     */
-    private $userTokenName = '';
-
-    /**
-     * @var string
-     */
-    private $userTokenPassword = '';
-
-    /**
-     * @var bool
-     */
-    private $userTokenDigest = false;
-
-    /**
-     * @var bool
-     */
-    private $encrypt = false;
-
-    /**
-     * @var bool
-     */
-    private $mustUnderstand = true;
-
-    /**
-     * @var bool
-     */
-    private $serverCertificateHasSubjectKeyIdentifier = true;
+    private string $privateKeyFile;
+    private string $publicKeyFile;
+    private string $serverCertificateFile = '';
+    private int $timestamp = 3600;
+    private bool $signAllHeaders = false;
+    private string $digitalSignMethod = XMLSecurityKey::RSA_SHA1;
+    private string $userTokenName = '';
+    private string $userTokenPassword = '';
+    private bool $userTokenDigest = false;
+    private bool $encrypt = false;
+    private bool $hasUserToken = false;
+    private bool $serverCertificateHasSubjectKeyIdentifier = true;
+    private bool $mustUnderstand = true;
 
     public function __construct(array $properties)
     {
@@ -129,45 +84,56 @@ class WsseMiddleware extends Middleware
         return $this;
     }
 
+    public function handleRequest(RequestInterface $request, callable $next, callable $first): Promise
+    {
+        return $this->beforeRequest($next, $request)->then(
+            fn (ResponseInterface $response): ResponseInterface => $this->afterResponse($response)
+        );
+    }
+
     public function beforeRequest(callable $handler, RequestInterface $request): Promise
     {
-        $xml = SoapXml::fromStream($request->getBody());
-        $wsse = new WSSESoap($xml->getXmlDocument(), $this->mustUnderstand);
+        $request = (new XmlMessageManipulator())(
+            $request,
+            function (Document $xml) {
+                $wsse = new WSSESoap($xml->toUnsafeDocument(), $this->mustUnderstand);
 
-        // Prepare the WSSE soap class:
-        $wsse->signAllHeaders = $this->signAllHeaders;
-        $wsse->addTimestamp($this->timestamp);
+                // Prepare the WSSE soap class:
+                $wsse->signAllHeaders = $this->signAllHeaders;
+                $wsse->addTimestamp($this->timestamp);
 
-        // Add a user token if this is configured.
-        if (! empty($this->userTokenName) && ! empty($this->userTokenPassword)) {
-            $wsse->addUserToken($this->userTokenName, $this->userTokenPassword, $this->userTokenDigest);
-        }
+                // Add a user token if this is configured.
+                if ($this->hasUserToken) {
+                    $wsse->addUserToken($this->userTokenName, $this->userTokenPassword, $this->userTokenDigest);
+                }
 
-        if (! empty($this->privateKeyFile) && ! empty($this->publicKeyFile)) {
-            // Create new XMLSec Key using the dsigType and type is private key
-            $key = new XMLSecurityKey($this->digitalSignMethod, ['type' => 'private']);
-            $key->loadKey($this->privateKeyFile, true);
-            $wsse->signSoapDoc($key);
-            //  Add certificate (BinarySecurityToken) to the message
-            $token = $wsse->addBinaryToken(file_get_contents($this->publicKeyFile));
-            //  Attach token pointer to Signature:
-            $wsse->attachTokentoSig($token);
-        }
+                if (! empty($this->privateKeyFile) && ! empty($this->publicKeyFile)) {
+                    //  Add certificate (BinarySecurityToken) to the message
+                    $token = $wsse->addBinaryToken(file_get_contents($this->publicKeyFile));
 
-        // Add end-to-end encryption if configured:
-        if ($this->encrypt) {
-            $key = new XMLSecurityKey(XMLSecurityKey::AES256_CBC);
-            $key->generateSessionKey();
-            $siteKey = new XMLSecurityKey(XMLSecurityKey::RSA_OAEP_MGF1P, ['type' => 'public']);
-            $siteKey->loadKey($this->serverCertificateFile, true, true);
-            $wsse->encryptSoapDoc($siteKey, $key, [
-                'KeyInfo' => [
-                    'X509SubjectKeyIdentifier' => $this->serverCertificateHasSubjectKeyIdentifier,
-                ],
-            ]);
-        }
+                    // Create new XMLSec Key using the dsigType and type is private key
+                    $key = new XMLSecurityKey($this->digitalSignMethod, ['type' => 'private']);
+                    $key->loadKey($this->privateKeyFile, true);
+                    $wsse->signSoapDoc($key);
 
-        $request = $request->withBody($xml->toStream());
+                    //  Attach token pointer to Signature:
+                    $wsse->attachTokentoSig($token);
+                }
+
+                // Add end-to-end encryption if configured:
+                if ($this->encrypt) {
+                    $key = new XMLSecurityKey(XMLSecurityKey::AES256_CBC);
+                    $key->generateSessionKey();
+                    $siteKey = new XMLSecurityKey(XMLSecurityKey::RSA_OAEP_MGF1P, ['type' => 'public']);
+                    $siteKey->loadKey($this->serverCertificateFile, true, true);
+                    $wsse->encryptSoapDoc($siteKey, $key, [
+                        'KeyInfo' => [
+                            'X509SubjectKeyIdentifier' => $this->serverCertificateHasSubjectKeyIdentifier,
+                        ],
+                    ]);
+                }
+            }
+        );
 
         return $handler($request);
     }
@@ -178,21 +144,23 @@ class WsseMiddleware extends Middleware
             return $response;
         }
 
-        $xml = SoapXml::fromStream($response->getBody());
-        $wsse = new WSSESoap($xml->getXmlDocument());
-        $wsse->decryptSoapDoc(
-            $xml->getXmlDocument(),
-            [
-                'keys' => [
-                    'private' => [
-                        'key' => $this->privateKeyFile,
-                        'isFile' => true,
-                        'isCert' => false,
-                    ],
-                ],
-            ]
+        return (new XmlMessageManipulator())(
+            $response,
+            function (Document $xml) {
+                $wsse = new WSSESoap($xml->toUnsafeDocument());
+                $wsse->decryptSoapDoc(
+                    $xml->toUnsafeDocument(),
+                    [
+                        'keys' => [
+                            'private' => [
+                                'key'    => $this->privateKeyFile,
+                                'isFile' => true,
+                                'isCert' => false,
+                            ],
+                        ],
+                    ]
+                );
+            }
         );
-
-        return $response->withBody($xml->toStream());
     }
 }

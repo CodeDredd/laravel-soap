@@ -10,6 +10,7 @@ use CodeDredd\Soap\SoapFactory;
 use CodeDredd\Soap\Tests\Fixtures\CustomSoapClient;
 use CodeDredd\Soap\Tests\TestCase;
 use GuzzleHttp\RedirectMiddleware;
+use Illuminate\Support\Str;
 
 class SoapClientTest extends TestCase
 {
@@ -22,44 +23,44 @@ class SoapClientTest extends TestCase
     {
         Soap::fake();
         Soap::assertNothingSent();
-        $response = Soap::baseWsdl('https://laravel-soap.wsdl')
-            ->call('Get_Users');
+        $response = Soap::baseWsdl(dirname(__DIR__, 1).'/Fixtures/Wsdl/weather.wsdl')
+            ->call('GetWeatherInformation');
         self::assertTrue($response->ok());
         Soap::assertSent(function (Request $request) {
-            return $request->action() === 'Get_Users';
+            return $request->action() === 'GetWeatherInformation';
         });
         Soap::assertNotSent(function (Request $request) {
-            return $request->action() === 'Get_User';
+            return $request->action() === 'GetCityWeatherByZIPSoapOut';
         });
-        Soap::assertActionCalled('Get_Users');
+        Soap::assertActionCalled('GetWeatherInformation');
     }
 
     public function testMagicCallByConfig()
     {
         Soap::fake();
-        $response = Soap::buildClient('laravel_soap')->Get_User();
+        $response = Soap::buildClient('laravel_soap')->GetWeatherInformation();
         self::assertTrue($response->ok());
     }
 
     public function testWsseWithWsaCall()
     {
         Soap::fake();
-        $client = Soap::baseWsdl('https://laravel-soap.wsdl')->withWsse([
+        $client = Soap::baseWsdl(dirname(__DIR__, 1).'/Fixtures/Wsdl/weather.wsdl')->withWsse([
             'userTokenName' => 'Test',
             'userTokenPassword' => 'passwordTest',
             'mustUnderstand' => false,
         ])->withWsa();
-        $response = $client->Get_User();
-        $lastRequestInfo = $client->getEngine()->collectLastRequestInfo();
-        self::assertStringNotContainsString('mustUnderstand', $lastRequestInfo->getLastRequest());
-//        dd($client->debugLastSoapRequest());
+        $response = $client->GetWeatherInformation();
+        Soap::assertSent(function (Request $request) {
+            return ! Str::contains($request->xmlContent(), 'mustUnderstand');
+        });
         self::assertTrue($response->ok());
     }
 
     public function testArrayAccessResponse()
     {
         Soap::fakeSequence()->push('test');
-        $response = Soap::buildClient('laravel_soap')->Get_User()['response'];
+        $response = Soap::buildClient('laravel_soap')->GetWeatherInformation()['response'];
         self::assertEquals('test', $response);
     }
 
@@ -114,7 +115,7 @@ class SoapClientTest extends TestCase
             return Soap::response($item);
         })->all();
         Soap::fake($fake);
-        $response = Soap::baseWsdl('https://laravel-soap.wsdl')
+        $response = Soap::baseWsdl(dirname(__DIR__, 1).'/Fixtures/Wsdl/weather.wsdl')
             ->call($action);
         self::assertEquals($exspected, $response->json());
     }
@@ -122,7 +123,7 @@ class SoapClientTest extends TestCase
     public function soapActionProvider(): array
     {
         $fakeResponse = [
-            'Get_Users' => [
+            'GetWeatherInformation' => [
                 'Response_Data' => [
                     'Users' => [
                         [
@@ -132,28 +133,31 @@ class SoapClientTest extends TestCase
                     ],
                 ],
             ],
-            'Get_Post' => 'Test',
+            'GetCityForecastByZIP' => 'Test',
         ];
 
         return [
-            'without_fake_array' => ['Get_User', null, null],
-            'with_fake_array_wrong_method' => ['Get_User', $fakeResponse, null],
-            'with_fake_array' => ['Get_Users', $fakeResponse, $fakeResponse['Get_Users']],
-            'with_fake_string' => ['Get_Post', $fakeResponse, ['response' => 'Test']],
+            'without_fake_array' => ['GetCityWeatherByZIP', null, null],
+            'with_fake_array_wrong_method' => ['GetCityWeatherByZIP', $fakeResponse, null],
+            'with_fake_array' => ['GetWeatherInformation', $fakeResponse, $fakeResponse['GetWeatherInformation']],
+            'with_fake_string' => ['GetCityForecastByZIP', $fakeResponse, ['response' => 'Test']],
         ];
     }
 
     public function testSoapOptions(): void
     {
         Soap::fake();
-        $client = Soap::withOptions(['soap_version' => SOAP_1_2])->baseWsdl('https://laravel-soap.wsdl');
-        $response = $client->call('Get_User');
-        $lastRequestInfo = $client->getEngine()->collectLastRequestInfo();
-
+        $client = Soap::withOptions(['soap_version' => SOAP_1_2])
+            ->baseWsdl(dirname(__DIR__, 1).'/Fixtures/Wsdl/weather.wsdl');
+        $response = $client->call('GetWeatherInformation');
         self::assertTrue($response->ok());
-        self::assertStringContainsString('application/soap+xml; charset="utf-8',
-            $lastRequestInfo->getLastRequestHeaders());
-        Soap::assertActionCalled('Get_User');
+        Soap::assertSent(function (Request $request) {
+            return Str::contains(
+                $request->getRequest()->getHeaderLine('Content-Type'),
+                'application/soap+xml; charset="utf-8"'
+            );
+        });
+        Soap::assertActionCalled('GetWeatherInformation');
     }
 
     public function testRealSoapCall(): void
@@ -185,24 +189,24 @@ class SoapClientTest extends TestCase
     public function testSoapWithDifferentHeaders($header, $exspected): void
     {
         Soap::fake();
-        $client = Soap::withHeaders($header)->baseWsdl('https://laravel-soap.wsdl');
-        $response = $client->call('Get_User');
-        $lastRequestInfo = $client->getEngine()->collectLastRequestInfo();
-
+        $client = Soap::withHeaders($header)->baseWsdl(dirname(__DIR__, 1).'/Fixtures/Wsdl/weather.wsdl');
+        $response = $client->call('GetWeatherInformation');
+        Soap::assertSent(function (Request $request) use ($exspected) {
+            return $request->getRequest()->getHeaderLine('test') === $exspected;
+        });
         self::assertTrue($response->ok());
-        self::assertStringContainsString($exspected, $lastRequestInfo->getLastRequestHeaders());
-        Soap::assertActionCalled('Get_User');
+        Soap::assertActionCalled('GetWeatherInformation');
     }
 
     public function soapHeaderProvider(): array
     {
         $header = [
-            'Content-Type' => 'application/soap+xml; charset="utf-8"',
+            'test' => 'application/soap+xml; charset="utf-8"',
         ];
 
         return [
-            'without_header' => [[], 'text/xml; charset="utf-8"'],
-            'with_header' => [$header, $header['Content-Type']],
+            'without_header' => [[], ''],
+            'with_header' => [$header, $header['test']],
         ];
     }
 
@@ -219,11 +223,11 @@ class SoapClientTest extends TestCase
     public function testHandlerOptions(): void
     {
         Soap::fake();
-        $client = Soap::baseWsdl('https://laravel-soap.wsdl');
-        $response = $client->call('Get_User');
+        $client = Soap::baseWsdl(dirname(__DIR__, 1).'/Fixtures/Wsdl/weather.wsdl');
+        $response = $client->call('GetWeatherInformation');
         self::assertTrue($response->ok());
-        self::assertEquals(true, $client->getHandler()->getClient()->getConfig()['verify']);
-        $client = $client->withHandlerOptions([
+        self::assertEquals(true, $client->getClient()->getConfig()['verify']);
+        $client = $client->withGuzzleClientOptions([
             'allow_redirects' => RedirectMiddleware::$defaultSettings,
             'http_errors' => true,
             'decode_content' => true,
@@ -231,8 +235,8 @@ class SoapClientTest extends TestCase
             'cookies' => false,
             'idn_conversion' => false,
         ]);
-        $response = $client->call('Get_User');
+        $response = $client->call('GetWeatherInformation');
         self::assertTrue($response->ok());
-        self::assertEquals(false, $client->getHandler()->getClient()->getConfig()['verify']);
+        self::assertEquals(false, $client->getClient()->getConfig()['verify']);
     }
 }

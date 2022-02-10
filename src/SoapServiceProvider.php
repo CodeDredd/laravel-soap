@@ -30,7 +30,7 @@ class SoapServiceProvider extends ServiceProvider
         );
 
         $this->registerService();
-        $this->registerCommands();
+//        $this->registerCommands();
     }
 
     /**

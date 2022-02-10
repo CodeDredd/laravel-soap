@@ -3,14 +3,8 @@
 namespace CodeDredd\Soap\Types;
 
 use Illuminate\Console\OutputStyle;
-use Wsdl2PhpGenerator\ArrayType;
-use Wsdl2PhpGenerator\ComplexType;
-use Wsdl2PhpGenerator\Config;
-use Wsdl2PhpGenerator\Enum;
-use Wsdl2PhpGenerator\Operation;
-use Wsdl2PhpGenerator\Pattern;
 
-class Generator extends \Wsdl2PhpGenerator\Generator
+class Generator
 {
     /**
      * @var Service

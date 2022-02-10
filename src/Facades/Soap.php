@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static \CodeDredd\Soap\SoapClient byConfig(string $setup = '')
  * @method static \CodeDredd\Soap\SoapClient withOptions(array $options)
  * @method static \CodeDredd\Soap\SoapClient withHeaders(array $options)
- * @method static \CodeDredd\Soap\SoapClient withHandlerOptions(array $options)
+ * @method static \CodeDredd\Soap\SoapClient withGuzzleClientOptions(array $options)
  * @method static \CodeDredd\Soap\SoapClient withWsse(array $config)
  * @method static \CodeDredd\Soap\SoapClient withWsa()
  * @method static \CodeDredd\Soap\SoapClient withRemoveEmptyNodes()

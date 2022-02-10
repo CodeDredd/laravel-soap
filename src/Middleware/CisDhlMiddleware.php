@@ -2,13 +2,20 @@
 
 namespace CodeDredd\Soap\Middleware;
 
+use Http\Client\Common\Plugin;
 use Http\Promise\Promise;
-use Phpro\SoapClient\Middleware\Middleware;
-use Phpro\SoapClient\Xml\SoapXml;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Soap\Psr18Transport\Xml\XmlMessageManipulator;
+use Soap\Xml\Builder\SoapHeader;
+use Soap\Xml\Builder\SoapHeaders;
+use Soap\Xml\Manipulator\PrependSoapHeaders;
+use function VeeWee\Xml\Dom\Builder\children;
+use function VeeWee\Xml\Dom\Builder\namespaced_element;
+use function VeeWee\Xml\Dom\Builder\value;
+use VeeWee\Xml\Dom\Document;
 
-class CisDhlMiddleware extends Middleware
+class CisDhlMiddleware implements Plugin
 {
     /**
      * @var string
@@ -36,34 +43,29 @@ class CisDhlMiddleware extends Middleware
         return 'cis_dhl_middleware';
     }
 
-    /**
-     * @param  callable  $handler
-     * @param  RequestInterface  $request
-     * @return Promise
-     */
-    public function beforeRequest(callable $handler, RequestInterface $request): Promise
+    public function handleRequest(RequestInterface $request, callable $next, callable $first): Promise
     {
-        $xml = SoapXml::fromStream($request->getBody());
-        $xml->registerNamespace('cis', 'http://dhl.de/webservice/cisbase');
-        $envelope = $xml->xpath('/soap:Envelope')->item(0);
+        return $next(
+            (new XmlMessageManipulator)(
+                $request,
+                function (Document $document) {
+                    $builder = new SoapHeaders(
+                        new SoapHeader(
+                            self::CIS_NS,
+                            'cis:Authentification',
+                            children(
+                                namespaced_element(self::CIS_NS, 'user', value($this->user)),
+                                namespaced_element(self::CIS_NS, 'signature', value($this->signature))
+                            )
+                        )
+                    );
 
-        $domDoc = $xml->getXmlDocument();
-        $domDoc->documentElement->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:cis', self::CIS_NS);
+                    $headers = $document->build($builder);
 
-        $header = $domDoc->createElementNS('http://schemas.xmlsoap.org/soap/envelope/', 'SOAP-ENV:Header');
-        $cisAuth = $domDoc->createElementNS(self::CIS_NS, 'cis:Authentification');
-
-        $envelope->insertBefore($header, $envelope->firstChild);
-
-        if (! empty($this->user) && ! empty($this->signature)) {
-            $cisUser = $domDoc->createElementNS(self::CIS_NS, 'cis:user', $this->user);
-            $cisSig = $domDoc->createElementNS(self::CIS_NS, 'cis:signature', $this->signature);
-            $cisAuth->appendChild($cisUser);
-            $cisAuth->appendChild($cisSig);
-        }
-        $header->appendChild($cisAuth);
-
-        return $handler($request->withBody($xml->toStream()));
+                    return $document->manipulate(new PrependSoapHeaders(...$headers));
+                }
+            )
+        );
     }
 
     /**

@@ -9,7 +9,7 @@ class CustomSoapClient extends SoapClient
     public function buildClient(string $setup = '')
     {
         $this->baseWsdl(__DIR__.'/Wsdl/weather.wsdl');
-        $this->withHandlerOptions([
+        $this->withGuzzleClientOptions([
             'handler' => $this->buildHandlerStack(),
         ]);
         $this->refreshEngine();

@@ -5,19 +5,22 @@ declare(strict_types=1);
 namespace CodeDredd\Soap\Driver\ExtSoap;
 
 use CodeDredd\Soap\Faker\EngineFaker;
-use Phpro\SoapClient\Soap\Driver\ExtSoap\ExtSoapOptions;
-use Phpro\SoapClient\Soap\Engine\Engine;
-use Phpro\SoapClient\Soap\Handler\HandlerInterface;
+use Soap\Engine\SimpleEngine;
+use Soap\Engine\Transport;
+use Soap\ExtSoapEngine\ExtSoapDriver;
+use Soap\ExtSoapEngine\ExtSoapOptions;
 
 class ExtSoapEngineFactory
 {
     public static function fromOptionsWithHandler(
         ExtSoapOptions $options,
-        HandlerInterface $handler,
+        Transport $transport,
         $withMocking = false
-    ) {
+    ): EngineFaker|SimpleEngine {
         $driver = ExtSoapDriver::createFromOptions($options);
+        if ($withMocking) {
+        }
 
-        return $withMocking ? new EngineFaker($driver, $handler, $options) : new Engine($driver, $handler);
+        return $withMocking ? new EngineFaker($driver, $transport, $options) : new SimpleEngine($driver, $transport);
     }
 }

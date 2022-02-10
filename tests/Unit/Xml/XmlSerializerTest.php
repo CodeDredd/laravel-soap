@@ -3,7 +3,6 @@
 namespace CodeDredd\Soap\Tests\Unit\Xml;
 
 use CodeDredd\Soap\Tests\TestCase;
-use CodeDredd\Soap\Xml\SoapXml;
 use CodeDredd\Soap\Xml\XMLSerializer;
 
 class XmlSerializerTest extends TestCase
@@ -28,13 +27,5 @@ XML;
         $soapXml = XMLSerializer::arrayToSoapXml($this->array);
 
         self::assertXmlStringEqualsXmlString($this->xml, $soapXml);
-    }
-
-    public function testDomNodeToArray()
-    {
-        $xmlDocument = SoapXml::fromString($this->xml);
-        $xmlBodyAsArray = XMLSerializer::domNodeToArray($xmlDocument->getBody());
-
-        self::assertEquals($this->array, $xmlBodyAsArray);
     }
 }

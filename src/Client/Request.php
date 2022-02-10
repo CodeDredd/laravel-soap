@@ -2,27 +2,25 @@
 
 namespace CodeDredd\Soap\Client;
 
-use CodeDredd\Soap\Xml\SoapXml;
 use CodeDredd\Soap\Xml\XMLSerializer;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Psr\Http\Message\RequestInterface;
+use Soap\Psr18Transport\HttpBinding\SoapActionDetector;
+use Soap\Xml\Locator\SoapBodyLocator;
+use VeeWee\Xml\Dom\Document;
 
 /**
  * Class Request.
  */
 class Request
 {
-    /**
-     * The underlying PSR request.
-     *
-     * @var \Psr\Http\Message\RequestInterface
-     */
-    protected $request;
+    protected RequestInterface $request;
 
     /**
      * Create a new request instance.
      *
-     * @param  \Psr\Http\Message\RequestInterface  $request
+     * @param  RequestInterface  $request
      * @return void
      */
     public function __construct($request)
@@ -32,47 +30,32 @@ class Request
 
     /**
      * Get the soap action for soap 1.1 and 1.2.
-     *
-     * @return string
      */
     public function action(): string
     {
-        $contentType = $this->request->getHeaderLine('Content-Type');
-        $soapAction = $this->request->getHeaderLine('SOAPAction');
-        if (empty($soapAction)) {
-            return Str::of($contentType)->afterLast('action=')->remove('"');
-        }
-
-        return $this->request->getHeaderLine('SOAPAction');
+        return Str::remove('"', SoapActionDetector::detectFromRequest($this->request));
     }
 
-    /**
-     * @return \Psr\Http\Message\RequestInterface
-     */
-    public function getRequest()
+    public function getRequest(): RequestInterface
     {
         return $this->request;
     }
 
     /**
      * Return complete xml request body.
-     *
-     * @return string
      */
-    public function xmlContent()
+    public function xmlContent(): string
     {
         return $this->request->getBody()->getContents();
     }
 
     /**
      * Return request arguments.
-     *
-     * @return array
      */
     public function arguments(): array
     {
-        $xml = SoapXml::fromString($this->xmlContent());
-        $arguments = Arr::first(XMLSerializer::domNodeToArray($xml->getBody()));
+        $doc = Document::fromXmlString($this->xmlContent());
+        $arguments = Arr::first(XMLSerializer::domNodeToArray($doc->locate(new SoapBodyLocator())));
 
         return $arguments ?? [];
     }
