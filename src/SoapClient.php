@@ -7,7 +7,6 @@ use CodeDredd\Soap\Client\Response;
 use CodeDredd\Soap\Driver\ExtSoap\ExtSoapEngineFactory;
 use CodeDredd\Soap\Exceptions\NotFoundConfigurationException;
 use CodeDredd\Soap\Exceptions\SoapException;
-use CodeDredd\Soap\Middleware\BasicAuthMiddleware;
 use CodeDredd\Soap\Middleware\CisDhlMiddleware;
 use CodeDredd\Soap\Middleware\WsseMiddleware;
 use GuzzleHttp\Client;
@@ -199,9 +198,9 @@ class SoapClient
         }
 
         $this->withHeaders([
-           'Authorization' => sprintf('Basic %s', base64_encode(
-               sprintf('%s:%s', $username, $password)
-           ))
+            'Authorization' => sprintf('Basic %s', base64_encode(
+                sprintf('%s:%s', $username, $password)
+            )),
         ]);
 
         return $this;
