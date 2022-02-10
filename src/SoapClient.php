@@ -7,17 +7,14 @@ use CodeDredd\Soap\Client\Response;
 use CodeDredd\Soap\Driver\ExtSoap\ExtSoapEngineFactory;
 use CodeDredd\Soap\Exceptions\NotFoundConfigurationException;
 use CodeDredd\Soap\Exceptions\SoapException;
-use CodeDredd\Soap\Faker\EngineFaker;
 use CodeDredd\Soap\Middleware\CisDhlMiddleware;
 use CodeDredd\Soap\Middleware\WsseMiddleware;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use Http\Client\Common\PluginClient;
 use Http\Client\Exception\HttpException;
-use Http\Client\HttpClient;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
 use Phpro\SoapClient\Type\ResultInterface;
@@ -27,7 +24,6 @@ use Soap\Engine\Engine;
 use Soap\Engine\Transport;
 use Soap\ExtSoapEngine\ExtSoapOptions;
 use Soap\ExtSoapEngine\Transport\TraceableTransport;
-use Soap\ExtSoapEngine\Wsdl\InMemoryWsdlProvider;
 use Soap\ExtSoapEngine\Wsdl\PassThroughWsdlProvider;
 use Soap\ExtSoapEngine\Wsdl\WsdlProvider;
 use Soap\Psr18Transport\Psr18Transport;
@@ -137,7 +133,8 @@ class SoapClient
         ]);
     }
 
-    public function refreshWsdlProvider(){
+    public function refreshWsdlProvider()
+    {
         $this->wsdlProvider = Psr18Loader::createForClient($this->pluginClient);
 
         return $this;
@@ -169,7 +166,6 @@ class SoapClient
                 $soapClient,
                 $transport
             );
-
 
         return $this;
     }
@@ -205,9 +201,9 @@ class SoapClient
     {
         $this->guzzleClientOptions = array_merge_recursive($this->guzzleClientOptions, $options);
         $this->client = new Client($this->guzzleClientOptions);
+
         return $this;
     }
-
 
     public function getEngine(): Engine
     {
@@ -369,7 +365,7 @@ class SoapClient
     public function call(string $method, $arguments = []): Response
     {
         try {
-            if (!$this->isClientBuilded) {
+            if (! $this->isClientBuilded) {
                 $this->buildClient();
             }
             $this->refreshEngine();
@@ -384,7 +380,7 @@ class SoapClient
             if ($result instanceof ResultProviderInterface) {
                 $result = Response::fromSoapResponse($result->getResult());
             }
-            if (!$result instanceof ResultInterface) {
+            if (! $result instanceof ResultInterface) {
                 $result = Response::fromSoapResponse($result);
             }
         } catch (\Exception $exception) {
@@ -430,9 +426,9 @@ class SoapClient
      */
     public function byConfig(string $setup)
     {
-        if (!empty($setup)) {
+        if (! empty($setup)) {
             $setup = config()->get('soap.clients.'.$setup);
-            if (!$setup) {
+            if (! $setup) {
                 throw new NotFoundConfigurationException($setup);
             }
             foreach ($setup as $setupItem => $setupItemConfig) {

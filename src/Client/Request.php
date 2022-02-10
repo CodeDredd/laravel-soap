@@ -2,7 +2,6 @@
 
 namespace CodeDredd\Soap\Client;
 
-use CodeDredd\Soap\Xml\SoapXml;
 use CodeDredd\Soap\Xml\XMLSerializer;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
