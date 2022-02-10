@@ -19,7 +19,6 @@ class ExtSoapEngineFactory
     ): EngineFaker|SimpleEngine {
         $driver = ExtSoapDriver::createFromOptions($options);
         if ($withMocking) {
-
         }
 
         return $withMocking ? new EngineFaker($driver, $transport, $options) : new SimpleEngine($driver, $transport);

@@ -6,7 +6,6 @@ use CodeDredd\Soap\Tests\TestCase;
 
 class MakeValidationCommandTest extends TestCase
 {
-
     public function testConsoleCommand()
     {
         $this->markTestSkipped('wsdl2Php package has been removed. Needs refactoring');

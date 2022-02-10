@@ -43,5 +43,4 @@ class EngineFaker implements Engine
     {
         return $this->driver->getMetadata();
     }
-
 }

@@ -120,8 +120,6 @@ class WsseMiddleware implements Plugin
                     $wsse->attachTokentoSig($token);
                 }
 
-
-
                 // Add end-to-end encryption if configured:
                 if ($this->encrypt) {
                     $key = new XMLSecurityKey(XMLSecurityKey::AES256_CBC);
@@ -131,7 +129,7 @@ class WsseMiddleware implements Plugin
                     $wsse->encryptSoapDoc($siteKey, $key, [
                         'KeyInfo' => [
                             'X509SubjectKeyIdentifier' => $this->serverCertificateHasSubjectKeyIdentifier,
-                        ]
+                        ],
                     ]);
                 }
             }
@@ -142,7 +140,7 @@ class WsseMiddleware implements Plugin
 
     public function afterResponse(ResponseInterface $response): ResponseInterface
     {
-        if (!$this->encrypt) {
+        if (! $this->encrypt) {
             return $response;
         }
 
@@ -158,8 +156,8 @@ class WsseMiddleware implements Plugin
                                 'key'    => $this->privateKeyFile,
                                 'isFile' => true,
                                 'isCert' => false,
-                            ]
-                        ]
+                            ],
+                        ],
                     ]
                 );
             }
