@@ -15,22 +15,7 @@ class ResponseTest extends TestCase
 
     public function testBodyFromSoapError()
     {
-        $xml = <<<XML
-<?xml version='1.0' encoding='UTF-8'?>
-<soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope'>
-   <soap:Body>
-      <soap:Fault>
-         <faultcode>soap:VersionMismatch</faultcode>
-         <faultstring xml:lang='en'>
-            Message was not SOAP 1.1 compliant
-         </faultstring>
-         <faultactor>
-            http://sample.org.ocm/jws/authnticator
-         </faultactor>
-      </soap:Fault>
-   </soap:Body>
-</soap:Envelope>
-XML;
+        $xml = file_get_contents(dirname(__DIR__, 2) . '/Fixtures/Responses/SoapFault.xml');
         $soapResponse = new Response(new Psr7Response(400, [], $xml));
         self::assertEquals('Message was not SOAP 1.1 compliant', $soapResponse->body());
     }

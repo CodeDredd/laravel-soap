@@ -16,7 +16,7 @@ jobs:
       -   uses: actions/checkout@v2
       -   uses: shivammathur/setup-php@v2
           with:
-            php-version: 7.4
+            php-version: 8.0
 
       -   run: composer install --no-progress --ansi
 
@@ -56,7 +56,10 @@ jobs:
       -   uses: shivammathur/setup-php@v2
           with:
             php-version: ${{ matrix.php }}
-            coverage: none
+            extensions: mbstring, intl
+            ini-values: post_max_size=256M, max_execution_time=180
+            coverage: xdebug
+            tools: php-cs-fixer, phpunit
 
       # composer install cache - https://github.com/ramsey/composer-install
       -
