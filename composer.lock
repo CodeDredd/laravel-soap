@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1c49a04b28c18aa4ba55c414de286d1b",
+    "content-hash": "7b6dde52ea5ae57dd2b0511fb9979a52",
     "packages": [
         {
             "name": "azjezz/psl",
@@ -6486,16 +6486,16 @@
         },
         {
             "name": "veewee/xml",
-            "version": "v1.2.0",
+            "version": "v1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/veewee/xml.git",
-                "reference": "5f4b53c6a6418a77891996a6302bde7779c1d46e"
+                "reference": "9c4e8c14bf4b69aa6ca22f337dd1c4d5a21cd01b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/veewee/xml/zipball/5f4b53c6a6418a77891996a6302bde7779c1d46e",
-                "reference": "5f4b53c6a6418a77891996a6302bde7779c1d46e",
+                "url": "https://api.github.com/repos/veewee/xml/zipball/9c4e8c14bf4b69aa6ca22f337dd1c4d5a21cd01b",
+                "reference": "9c4e8c14bf4b69aa6ca22f337dd1c4d5a21cd01b",
                 "shasum": ""
             },
             "require": {
@@ -6515,12 +6515,12 @@
             },
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "VeeWee\\Xml\\": "src/Xml"
-                },
                 "files": [
                     "src/bootstrap.php"
-                ]
+                ],
+                "psr-4": {
+                    "VeeWee\\Xml\\": "src/Xml"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -6549,7 +6549,7 @@
             ],
             "support": {
                 "issues": "https://github.com/veewee/xml/issues",
-                "source": "https://github.com/veewee/xml/tree/v1.2.0"
+                "source": "https://github.com/veewee/xml/tree/v1.3.0"
             },
             "funding": [
                 {
@@ -6557,7 +6557,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-12-17T13:32:47+00:00"
+            "time": "2022-02-11T07:05:15+00:00"
         },
         {
             "name": "vlucas/phpdotenv",

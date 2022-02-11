@@ -9,6 +9,10 @@ use Psr\Http\Message\RequestInterface;
 use Soap\Psr18Transport\HttpBinding\SoapActionDetector;
 use Soap\Xml\Locator\SoapBodyLocator;
 use VeeWee\Xml\Dom\Document;
+use VeeWee\Xml\Dom\Traverser\Visitor\RemoveNamespaces;
+use VeeWee\Xml\Encoding\Exception\EncodingException;
+use function VeeWee\Xml\Dom\Configurator\traverse;
+use function VeeWee\Xml\Encoding\element_decode;
 
 /**
  * Class Request.
@@ -51,11 +55,13 @@ class Request
 
     /**
      * Return request arguments.
+     * @throws EncodingException
      */
     public function arguments(): array
     {
         $doc = Document::fromXmlString($this->xmlContent());
-        $arguments = Arr::first(XMLSerializer::domNodeToArray($doc->locate(new SoapBodyLocator())));
+        $method = $doc->locate(new SoapBodyLocator())?->firstElementChild;
+        $arguments = element_decode($method, traverse(new RemoveNamespaces()));
 
         return $arguments ?? [];
     }
