@@ -1,25 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="vendor/autoload.php" backupGlobals="false"
-         backupStaticAttributes="false" colors="true" verbose="true" convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true" convertWarningsToExceptions="true" processIsolation="false"
-         stopOnFailure="false" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
-    <coverage>
-        <include>
-            <directory suffix=".php">src/</directory>
-        </include>
-    </coverage>
+<phpunit
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+    backupGlobals="false"
+    backupStaticAttributes="false"
+    bootstrap="vendor/autoload.php"
+    colors="true"
+    convertErrorsToExceptions="true"
+    convertNoticesToExceptions="true"
+    convertWarningsToExceptions="true"
+    processIsolation="false"
+    stopOnFailure="false"
+    executionOrder="random"
+    failOnWarning="true"
+    failOnRisky="true"
+    failOnEmptyTestSuite="true"
+    beStrictAboutOutputDuringTests="true"
+    verbose="true"
+>
     <testsuites>
-        <testsuite name="Laravel Soap Test Suite">
+        <testsuite name="Laravel SOAP Test Suite">
             <directory>tests</directory>
         </testsuite>
     </testsuites>
-    <php>
-        <server name="APP_ENV" value="testing"/>
-        <server name="API_PREFIX" value="api"/>
-        <server name="BCRYPT_ROUNDS" value="4"/>
-        <server name="CACHE_DRIVER" value="array"/>
-        <server name="MAIL_DRIVER" value="array"/>
-        <server name="QUEUE_CONNECTION" value="sync"/>
-        <server name="SESSION_DRIVER" value="array"/>
-    </php>
+    <coverage>
+        <include>
+            <directory suffix=".php">./src</directory>
+        </include>
+        <report>
+            <html outputDirectory="build/coverage"/>
+            <text outputFile="build/coverage.txt"/>
+            <clover outputFile="build/logs/clover.xml"/>
+        </report>
+    </coverage>
+    <logging>
+        <junit outputFile="build/report.junit.xml"/>
+    </logging>
 </phpunit>
