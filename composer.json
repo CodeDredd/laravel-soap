@@ -34,8 +34,7 @@
         "phpunit/phpunit": "^9.1",
         "orchestra/testbench": "^7.0",
         "laminas/laminas-code": "^4.5.1",
-        "nunomaduro/larastan": "^2.0",
-        "nunomaduro/collision": "^6.1"
+        "symplify/easy-ci": "^10.0"
     },
     "autoload": {
         "psr-4": {
