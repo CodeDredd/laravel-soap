@@ -196,9 +196,9 @@ class SoapClient
         }
 
         $this->withHeaders([
-           'Authorization' => sprintf('Basic %s', base64_encode(
-               sprintf('%s:%s', $username, $password)
-           )),
+            'Authorization' => sprintf('Basic %s', base64_encode(
+                sprintf('%s:%s', $username, $password)
+            )),
         ]);
 
         return $this;
