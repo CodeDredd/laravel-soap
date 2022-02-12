@@ -94,10 +94,20 @@ class Client extends Base
             ->addTrait('Macroable')
             ->addTraitAlias('Macroable::__call', 'macroCall')
             ->addMethods([
-                new MethodGenerator('__construct', [], MethodGenerator::FLAG_PUBLIC,
-                    '$this->client = Soap::buildClient(\''.$this->configName.'\');', $constructorDocBlock),
-                new MethodGenerator('__call', $callMethodParameters, MethodGenerator::FLAG_PUBLIC, $callMethodBody,
-                    $callDocBlock),
+                new MethodGenerator(
+                    '__construct',
+                    [],
+                    MethodGenerator::FLAG_PUBLIC,
+                    '$this->client = Soap::buildClient(\''.$this->configName.'\');',
+                    $constructorDocBlock
+                ),
+                new MethodGenerator(
+                    '__call',
+                    $callMethodParameters,
+                    MethodGenerator::FLAG_PUBLIC,
+                    $callMethodBody,
+                    $callDocBlock
+                ),
             ]);
 
         return $this->codeClass;

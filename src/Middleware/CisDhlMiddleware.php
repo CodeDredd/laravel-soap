@@ -20,7 +20,7 @@ class CisDhlMiddleware implements Plugin
     /**
      * @var string
      */
-    const CIS_NS = 'http://dhl.de/webservice/cisbase';
+    public const CIS_NS = 'http://dhl.de/webservice/cisbase';
 
     /**
      * @var string
@@ -46,7 +46,7 @@ class CisDhlMiddleware implements Plugin
     public function handleRequest(RequestInterface $request, callable $next, callable $first): Promise
     {
         return $next(
-            (new XmlMessageManipulator)(
+            (new XmlMessageManipulator())(
                 $request,
                 function (Document $document) {
                     $builder = new SoapHeaders(
