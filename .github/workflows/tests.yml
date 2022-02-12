@@ -1,7 +1,6 @@
 name: Unit Tests
 
-on:
-  pull_request: null
+on: push
 
 env:
   # see https://github.com/composer/composer/issues/9368#issuecomment-718112361

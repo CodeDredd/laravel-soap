@@ -94,8 +94,8 @@ class Response implements ResultInterface, ArrayAccess
         $body = (string) $this->response->getBody();
         if ($transformXml && Str::contains($body, '<?xml')) {
             $message = Document::fromXmlString($body)
-                ->xpath()
-                ->evaluate('string(.//faultstring)', string())
+                    ->xpath()
+                    ->evaluate('string(.//faultstring)', string())
                 ?? 'No Fault Message found';
 
             return trim($sanitizeXmlFaultMessage ? Str::after($message, 'Exception:') : $message);
@@ -171,6 +171,19 @@ class Response implements ResultInterface, ArrayAccess
     }
 
     /**
+     * Throw an exception if a server or client error occurred and the given condition evaluates to true.
+     *
+     * @param  bool  $condition
+     * @return $this
+     *
+     * @throws \CodeDredd\Soap\Exceptions\RequestException
+     */
+    public function throwIf(bool $condition): Response|static
+    {
+        return $condition ? $this->throw() : $this;
+    }
+
+    /**
      * Determine if the response indicates a server error occurred.
      */
     public function serverError(): bool
@@ -202,17 +215,6 @@ class Response implements ResultInterface, ArrayAccess
     }
 
     /**
-     * Determine if the given offset exists.
-     *
-     * @param  string  $offset
-     * @return bool
-     */
-    public function offsetExists($offset)
-    {
-        return isset($this->json()[$offset]);
-    }
-
-    /**
      * Get the JSON decoded body of the response as an array.
      */
     public function json($key = null, $default = null): ?array
@@ -229,12 +231,23 @@ class Response implements ResultInterface, ArrayAccess
     }
 
     /**
+     * Determine if the given offset exists.
+     *
+     * @param  string  $offset
+     * @return bool
+     */
+    public function offsetExists($offset): bool
+    {
+        return isset($this->json()[$offset]);
+    }
+
+    /**
      * Get the value for a given offset.
      *
      * @param  string  $offset
      * @return mixed
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         return $this->json()[$offset];
     }
@@ -248,7 +261,7 @@ class Response implements ResultInterface, ArrayAccess
      *
      * @throws \LogicException
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         throw new LogicException('Response data may not be mutated using array access.');
     }
