@@ -140,10 +140,10 @@ class SoapClientTest extends TestCase
     }
 
     #[ArrayShape([
-        'without_fake_array' => "array",
-        'with_fake_array_wrong_method' => "array",
-        'with_fake_array' => "array",
-        'with_fake_string' => "array",
+        'without_fake_array' => 'array',
+        'with_fake_array_wrong_method' => 'array',
+        'with_fake_array' => 'array',
+        'with_fake_string' => 'array',
     ])]
     public function soapActionProvider(): array
     {
