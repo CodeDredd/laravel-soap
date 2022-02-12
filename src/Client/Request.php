@@ -54,6 +54,7 @@ class Request
 
     /**
      * Return request arguments.
+     *
      * @throws EncodingException
      */
     public function arguments(): array
