@@ -1,3 +1,9 @@
+<p align="center">
+  <a href="https://codedredd.github.io/laravel-soap/" target="_blank" rel="noopener noreferrer">
+    <img style="width: 100%; height: auto" width="100%" src="https://www.codedredd.de/images/laravel-soap/preview.png" alt="Laravel SOAP">
+  </a>
+</p>
+
 # Laravel SOAP Client
 
 [![Software License](https://img.shields.io/github/license/codedredd/laravel-soap?style=flat-square)](LICENSE.md)
