@@ -12,7 +12,7 @@ use LogicException;
 use Phpro\SoapClient\Type\ResultInterface;
 use Psr\Http\Message\ResponseInterface;
 use VeeWee\Xml\Dom\Document;
-use function VeeWee\Xml\Dom\Locator\elements_with_tagname;
+use function Psl\Type\string;
 
 /**
  * Class Response.
@@ -94,8 +94,8 @@ class Response implements ResultInterface, ArrayAccess
         $body = (string) $this->response->getBody();
         if ($transformXml && Str::contains($body, '<?xml')) {
             $message = Document::fromXmlString($body)
-                    ->locate(elements_with_tagname('faultstring'))
-                    ?->item(0)->firstChild->nodeValue
+                ->xpath()
+                ->evaluate('string(.//faultstring)', string())
                 ?? 'No Fault Message found';
 
             return trim($sanitizeXmlFaultMessage ? Str::after($message, 'Exception:') : $message);
