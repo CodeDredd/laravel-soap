@@ -22,13 +22,13 @@ jobs:
 
       -
         # to see the output
-        run: packages/easy-ci/bin/easy-ci php-versions-json
+        run: vendor/bin/easy-ci php-versions-json
 
       # here we create the json, we need the "id:" so we can use it in "outputs" bellow
 
       -
         id: output_data
-        run: echo "::set-output name=matrix::$(packages/easy-ci/bin/easy-ci php-versions-json)"
+        run: echo "::set-output name=matrix::$(vendor/bin/easy-ci php-versions-json)"
 
     # here, we save the result of this 1st phase to the "outputs"
     outputs:
