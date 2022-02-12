@@ -67,7 +67,7 @@ class SoapServiceProvider extends ServiceProvider
      */
     protected function registerCommands()
     {
-        $this->commands(MakeClientCommand::class);
-        $this->commands(MakeValidationCommand::class);
+//        $this->commands(MakeClientCommand::class);
+//        $this->commands(MakeValidationCommand::class);
     }
 }

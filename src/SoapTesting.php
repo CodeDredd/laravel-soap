@@ -94,11 +94,8 @@ class SoapTesting
 
     /**
      * Assert how many requests have been recorded.
-     *
-     * @param $count
-     * @return void
      */
-    public function assertSentCount($count)
+    public function assertSentCount(int $count): void
     {
         PHPUnit::assertCount($count, $this->factory->getRecorded());
     }

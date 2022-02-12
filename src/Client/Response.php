@@ -27,7 +27,7 @@ class Response implements ResultInterface, ArrayAccess
     /**
      * The underlying PSR response.
      */
-    protected ResponseInterface|MessageInterface $response;
+    protected ResponseInterface $response;
 
     /**
      * The decoded JSON response.
@@ -39,7 +39,7 @@ class Response implements ResultInterface, ArrayAccess
     /**
      * Create a new response instance.
      */
-    public function __construct(MessageInterface $response)
+    public function __construct(ResponseInterface $response)
     {
         $this->response = $response;
     }
@@ -56,10 +56,8 @@ class Response implements ResultInterface, ArrayAccess
 
     /**
      * Get the underlying PSR response for the response.
-     *
-     * @return ResponseInterface
      */
-    public function toPsrResponse()
+    public function toPsrResponse(): ResponseInterface
     {
         return $this->response;
     }
@@ -154,7 +152,6 @@ class Response implements ResultInterface, ArrayAccess
     /**
      * Throw an exception if a server or client error occurred.
      *
-     * @param  \Closure|null  $callback
      * @return $this
      *
      * @throws \CodeDredd\Soap\Exceptions\RequestException
@@ -176,20 +173,16 @@ class Response implements ResultInterface, ArrayAccess
 
     /**
      * Determine if the response indicates a server error occurred.
-     *
-     * @return bool
      */
-    public function serverError()
+    public function serverError(): bool
     {
         return $this->status() >= 500;
     }
 
     /**
      * Determine if the response indicates a client error occurred.
-     *
-     * @return bool
      */
-    public function clientError()
+    public function clientError(): bool
     {
         return $this->status() >= 400 && $this->status() < 500;
     }
