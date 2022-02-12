@@ -4,7 +4,6 @@ namespace CodeDredd\Soap\Client;
 
 use ArrayAccess;
 use CodeDredd\Soap\Exceptions\RequestException;
-use CodeDredd\Soap\Xml\SoapXml;
 use GuzzleHttp\Psr7\Response as Psr7Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -32,8 +31,10 @@ class Response implements ResultInterface, ArrayAccess
 
     /**
      * The decoded JSON response.
+     *
+     * @var array
      */
-    protected array $decoded;
+    protected $decoded;
 
     /**
      * Create a new response instance.
@@ -221,16 +222,18 @@ class Response implements ResultInterface, ArrayAccess
 
     /**
      * Get the JSON decoded body of the response as an array.
-     *
-     * @return array
      */
-    public function json()
+    public function json($key = null, $default = null): ?array
     {
         if (! $this->decoded) {
             $this->decoded = json_decode($this->body(), true);
         }
 
-        return $this->decoded;
+        if (is_null($key)) {
+            return $this->decoded;
+        }
+
+        return data_get($this->decoded, $key, $default);
     }
 
     /**

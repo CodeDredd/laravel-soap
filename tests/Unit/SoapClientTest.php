@@ -78,6 +78,7 @@ class SoapClientTest extends TestCase
 
         self::assertTrue($response->ok());
         Soap::assertSent(function (Request $request) use ($arguments) {
+            dd($request->arguments());
             return $request->arguments() === $arguments &&
                 $request->action() === 'Submit_User';
         });

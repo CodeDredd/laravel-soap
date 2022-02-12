@@ -61,8 +61,7 @@ class Request
     {
         $doc = Document::fromXmlString($this->xmlContent());
         $method = $doc->locate(new SoapBodyLocator())?->firstElementChild;
-        $arguments = element_decode($method, traverse(new RemoveNamespaces()));
 
-        return $arguments ?? [];
+        return Arr::get(element_decode($method, traverse(new RemoveNamespaces())), 'node', []);
     }
 }
