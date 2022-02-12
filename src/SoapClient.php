@@ -7,7 +7,6 @@ use CodeDredd\Soap\Client\Response;
 use CodeDredd\Soap\Driver\ExtSoap\ExtSoapEngineFactory;
 use CodeDredd\Soap\Exceptions\NotFoundConfigurationException;
 use CodeDredd\Soap\Exceptions\SoapException;
-use CodeDredd\Soap\Middleware\BasicAuthMiddleware;
 use CodeDredd\Soap\Middleware\CisDhlMiddleware;
 use CodeDredd\Soap\Middleware\WsseMiddleware;
 use GuzzleHttp\Client;
@@ -128,9 +127,9 @@ class SoapClient
         $transport = $handler ?? Psr18Transport::createForClient($this->pluginClient);
 
         $this->transport = $handler ?? new TraceableTransport(
-                $soapClient,
-                $transport
-            );
+            $soapClient,
+            $transport
+        );
 
         return $this;
     }
@@ -201,7 +200,7 @@ class SoapClient
         $this->withHeaders([
            'Authorization' => sprintf('Basic %s', base64_encode(
                sprintf('%s:%s', $username, $password)
-           ))
+           )),
         ]);
 
         return $this;
@@ -360,6 +359,7 @@ class SoapClient
                 /** @var HttpException $previous */
                 return new Response($previous->getResponse());
             }
+
             throw SoapException::fromThrowable($exception);
         }
 

@@ -107,6 +107,7 @@ class Generator
                     foreach ($this->types as $registered_types) {
                         if ($registered_types->getIdentifier() == $type->getIdentifier()) {
                             $already_registered = true;
+
                             break;
                         }
                     }

@@ -25,6 +25,7 @@ class XMLSerializer
             case XML_CDATA_SECTION_NODE:
             case XML_TEXT_NODE:
                 $output = trim($node->textContent);
+
                 break;
             case XML_ELEMENT_NODE:
                 for ($i = 0, $m = $node->childNodes->length; $i < $m; $i++) {
@@ -57,6 +58,7 @@ class XMLSerializer
                         }
                     }
                 }
+
                 break;
         }
 

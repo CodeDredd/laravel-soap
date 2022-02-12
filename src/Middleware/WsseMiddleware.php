@@ -153,7 +153,7 @@ class WsseMiddleware implements Plugin
                     [
                         'keys' => [
                             'private' => [
-                                'key'    => $this->privateKeyFile,
+                                'key' => $this->privateKeyFile,
                                 'isFile' => true,
                                 'isCert' => false,
                             ],
