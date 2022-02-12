@@ -82,7 +82,6 @@ class XMLSerializer
         return $xml->asXML();
     }
 
-
     public static function addArrayToXml(array $array, &$xml)
     {
         foreach ($array as $key => $value) {

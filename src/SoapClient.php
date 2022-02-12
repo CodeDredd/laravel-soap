@@ -12,6 +12,7 @@ use CodeDredd\Soap\Middleware\CisDhlMiddleware;
 use CodeDredd\Soap\Middleware\WsseMiddleware;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7\Response as Psr7Response;
 use Http\Client\Common\PluginClient;
 use Http\Client\Exception\HttpException;
 use Illuminate\Contracts\Validation\Validator;
@@ -35,7 +36,6 @@ use Soap\Psr18Transport\Psr18Transport;
 use Soap\Psr18Transport\Wsdl\Psr18Loader;
 use Soap\Psr18WsseMiddleware\WsaMiddleware;
 use Soap\Wsdl\Loader\FlatteningLoader;
-use GuzzleHttp\Psr7\Response as Psr7Response;
 
 /**
  * Class SoapClient.
@@ -286,6 +286,7 @@ class SoapClient
                 ],
             ];
         }
+
         return [];
     }
 
@@ -334,6 +335,7 @@ class SoapClient
             if (! $result instanceof ResultInterface) {
                 return Response::fromSoapResponse($result);
             }
+
             return new Response(new Psr7Response(200, [], $result));
         } catch (\Exception $exception) {
             if ($exception instanceof \SoapFault) {
@@ -345,6 +347,7 @@ class SoapClient
                 /** @var HttpException $previous */
                 return new Response($previous->getResponse());
             }
+
             throw SoapException::fromThrowable($exception);
         }
     }
