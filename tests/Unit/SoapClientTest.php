@@ -2,6 +2,9 @@
 
 namespace CodeDredd\Soap\Tests\Unit;
 
+use CodeDredd\Soap\Client\Events\ConnectionFailed;
+use CodeDredd\Soap\Client\Events\RequestSending;
+use CodeDredd\Soap\Client\Events\ResponseReceived;
 use CodeDredd\Soap\Client\Request;
 use CodeDredd\Soap\Client\Response;
 use CodeDredd\Soap\Facades\Soap;
@@ -10,10 +13,18 @@ use CodeDredd\Soap\SoapFactory;
 use CodeDredd\Soap\Tests\Fixtures\CustomSoapClient;
 use CodeDredd\Soap\Tests\TestCase;
 use GuzzleHttp\RedirectMiddleware;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Str;
+use JetBrains\PhpStorm\ArrayShape;
 
 class SoapClientTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        Event::fake();
+    }
+
     /**
      * Test that a "fake" terminal returns an instance of BuilderFake.
      *
@@ -76,6 +87,8 @@ class SoapClientTest extends TestCase
         /** @var Response $response */
         $response = Soap::buildClient('laravel_soap')->Submit_User($arguments);
 
+        Event::assertDispatched(RequestSending::class);
+        Event::assertDispatched(ResponseReceived::class);
         self::assertTrue($response->ok());
         Soap::assertSent(function (Request $request) use ($arguments) {
             return $request->arguments() === $arguments &&
@@ -114,12 +127,24 @@ class SoapClientTest extends TestCase
         $fake = collect($fake)->map(function ($item) {
             return Soap::response($item);
         })->all();
+
         Soap::fake($fake);
+        Event::assertNotDispatched(RequestSending::class);
+        Event::assertNotDispatched(ResponseReceived::class);
         $response = Soap::baseWsdl(dirname(__DIR__, 1).'/Fixtures/Wsdl/weather.wsdl')
             ->call($action);
+        Event::assertDispatched(RequestSending::class);
+        Event::assertDispatched(ResponseReceived::class);
+        Event::assertNotDispatched(ConnectionFailed::class);
         self::assertEquals($exspected, $response->json());
     }
 
+    #[ArrayShape([
+        'without_fake_array' => "array",
+        'with_fake_array_wrong_method' => "array",
+        'with_fake_array' => "array",
+        'with_fake_string' => "array"
+    ])]
     public function soapActionProvider(): array
     {
         $fakeResponse = [

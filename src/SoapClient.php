@@ -3,6 +3,9 @@
 namespace CodeDredd\Soap;
 
 use Closure;
+use CodeDredd\Soap\Client\Events\ConnectionFailed;
+use CodeDredd\Soap\Client\Events\RequestSending;
+use CodeDredd\Soap\Client\Events\ResponseReceived;
 use CodeDredd\Soap\Client\Request;
 use CodeDredd\Soap\Client\Response;
 use CodeDredd\Soap\Driver\ExtSoap\ExtSoapEngineFactory;
@@ -84,6 +87,11 @@ class SoapClient
     protected \Illuminate\Support\Collection|null $stubCallbacks;
 
     /**
+     * The sent request object, if a request has been made.
+     */
+    protected ?Request $request;
+
+    /**
      * Create a new Soap Client instance.
      *
      * @param  \CodeDredd\Soap\SoapFactory|null  $factory
@@ -95,11 +103,12 @@ class SoapClient
         $this->client = new Client($this->guzzleClientOptions);
         $this->pluginClient = new PluginClient($this->client, $this->middlewares);
         $this->wsdlProvider = new FlatteningLoader(Psr18Loader::createForClient($this->pluginClient));
-        $this->beforeSendingCallbacks = collect([
-            function (Request $request, array $options) {
-                $this->cookies = Arr::wrap($options['cookies']);
-            },
-        ]);
+        $this->beforeSendingCallbacks = collect([function (Request $request, array $options, SoapClient $soapClient) {
+            $soapClient->request = $request;
+            $soapClient->cookies = Arr::wrap($options['cookies']);
+
+            $soapClient->dispatchRequestSendingEvent();
+        }]);
     }
 
     public function refreshWsdlProvider()
@@ -330,19 +339,26 @@ class SoapClient
             $arguments = [$arguments];
             $result = $this->engine->request($method, $arguments);
             if ($result instanceof ResultProviderInterface) {
-                return Response::fromSoapResponse($result->getResult());
+                $response = Response::fromSoapResponse($result->getResult());
+                $this->dispatchResponseReceivedEvent($response);
+                return $response;
             }
             if (! $result instanceof ResultInterface) {
-                return Response::fromSoapResponse($result);
+                $response = Response::fromSoapResponse($result);
+                $this->dispatchResponseReceivedEvent($response);
+                return $response;
             }
-
-            return new Response(new Psr7Response(200, [], $result));
+            $response = new Response(new Psr7Response(200, [], $result));
+            $this->dispatchResponseReceivedEvent($response);
+            return $response;
         } catch (\Exception $exception) {
             if ($exception instanceof \SoapFault) {
-                /** @var \SoapFault $exception */
-                return Response::fromSoapFault($exception);
+                $response = Response::fromSoapFault($exception);
+                $this->dispatchResponseReceivedEvent($response);
+                return $response;
             }
             $previous = $exception->getPrevious();
+            $this->dispatchConnectionFailedEvent();
             if ($previous instanceof HttpException) {
                 /** @var HttpException $previous */
                 return new Response($previous->getResponse());
@@ -446,9 +462,52 @@ class SoapClient
         return tap($request, function ($request) use ($options) {
             $this->beforeSendingCallbacks->each->__invoke(
                 (new Request($request)),
-                $options
+                $options,
+                $this
             );
         });
+    }
+
+    /**
+     * Dispatch the RequestSending event if a dispatcher is available.
+     *
+     * @return void
+     */
+    protected function dispatchRequestSendingEvent()
+    {
+        ray()->showEvents();
+        event(new RequestSending($this->request));
+        ray()->stopShowingEvents();
+
+    }
+
+    /**
+     * Dispatch the ResponseReceived event if a dispatcher is available.
+     *
+     * @param  \CodeDredd\Soap\Client\Response  $response
+     * @return void
+     */
+    protected function dispatchResponseReceivedEvent(Response $response)
+    {
+        if (! $this->request) {
+            return;
+        }
+
+        ray()->showEvents();
+        event(new ResponseReceived($this->request, $response));
+        ray()->stopShowingEvents();
+    }
+
+    /**
+     * Dispatch the ConnectionFailed event if a dispatcher is available.
+     *
+     * @return void
+     */
+    protected function dispatchConnectionFailedEvent()
+    {
+        ray()->showEvents();
+        event(new ConnectionFailed($this->request));
+        ray()->stopShowingEvents();
     }
 
     /**
@@ -460,7 +519,7 @@ class SoapClient
     {
         return function ($handler) {
             return function ($request, $options) use ($handler) {
-                $promise = $handler($this->runBeforeSendingCallbacks($request, $options), $options);
+                $promise = $handler($request, $options);
 
                 return $promise->then(function ($response) use ($request) {
                     optional($this->factory)->recordRequestResponsePair(
