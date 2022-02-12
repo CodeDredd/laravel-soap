@@ -341,20 +341,24 @@ class SoapClient
             if ($result instanceof ResultProviderInterface) {
                 $response = Response::fromSoapResponse($result->getResult());
                 $this->dispatchResponseReceivedEvent($response);
+
                 return $response;
             }
             if (! $result instanceof ResultInterface) {
                 $response = Response::fromSoapResponse($result);
                 $this->dispatchResponseReceivedEvent($response);
+
                 return $response;
             }
             $response = new Response(new Psr7Response(200, [], $result));
             $this->dispatchResponseReceivedEvent($response);
+
             return $response;
         } catch (\Exception $exception) {
             if ($exception instanceof \SoapFault) {
                 $response = Response::fromSoapFault($exception);
                 $this->dispatchResponseReceivedEvent($response);
+
                 return $response;
             }
             $previous = $exception->getPrevious();
@@ -478,7 +482,6 @@ class SoapClient
         ray()->showEvents();
         event(new RequestSending($this->request));
         ray()->stopShowingEvents();
-
     }
 
     /**
