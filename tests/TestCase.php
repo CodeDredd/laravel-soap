@@ -44,8 +44,8 @@ abstract class TestCase extends OrchestraTestCase
         $app['config']->set('soap.clients.laravel_soap', [
             'base_wsdl' => __DIR__.'/Fixtures/Wsdl/weather.wsdl',
             'with_wsse' => [
-                'user_token_name'   => 'username',
-                'user_token_password'   => 'password',
+                'user_token_name' => 'username',
+                'user_token_password' => 'password',
             ],
         ]);
         $app['config']->set('soap.code.path', __DIR__.'/app');

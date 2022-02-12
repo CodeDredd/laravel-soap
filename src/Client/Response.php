@@ -4,13 +4,15 @@ namespace CodeDredd\Soap\Client;
 
 use ArrayAccess;
 use CodeDredd\Soap\Exceptions\RequestException;
-use CodeDredd\Soap\Xml\SoapXml;
 use GuzzleHttp\Psr7\Response as Psr7Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
 use LogicException;
 use Phpro\SoapClient\Type\ResultInterface;
+use function Psl\Type\string;
+use Psr\Http\Message\ResponseInterface;
+use VeeWee\Xml\Dom\Document;
 
 /**
  * Class Response.
@@ -23,10 +25,8 @@ class Response implements ResultInterface, ArrayAccess
 
     /**
      * The underlying PSR response.
-     *
-     * @var \Psr\Http\Message\ResponseInterface
      */
-    protected $response;
+    protected ResponseInterface $response;
 
     /**
      * The decoded JSON response.
@@ -37,40 +37,26 @@ class Response implements ResultInterface, ArrayAccess
 
     /**
      * Create a new response instance.
-     *
-     * @param  \Psr\Http\Message\MessageInterface  $response
-     * @return void
      */
-    public function __construct($response)
+    public function __construct(ResponseInterface $response)
     {
         $this->response = $response;
     }
 
-    /**
-     * @param $result
-     * @param  int  $status
-     * @return Response
-     */
-    public static function fromSoapResponse($result, $status = 200)
+    public static function fromSoapResponse(mixed $result, int $status = 200): Response
     {
         return new self(new Psr7Response($status, [], json_encode($result)));
     }
 
-    /**
-     * @param  \SoapFault  $soapFault
-     * @return Response
-     */
-    public static function fromSoapFault(\SoapFault $soapFault)
+    public static function fromSoapFault(\SoapFault $soapFault): Response
     {
         return new self(new Psr7Response(400, [], $soapFault->getMessage()));
     }
 
     /**
      * Get the underlying PSR response for the response.
-     *
-     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function toPsrResponse()
+    public function toPsrResponse(): ResponseInterface
     {
         return $this->response;
     }
@@ -80,7 +66,7 @@ class Response implements ResultInterface, ArrayAccess
      *
      * @return object
      */
-    public function object()
+    public function object(): object
     {
         return json_decode($this->body(), false);
     }
@@ -91,7 +77,7 @@ class Response implements ResultInterface, ArrayAccess
      * @param  string|null  $key
      * @return \Illuminate\Support\Collection
      */
-    public function collect($key = null)
+    public function collect(string $key = null): Collection
     {
         return Collection::make($this->json($key));
     }
@@ -103,11 +89,14 @@ class Response implements ResultInterface, ArrayAccess
      * @param  bool  $sanitizeXmlFaultMessage
      * @return string
      */
-    public function body($transformXml = true, $sanitizeXmlFaultMessage = true)
+    public function body(bool $transformXml = true, bool $sanitizeXmlFaultMessage = true): string
     {
         $body = (string) $this->response->getBody();
         if ($transformXml && Str::contains($body, '<?xml')) {
-            $message = SoapXml::fromString($body)->getFaultMessage();
+            $message = Document::fromXmlString($body)
+                ->xpath()
+                ->evaluate('string(.//faultstring)', string())
+                ?? 'No Fault Message found';
 
             return trim($sanitizeXmlFaultMessage ? Str::after($message, 'Exception:') : $message);
         }
@@ -120,7 +109,7 @@ class Response implements ResultInterface, ArrayAccess
      *
      * @return bool
      */
-    public function successful()
+    public function successful(): bool
     {
         return $this->status() >= 200 && $this->status() < 300;
     }
@@ -130,37 +119,31 @@ class Response implements ResultInterface, ArrayAccess
      *
      * @return int
      */
-    public function status()
+    public function status(): int
     {
         return (int) $this->response->getStatusCode();
     }
 
     /**
      * Determine if the response code was "OK".
-     *
-     * @return bool
      */
-    public function ok()
+    public function ok(): bool
     {
         return $this->status() === 200;
     }
 
     /**
      * Determine if the response indicates a client or server error occurred.
-     *
-     * @return bool
      */
-    public function failed()
+    public function failed(): bool
     {
         return $this->serverError() || $this->clientError();
     }
 
     /**
      * Determine if the response was a redirect.
-     *
-     * @return bool
      */
-    public function redirect()
+    public function redirect(): bool
     {
         return $this->status() >= 300 && $this->status() < 400;
     }
@@ -168,7 +151,6 @@ class Response implements ResultInterface, ArrayAccess
     /**
      * Throw an exception if a server or client error occurred.
      *
-     * @param  \Closure|null  $callback
      * @return $this
      *
      * @throws \CodeDredd\Soap\Exceptions\RequestException
@@ -190,20 +172,16 @@ class Response implements ResultInterface, ArrayAccess
 
     /**
      * Determine if the response indicates a server error occurred.
-     *
-     * @return bool
      */
-    public function serverError()
+    public function serverError(): bool
     {
         return $this->status() >= 500;
     }
 
     /**
      * Determine if the response indicates a client error occurred.
-     *
-     * @return bool
      */
-    public function clientError()
+    public function clientError(): bool
     {
         return $this->status() >= 400 && $this->status() < 500;
     }
@@ -236,16 +214,18 @@ class Response implements ResultInterface, ArrayAccess
 
     /**
      * Get the JSON decoded body of the response as an array.
-     *
-     * @return array
      */
-    public function json()
+    public function json($key = null, $default = null): ?array
     {
         if (! $this->decoded) {
             $this->decoded = json_decode($this->body(), true);
         }
 
-        return $this->decoded;
+        if (is_null($key)) {
+            return $this->decoded;
+        }
+
+        return data_get($this->decoded, $key, $default);
     }
 
     /**

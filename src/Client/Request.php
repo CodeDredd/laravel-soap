@@ -2,13 +2,16 @@
 
 namespace CodeDredd\Soap\Client;
 
-use CodeDredd\Soap\Xml\XMLSerializer;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Psr\Http\Message\RequestInterface;
 use Soap\Psr18Transport\HttpBinding\SoapActionDetector;
 use Soap\Xml\Locator\SoapBodyLocator;
+use function VeeWee\Xml\Dom\Configurator\traverse;
 use VeeWee\Xml\Dom\Document;
+use VeeWee\Xml\Dom\Traverser\Visitor\RemoveNamespaces;
+use function VeeWee\Xml\Encoding\element_decode;
+use VeeWee\Xml\Encoding\Exception\EncodingException;
 
 /**
  * Class Request.
@@ -51,12 +54,14 @@ class Request
 
     /**
      * Return request arguments.
+     *
+     * @throws EncodingException
      */
     public function arguments(): array
     {
         $doc = Document::fromXmlString($this->xmlContent());
-        $arguments = Arr::first(XMLSerializer::domNodeToArray($doc->locate(new SoapBodyLocator())));
+        $method = $doc->locate(new SoapBodyLocator())?->firstElementChild;
 
-        return $arguments ?? [];
+        return Arr::get(element_decode($method, traverse(new RemoveNamespaces())), 'node', []);
     }
 }

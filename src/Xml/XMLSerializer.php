@@ -25,6 +25,7 @@ class XMLSerializer
             case XML_CDATA_SECTION_NODE:
             case XML_TEXT_NODE:
                 $output = trim($node->textContent);
+
                 break;
             case XML_ELEMENT_NODE:
                 for ($i = 0, $m = $node->childNodes->length; $i < $m; $i++) {
@@ -36,8 +37,8 @@ class XMLSerializer
                             $output[$t] = [];
                         }
                         $output[$t][] = $v;
-                    } elseif ($v || $v === '0') {
-                        $output = (string) $v;
+                    } elseif (($v || $v === '0')) {
+                        $output = is_array($v) ? json_encode($v) : $v;
                     }
                 }
                 if ($node->attributes->length && ! is_array($output)) { // Has attributes but isn't an array
@@ -57,6 +58,7 @@ class XMLSerializer
                         }
                     }
                 }
+
                 break;
         }
 
@@ -80,11 +82,7 @@ class XMLSerializer
         return $xml->asXML();
     }
 
-    /**
-     * @param $array
-     * @param $xml
-     */
-    public static function addArrayToXml($array, &$xml)
+    public static function addArrayToXml(array $array, &$xml)
     {
         foreach ($array as $key => $value) {
             if (is_array($value)) {

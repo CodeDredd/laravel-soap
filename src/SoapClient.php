@@ -2,6 +2,7 @@
 
 namespace CodeDredd\Soap;
 
+use Closure;
 use CodeDredd\Soap\Client\Request;
 use CodeDredd\Soap\Client\Response;
 use CodeDredd\Soap\Driver\ExtSoap\ExtSoapEngineFactory;
@@ -11,15 +12,18 @@ use CodeDredd\Soap\Middleware\CisDhlMiddleware;
 use CodeDredd\Soap\Middleware\WsseMiddleware;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7\Response as Psr7Response;
 use Http\Client\Common\PluginClient;
 use Http\Client\Exception\HttpException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use Phpro\SoapClient\Type\ResultInterface;
 use Phpro\SoapClient\Type\ResultProviderInterface;
 use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestInterface;
 use Soap\Engine\Engine;
 use Soap\Engine\Transport;
 use Soap\ExtSoapEngine\AbusedClient;
@@ -41,6 +45,7 @@ class SoapClient
     use Macroable {
         __call as macroCall;
     }
+    use Conditionable;
 
     protected ClientInterface $client;
 
@@ -52,7 +57,7 @@ class SoapClient
 
     protected ExtSoapOptions $extSoapOptions;
 
-    protected TraceableTransport $transport;
+    protected TraceableTransport|Transport $transport;
 
     protected array $guzzleClientOptions = [];
 
@@ -127,41 +132,34 @@ class SoapClient
         $transport = $handler ?? Psr18Transport::createForClient($this->pluginClient);
 
         $this->transport = $handler ?? new TraceableTransport(
-                $soapClient,
-                $transport
-            );
+            $soapClient,
+            $transport
+        );
 
         return $this;
     }
 
     /**
      * Add the given headers to the request.
-     *
-     * @param  array  $headers
-     * @return $this
      */
-    public function withHeaders(array $headers)
+    public function withHeaders(array $headers): static
     {
         return $this->withGuzzleClientOptions(array_merge_recursive($this->options, [
             'headers' => $headers,
         ]));
     }
 
-    public function getTransport(): TraceableTransport
+    public function getTransport(): TraceableTransport|Transport
     {
         return $this->transport;
     }
 
-    public function getClient(): Client
+    public function getClient(): Client|ClientInterface
     {
         return $this->client;
     }
 
-    /**
-     * @param $options
-     * @return $this
-     */
-    public function withGuzzleClientOptions($options)
+    public function withGuzzleClientOptions(array $options): static
     {
         $this->guzzleClientOptions = array_merge_recursive($this->guzzleClientOptions, $options);
         $this->client = new Client($this->guzzleClientOptions);
@@ -236,11 +234,7 @@ class SoapClient
         return $this;
     }
 
-    /**
-     * @param $options
-     * @return $this
-     */
-    public function withWsse($options)
+    public function withWsse(array $options): static
     {
         $this->middlewares = array_merge_recursive($this->middlewares, [
             new WsseMiddleware($options),
@@ -275,23 +269,25 @@ class SoapClient
 
     /**
      * Make it possible to debug the last request.
-     *
-     * @return array
      */
     public function debugLastSoapRequest(): array
     {
-        $lastRequestInfo = $this->engine->collectLastRequestInfo();
+        if ($this->transport instanceof TraceableTransport) {
+            $lastRequestInfo = $this->transport->collectLastRequestInfo();
 
-        return [
-            'request' => [
-                'headers' => trim($lastRequestInfo->getLastRequestHeaders()),
-                'body' => XmlFormatter::format($lastRequestInfo->getLastRequest()),
-            ],
-            'response' => [
-                'headers' => trim($lastRequestInfo->getLastResponseHeaders()),
-                'body' => XmlFormatter::format($lastRequestInfo->getLastResponse()),
-            ],
-        ];
+            return [
+                'request' => [
+                    'headers' => trim($lastRequestInfo->getLastRequestHeaders()),
+                    'body' => $lastRequestInfo->getLastRequest(),
+                ],
+                'response' => [
+                    'headers' => trim($lastRequestInfo->getLastResponseHeaders()),
+                    'body' => $lastRequestInfo->getLastResponse(),
+                ],
+            ];
+        }
+
+        return [];
     }
 
     /**
@@ -309,11 +305,6 @@ class SoapClient
         ]);
     }
 
-    /**
-     * @param $method
-     * @param $parameters
-     * @return mixed
-     */
     public function __call($method, $parameters)
     {
         if (static::hasMacro($method)) {
@@ -323,12 +314,7 @@ class SoapClient
         return $this->call($method, $parameters[0] ?? $parameters);
     }
 
-    /**
-     * @param  string  $method
-     * @param  array|Validator  $arguments
-     * @return Response
-     */
-    public function call(string $method, $arguments = []): Response
+    public function call(string $method, Validator|array $arguments = []): Response
     {
         try {
             if (! $this->isClientBuilded) {
@@ -344,11 +330,13 @@ class SoapClient
             $arguments = [$arguments];
             $result = $this->engine->request($method, $arguments);
             if ($result instanceof ResultProviderInterface) {
-                $result = Response::fromSoapResponse($result->getResult());
+                return Response::fromSoapResponse($result->getResult());
             }
             if (! $result instanceof ResultInterface) {
-                $result = Response::fromSoapResponse($result);
+                return Response::fromSoapResponse($result);
             }
+
+            return new Response(new Psr7Response(200, [], $result));
         } catch (\Exception $exception) {
             if ($exception instanceof \SoapFault) {
                 /** @var \SoapFault $exception */
@@ -359,10 +347,9 @@ class SoapClient
                 /** @var HttpException $previous */
                 return new Response($previous->getResponse());
             }
+
             throw SoapException::fromThrowable($exception);
         }
-
-        return $result;
     }
 
     /**
@@ -441,10 +428,8 @@ class SoapClient
 
     /**
      * Build the before sending handler.
-     *
-     * @return \Closure
      */
-    public function buildBeforeSendingHandler()
+    public function buildBeforeSendingHandler(): Closure
     {
         return function ($handler) {
             return function ($request, $options) use ($handler) {
@@ -455,12 +440,8 @@ class SoapClient
 
     /**
      * Execute the "before sending" callbacks.
-     *
-     * @param  \GuzzleHttp\Psr7\RequestInterface  $request
-     * @param  array  $options
-     * @return \Closure
      */
-    public function runBeforeSendingCallbacks($request, array $options)
+    public function runBeforeSendingCallbacks(RequestInterface $request, array $options): mixed
     {
         return tap($request, function ($request) use ($options) {
             $this->beforeSendingCallbacks->each->__invoke(
@@ -473,7 +454,7 @@ class SoapClient
     /**
      * Build the recorder handler.
      *
-     * @return \Closure
+     * @return Closure
      */
     public function buildRecorderHandler()
     {
@@ -496,7 +477,7 @@ class SoapClient
     /**
      * Build the stub handler.
      *
-     * @return \Closure
+     * @return Closure
      */
     public function buildStubHandler()
     {
