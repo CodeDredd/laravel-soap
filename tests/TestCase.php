@@ -19,7 +19,7 @@ abstract class TestCase extends OrchestraTestCase
     {
         return [
             SoapServiceProvider::class,
-            RayServiceProvider::class
+            RayServiceProvider::class,
         ];
     }
 
