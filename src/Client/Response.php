@@ -274,7 +274,7 @@ class Response implements ResultInterface, ArrayAccess
      *
      * @throws \LogicException
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         throw new LogicException('Response data may not be mutated using array access.');
     }
