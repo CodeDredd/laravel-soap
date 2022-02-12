@@ -10,3 +10,7 @@ parameters:
     checkOctaneCompatibility: true
     checkModelProperties: true
     checkMissingIterableValueType: false
+    ignoreErrors:
+        - '#on an unknown class Spatie\\RayBundle\\Ray#'
+        - '#on an unknown class Spatie\\WordPressRay\\Ray#'
+        - '#on an unknown class Spatie\\YiiRay\\Ray#'
