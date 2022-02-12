@@ -10,9 +10,9 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
 use LogicException;
 use Phpro\SoapClient\Type\ResultInterface;
+use function Psl\Type\string;
 use Psr\Http\Message\ResponseInterface;
 use VeeWee\Xml\Dom\Document;
-use function Psl\Type\string;
 
 /**
  * Class Response.
