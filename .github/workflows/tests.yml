@@ -17,6 +17,7 @@ jobs:
       -   uses: shivammathur/setup-php@v2
           with:
             php-version: 8.0
+            tools: composer:v2
 
       -   run: composer install --no-progress --ansi
 
@@ -59,7 +60,7 @@ jobs:
             extensions: mbstring, intl
             ini-values: post_max_size=256M, max_execution_time=180
             coverage: xdebug
-            tools: php-cs-fixer, phpunit
+            tools: php-cs-fixer, phpunit, composer:v2
 
       # composer install cache - https://github.com/ramsey/composer-install
       -
@@ -68,11 +69,11 @@ jobs:
 
       -
         if: "matrix.php == 7.4"
-        uses: "ramsey/composer-install@v1"
+        uses: "ramsey/composer-install@v2"
 
       -
         if: "matrix.php >= 8"
-        uses: "ramsey/composer-install@v1"
+        uses: "ramsey/composer-install@v2"
         with:
           composer-options: "--ignore-platform-req php"
 
