@@ -47,7 +47,7 @@ class SoapServiceProvider extends PackageServiceProvider
 
     protected function registerRay()
     {
-        if (!class_exists('Spatie\\LaravelRay\\Ray')) {
+        if (! class_exists('Spatie\\LaravelRay\\Ray')) {
             return;
         }
         /** @var LaravelRay $macros */
@@ -60,7 +60,7 @@ class SoapServiceProvider extends PackageServiceProvider
 
     protected function bootRay()
     {
-        if (!class_exists('Spatie\\LaravelRay\\Ray')) {
+        if (! class_exists('Spatie\\LaravelRay\\Ray')) {
             return;
         }
 

@@ -70,5 +70,4 @@ class SoapClientWatcher extends Watcher
 
         return app(Ray::class)->sendRequest($payload);
     }
-
 }
