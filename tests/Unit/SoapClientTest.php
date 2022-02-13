@@ -57,7 +57,7 @@ class SoapClientTest extends TestCase
     public function testWsseWithWsaCall()
     {
         Soap::fake();
-        ray()->showSoapRequests();
+        ray()->showSoapClientRequests();
         $client = Soap::baseWsdl(dirname(__DIR__, 1).'/Fixtures/Wsdl/weather.wsdl')->withWsse([
             'userTokenName' => 'Test',
             'userTokenPassword' => 'passwordTest',
@@ -195,7 +195,7 @@ class SoapClientTest extends TestCase
     public function testRealSoapCall(): void
     {
         $this->markTestSkipped('Real Soap Call Testing. Comment the line out for testing');
-        ray()->showSoapRequests();
+        ray()->showSoapClientRequests();
         // location has to be set because the wsdl has a wrong location declaration
         $client = Soap::baseWsdl('https://www.w3schools.com/xml/tempconvert.asmx?wsdl')
             ->withOptions([
@@ -216,7 +216,7 @@ class SoapClientTest extends TestCase
     public function testRealSoapCallBank(): void
     {
         $this->markTestSkipped('Real Soap Call Testing. Comment the line out for testing');
-        ray()->showSoapRequests();
+        ray()->showSoapClientRequests();
         // location has to be set because the wsdl has a wrong location declaration
         $client = Soap::baseWsdl('http://www.thomas-bayer.com/axis2/services/BLZService?wsdl')
             ->withOptions([

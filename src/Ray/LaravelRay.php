@@ -11,12 +11,12 @@ class LaravelRay
 {
     public function register()
     {
-        SpatieRay::macro('showSoapRequests', function ($callable = null): RayProxy
+        SpatieRay::macro('showSoapClientRequests', function ($callable = null): RayProxy
         {
             $watcher = app(SoapClientWatcher::class);
             return $this->handleWatcherCallable($watcher, $callable);
         });
-        SpatieRay::macro('stopShowingSoapRequests', fn () => app(SoapClientWatcher::class)->disable());
+        SpatieRay::macro('stopShowingSoapClientRequests', fn () => app(SoapClientWatcher::class)->disable());
     }
 
     protected function handleWatcherCallable(Watcher $watcher, Closure $callable = null): RayProxy
