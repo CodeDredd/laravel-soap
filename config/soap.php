@@ -25,7 +25,7 @@ return [
     */
 
     'ray' => [
-        'send_soap_client_requests' => false
+        'send_soap_client_requests' => false,
     ],
 
     /*
