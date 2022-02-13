@@ -2,36 +2,35 @@
 
 namespace CodeDredd\Soap;
 
-use CodeDredd\Soap\Commands\MakeClientCommand;
-use CodeDredd\Soap\Commands\MakeValidationCommand;
-use Illuminate\Support\ServiceProvider;
+use CodeDredd\Soap\Ray\LaravelRay;
+use CodeDredd\Soap\Ray\SoapClientWatcher;
+use Spatie\LaravelPackageTools\Package;
+use Spatie\LaravelPackageTools\PackageServiceProvider;
+use Spatie\LaravelRay\Watchers\Watcher;
 
-class SoapServiceProvider extends ServiceProvider
+class SoapServiceProvider extends PackageServiceProvider
 {
-    /**
-     * Bootstrap the application events.
-     *
-     * @return void
-     */
-    public function boot()
+    public function configurePackage(Package $package): void
     {
-        $this->registerPublishing();
+        /*
+         * This class is a Package Service Provider
+         *
+         * More info: https://github.com/spatie/laravel-package-tools
+         */
+        $package
+            ->name('soap')
+            ->hasConfigFile('soap');
     }
 
-    /**
-     * Register the service provider.
-     *
-     * @return void
-     */
-    public function register()
+    public function packageRegistered()
     {
-        $this->mergeConfigFrom(
-            __DIR__.'/../config/soap.php',
-            'soap'
-        );
-
         $this->registerService();
-//        $this->registerCommands();
+        $this->registerRay();
+    }
+
+    public function packageBooted()
+    {
+        $this->bootRay();
     }
 
     /**
@@ -46,28 +45,28 @@ class SoapServiceProvider extends ServiceProvider
         });
     }
 
-    /**
-     * Register the package's publishable resources.
-     *
-     * @return void
-     */
-    private function registerPublishing()
+    protected function registerRay()
     {
-        if ($this->app->runningInConsole()) {
-            $this->publishes([
-                dirname(__DIR__, 1).'/config/soap.php' => config_path('soap.php'),
-            ], 'soap-config');
+        if (! class_exists('Spatie\\LaravelRay\\Ray')) {
+            return;
         }
+        /** @var LaravelRay $macros */
+        $macros = app(LaravelRay::class);
+
+        $macros->register();
+
+        $this->app->singleton(SoapClientWatcher::class);
     }
 
-    /**
-     * Register Soap commands.
-     *
-     * @return void
-     */
-    protected function registerCommands()
+    protected function bootRay()
     {
-//        $this->commands(MakeClientCommand::class);
-//        $this->commands(MakeValidationCommand::class);
+        if (! class_exists('Spatie\\LaravelRay\\Ray')) {
+            return;
+        }
+
+        /** @var Watcher $watcher */
+        $watcher = app(SoapClientWatcher::class);
+
+        $watcher->register();
     }
 }

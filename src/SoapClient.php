@@ -3,6 +3,9 @@
 namespace CodeDredd\Soap;
 
 use Closure;
+use CodeDredd\Soap\Client\Events\ConnectionFailed;
+use CodeDredd\Soap\Client\Events\RequestSending;
+use CodeDredd\Soap\Client\Events\ResponseReceived;
 use CodeDredd\Soap\Client\Request;
 use CodeDredd\Soap\Client\Response;
 use CodeDredd\Soap\Driver\ExtSoap\ExtSoapEngineFactory;
@@ -13,6 +16,7 @@ use CodeDredd\Soap\Middleware\WsseMiddleware;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response as Psr7Response;
+use GuzzleHttp\TransferStats;
 use Http\Client\Common\PluginClient;
 use Http\Client\Exception\HttpException;
 use Illuminate\Contracts\Validation\Validator;
@@ -29,13 +33,13 @@ use Soap\Engine\Transport;
 use Soap\ExtSoapEngine\AbusedClient;
 use Soap\ExtSoapEngine\ExtSoapOptions;
 use Soap\ExtSoapEngine\Transport\TraceableTransport;
-use Soap\ExtSoapEngine\Wsdl\PassThroughWsdlProvider;
 use Soap\ExtSoapEngine\Wsdl\WsdlProvider;
 use Soap\Psr18Transport\Middleware\RemoveEmptyNodesMiddleware;
 use Soap\Psr18Transport\Psr18Transport;
 use Soap\Psr18Transport\Wsdl\Psr18Loader;
 use Soap\Psr18WsseMiddleware\WsaMiddleware;
 use Soap\Wsdl\Loader\FlatteningLoader;
+use Soap\Wsdl\Loader\StreamWrapperLoader;
 
 /**
  * Class SoapClient.
@@ -61,6 +65,11 @@ class SoapClient
 
     protected array $guzzleClientOptions = [];
 
+    /**
+     * The transfer stats for the request.
+     */
+    protected ?TransferStats $transferStats = null;
+
     protected string $wsdl = '';
 
     protected bool $isClientBuilded = false;
@@ -71,7 +80,7 @@ class SoapClient
 
     protected FlatteningLoader|WsdlProvider $wsdlProvider;
 
-    protected array $cookies;
+    protected array $cookies = [];
 
     /**
      * The callbacks that should execute before the request is sent.
@@ -82,6 +91,11 @@ class SoapClient
      * The stub callables that will handle requests.
      */
     protected \Illuminate\Support\Collection|null $stubCallbacks;
+
+    /**
+     * The sent request object, if a request has been made.
+     */
+    protected ?Request $request;
 
     /**
      * Create a new Soap Client instance.
@@ -95,11 +109,12 @@ class SoapClient
         $this->client = new Client($this->guzzleClientOptions);
         $this->pluginClient = new PluginClient($this->client, $this->middlewares);
         $this->wsdlProvider = new FlatteningLoader(Psr18Loader::createForClient($this->pluginClient));
-        $this->beforeSendingCallbacks = collect([
-            function (Request $request, array $options) {
-                $this->cookies = Arr::wrap($options['cookies']);
-            },
-        ]);
+        $this->beforeSendingCallbacks = collect([function (Request $request, array $options, SoapClient $soapClient) {
+            $soapClient->request = $request;
+            $soapClient->cookies = Arr::wrap($options['cookies']);
+
+            $soapClient->dispatchRequestSendingEvent();
+        }]);
     }
 
     public function refreshWsdlProvider()
@@ -111,9 +126,6 @@ class SoapClient
 
     public function refreshPluginClient(): static
     {
-//        if ($this->factory->isRecording()) {
-//            $this->client = new \Http\Mock\Client(Psr17FactoryDiscovery::findResponseFactory());
-//        }
         $this->pluginClient = new PluginClient($this->client, $this->middlewares);
 
         return $this;
@@ -159,9 +171,9 @@ class SoapClient
         return $this->client;
     }
 
-    public function withGuzzleClientOptions(array $options): static
+    public function withGuzzleClientOptions(array ...$options): static
     {
-        $this->guzzleClientOptions = array_merge_recursive($this->guzzleClientOptions, $options);
+        $this->guzzleClientOptions = array_merge_recursive($this->guzzleClientOptions, ...$options);
         $this->client = new Client($this->guzzleClientOptions);
 
         return $this;
@@ -330,19 +342,19 @@ class SoapClient
             $arguments = [$arguments];
             $result = $this->engine->request($method, $arguments);
             if ($result instanceof ResultProviderInterface) {
-                return Response::fromSoapResponse($result->getResult());
+                return $this->buildResponse(Response::fromSoapResponse($result->getResult()));
             }
             if (! $result instanceof ResultInterface) {
-                return Response::fromSoapResponse($result);
+                return $this->buildResponse(Response::fromSoapResponse($result));
             }
 
-            return new Response(new Psr7Response(200, [], $result));
+            return $this->buildResponse(new Response(new Psr7Response(200, [], $result)));
         } catch (\Exception $exception) {
             if ($exception instanceof \SoapFault) {
-                /** @var \SoapFault $exception */
-                return Response::fromSoapFault($exception);
+                return $this->buildResponse(Response::fromSoapFault($exception));
             }
             $previous = $exception->getPrevious();
+            $this->dispatchConnectionFailedEvent();
             if ($previous instanceof HttpException) {
                 /** @var HttpException $previous */
                 return new Response($previous->getResponse());
@@ -350,6 +362,14 @@ class SoapClient
 
             throw SoapException::fromThrowable($exception);
         }
+    }
+
+    protected function buildResponse($response)
+    {
+        return tap($response, function ($result) {
+            $this->populateResponse($result);
+            $this->dispatchResponseReceivedEvent($result);
+        });
     }
 
     /**
@@ -365,6 +385,9 @@ class SoapClient
         $this->byConfig($setup);
         $this->withGuzzleClientOptions([
             'handler' => $this->buildHandlerStack(),
+            'on_stats' => function ($transferStats) {
+                $this->transferStats = $transferStats;
+            },
         ]);
         $this->isClientBuilded = true;
 
@@ -446,9 +469,60 @@ class SoapClient
         return tap($request, function ($request) use ($options) {
             $this->beforeSendingCallbacks->each->__invoke(
                 (new Request($request)),
-                $options
+                $options,
+                $this
             );
         });
+    }
+
+    /**
+     * Populate the given response with additional data.
+     *
+     * @param  \CodeDredd\Soap\Client\Response  $response
+     * @return \CodeDredd\Soap\Client\Response
+     */
+    protected function populateResponse(Response $response)
+    {
+        $response->cookies = $this->cookies;
+
+        $response->transferStats = $this->transferStats;
+
+        return $response;
+    }
+
+    /**
+     * Dispatch the RequestSending event if a dispatcher is available.
+     *
+     * @return void
+     */
+    protected function dispatchRequestSendingEvent()
+    {
+        event(new RequestSending($this->request));
+    }
+
+    /**
+     * Dispatch the ResponseReceived event if a dispatcher is available.
+     *
+     * @param  \CodeDredd\Soap\Client\Response  $response
+     * @return void
+     */
+    protected function dispatchResponseReceivedEvent(Response $response)
+    {
+        if (! $this->request) {
+            return;
+        }
+
+        event(new ResponseReceived($this->request, $response));
+    }
+
+    /**
+     * Dispatch the ConnectionFailed event if a dispatcher is available.
+     *
+     * @return void
+     */
+    protected function dispatchConnectionFailedEvent()
+    {
+        event(new ConnectionFailed($this->request));
     }
 
     /**
@@ -460,7 +534,7 @@ class SoapClient
     {
         return function ($handler) {
             return function ($request, $options) use ($handler) {
-                $promise = $handler($this->runBeforeSendingCallbacks($request, $options), $options);
+                $promise = $handler($request, $options);
 
                 return $promise->then(function ($response) use ($request) {
                     optional($this->factory)->recordRequestResponsePair(
@@ -521,8 +595,8 @@ class SoapClient
     {
         $this->extSoapOptions = ExtSoapOptions::defaults($this->wsdl, $this->options);
         if ($this->factory->isRecording()) {
-            $this->wsdlProvider = new PassThroughWsdlProvider();
-            $this->extSoapOptions->withWsdlProvider($this->wsdlProvider);
+            $this->wsdlProvider = new FlatteningLoader(new StreamWrapperLoader());
+//            $this->extSoapOptions->withWsdlProvider($this->wsdlProvider);
         }
     }
 

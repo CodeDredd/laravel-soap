@@ -5,9 +5,12 @@ namespace CodeDredd\Soap\Tests;
 use CodeDredd\Soap\Facades\Soap;
 use CodeDredd\Soap\SoapServiceProvider;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
+use Spatie\LaravelRay\RayServiceProvider;
 
 abstract class TestCase extends OrchestraTestCase
 {
+    protected $loadEnvironmentVariables = true;
+
     /**
      * Load package service provider.
      *
@@ -16,7 +19,10 @@ abstract class TestCase extends OrchestraTestCase
      */
     protected function getPackageProviders($app)
     {
-        return [SoapServiceProvider::class];
+        return [
+            SoapServiceProvider::class,
+            RayServiceProvider::class,
+        ];
     }
 
     /**
