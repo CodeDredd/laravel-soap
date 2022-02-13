@@ -5,6 +5,7 @@ namespace CodeDredd\Soap\Client;
 use ArrayAccess;
 use CodeDredd\Soap\Exceptions\RequestException;
 use GuzzleHttp\Psr7\Response as Psr7Response;
+use GuzzleHttp\TransferStats;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
@@ -16,6 +17,9 @@ use VeeWee\Xml\Dom\Document;
 
 /**
  * Class Response.
+ *
+ * @property ?TransferStats $transferStats
+ * @property array $cookies
  */
 class Response implements ResultInterface, ArrayAccess
 {
@@ -215,6 +219,16 @@ class Response implements ResultInterface, ArrayAccess
     }
 
     /**
+     * Get the handler stats of the response.
+     *
+     * @return array
+     */
+    public function handlerStats()
+    {
+        return $this->transferStats?->getHandlerStats() ?? [];
+    }
+
+    /**
      * Get the JSON decoded body of the response as an array.
      */
     public function json($key = null, $default = null): ?array
@@ -228,6 +242,22 @@ class Response implements ResultInterface, ArrayAccess
         }
 
         return data_get($this->decoded, $key, $default);
+    }
+
+    /**
+     * Get a header from the response.
+     */
+    public function header(string $header): string
+    {
+        return $this->response->getHeaderLine($header);
+    }
+
+    /**
+     * Get the headers from the response.
+     */
+    public function headers(): array
+    {
+        return $this->response->getHeaders();
     }
 
     /**

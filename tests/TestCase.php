@@ -9,6 +9,8 @@ use Spatie\LaravelRay\RayServiceProvider;
 
 abstract class TestCase extends OrchestraTestCase
 {
+    protected $loadEnvironmentVariables = true;
+
     /**
      * Load package service provider.
      *

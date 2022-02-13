@@ -22,7 +22,6 @@ class SoapClientTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        Event::fake();
     }
 
     /**
@@ -33,6 +32,7 @@ class SoapClientTest extends TestCase
     public function testSimpleCall()
     {
         Soap::fake();
+        Event::fake();
         Soap::assertNothingSent();
         $response = Soap::baseWsdl(dirname(__DIR__, 1).'/Fixtures/Wsdl/weather.wsdl')
             ->call('GetWeatherInformation');
@@ -49,6 +49,7 @@ class SoapClientTest extends TestCase
     public function testMagicCallByConfig()
     {
         Soap::fake();
+        Event::fake();
         $response = Soap::buildClient('laravel_soap')->GetWeatherInformation();
         self::assertTrue($response->ok());
     }
@@ -56,6 +57,7 @@ class SoapClientTest extends TestCase
     public function testWsseWithWsaCall()
     {
         Soap::fake();
+        ray()->showSoapRequests();
         $client = Soap::baseWsdl(dirname(__DIR__, 1).'/Fixtures/Wsdl/weather.wsdl')->withWsse([
             'userTokenName' => 'Test',
             'userTokenPassword' => 'passwordTest',
@@ -71,6 +73,7 @@ class SoapClientTest extends TestCase
     public function testArrayAccessResponse()
     {
         Soap::fakeSequence()->push('test');
+        Event::fake();
         $response = Soap::buildClient('laravel_soap')->GetWeatherInformation()['response'];
         self::assertEquals('test', $response);
     }
@@ -78,6 +81,7 @@ class SoapClientTest extends TestCase
     public function testRequestWithArguments()
     {
         Soap::fake();
+        Event::fake();
 
         $arguments = [
             'prename' => 'Corona',
@@ -100,6 +104,7 @@ class SoapClientTest extends TestCase
     {
         $responseFake = ['user' => 'test'];
         $responseFake2 = ['user' => 'test2'];
+        Event::fake();
         Soap::fakeSequence()
             ->push($responseFake)
             ->whenEmpty(Soap::response($responseFake2));
@@ -129,6 +134,7 @@ class SoapClientTest extends TestCase
         })->all();
 
         Soap::fake($fake);
+        Event::fake();
         Event::assertNotDispatched(RequestSending::class);
         Event::assertNotDispatched(ResponseReceived::class);
         $response = Soap::baseWsdl(dirname(__DIR__, 1).'/Fixtures/Wsdl/weather.wsdl')
@@ -172,6 +178,7 @@ class SoapClientTest extends TestCase
     public function testSoapOptions(): void
     {
         Soap::fake();
+        Event::fake();
         $client = Soap::withOptions(['soap_version' => SOAP_1_2])
             ->baseWsdl(dirname(__DIR__, 1).'/Fixtures/Wsdl/weather.wsdl');
         $response = $client->call('GetWeatherInformation');
@@ -188,6 +195,7 @@ class SoapClientTest extends TestCase
     public function testRealSoapCall(): void
     {
         $this->markTestSkipped('Real Soap Call Testing. Comment the line out for testing');
+        ray()->showSoapRequests();
         // location has to be set because the wsdl has a wrong location declaration
         $client = Soap::baseWsdl('https://www.w3schools.com/xml/tempconvert.asmx?wsdl')
             ->withOptions([
@@ -205,6 +213,28 @@ class SoapClientTest extends TestCase
         self::assertArrayHasKey('FahrenheitToCelsiusResult', $result->json());
     }
 
+    public function testRealSoapCallBank(): void
+    {
+        $this->markTestSkipped('Real Soap Call Testing. Comment the line out for testing');
+        ray()->showSoapRequests();
+        // location has to be set because the wsdl has a wrong location declaration
+        $client = Soap::baseWsdl('http://www.thomas-bayer.com/axis2/services/BLZService?wsdl')
+            ->withOptions([
+                'soap_version' => SOAP_1_2,
+                'location' => 'http://www.thomas-bayer.com/axis2/services/BLZService?wsdl',
+            ]);
+        $result = $client->call('getBank', [
+            'blz' => '74120071',
+        ]);
+        dd($result->json());
+        self::assertArrayHasKey('FahrenheitToCelsiusResult', $result->json());
+
+        $result = $client->FahrenheitToCelsius([
+            'Fahrenheit' => 75,
+        ]);
+        self::assertArrayHasKey('FahrenheitToCelsiusResult', $result->json());
+    }
+
     /**
      * @dataProvider soapHeaderProvider
      *
@@ -214,6 +244,7 @@ class SoapClientTest extends TestCase
     public function testSoapWithDifferentHeaders($header, $exspected): void
     {
         Soap::fake();
+        Event::fake();
         $client = Soap::withHeaders($header)->baseWsdl(dirname(__DIR__, 1).'/Fixtures/Wsdl/weather.wsdl');
         $response = $client->call('GetWeatherInformation');
         Soap::assertSent(function (Request $request) use ($exspected) {
@@ -238,6 +269,7 @@ class SoapClientTest extends TestCase
     public function testSoapClientClassMayBeCustomized(): void
     {
         Soap::fake();
+        Event::fake();
         $client = Soap::buildClient('laravel_soap');
         $this->assertInstanceOf(SoapClient::class, $client);
         SoapFactory::useClientClass(CustomSoapClient::class);
@@ -248,6 +280,7 @@ class SoapClientTest extends TestCase
     public function testHandlerOptions(): void
     {
         Soap::fake();
+        Event::fake();
         $client = Soap::baseWsdl(dirname(__DIR__, 1).'/Fixtures/Wsdl/weather.wsdl');
         $response = $client->call('GetWeatherInformation');
         self::assertTrue($response->ok());
