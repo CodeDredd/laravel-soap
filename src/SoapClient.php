@@ -33,7 +33,6 @@ use Soap\Engine\Transport;
 use Soap\ExtSoapEngine\AbusedClient;
 use Soap\ExtSoapEngine\ExtSoapOptions;
 use Soap\ExtSoapEngine\Transport\TraceableTransport;
-use Soap\ExtSoapEngine\Wsdl\PassThroughWsdlProvider;
 use Soap\ExtSoapEngine\Wsdl\WsdlProvider;
 use Soap\Psr18Transport\Middleware\RemoveEmptyNodesMiddleware;
 use Soap\Psr18Transport\Psr18Transport;
