@@ -254,6 +254,19 @@ class SoapClientTest extends TestCase
         Soap::assertActionCalled('GetWeatherInformation');
     }
 
+    public function testArgumentsCanBeCalledTwice(): void
+    {
+        Soap::fake();
+        Event::fake();
+        Soap::assertNothingSent();
+        $response = Soap::baseWsdl(dirname(__DIR__, 1).'/Fixtures/Wsdl/weather.wsdl')
+            ->call('GetWeatherInformation');
+        self::assertTrue($response->ok());
+        Soap::assertSent(function (Request $request) {
+            return $request->arguments() === $request->arguments();
+        });
+    }
+
     public function soapHeaderProvider(): array
     {
         $header = [
