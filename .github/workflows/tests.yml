@@ -12,7 +12,7 @@ jobs:
 
     steps:
       # git clone + use PHP + composer install
-      -   uses: actions/checkout@v2.4.0
+      -   uses: actions/checkout@v3
       -   uses: shivammathur/setup-php@v2
           with:
             php-version: 8.0
@@ -47,7 +47,7 @@ jobs:
     name: PHP ${{ matrix.php }} tests
 
     steps:
-      -   uses: actions/checkout@v2.4.0
+      -   uses: actions/checkout@v3
       # required for "git tag" presence for changelog-linker git tags resolver; default is 1
       # https://github.com/actions/checkout#fetch-all-tags
       -   run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
