@@ -1,7 +1,7 @@
 site_name: Laravel SOAP Docs
 site_description: 'Laravel SOAP Documentation'
 site_author: 'Gregor Becker'
-docs_dir: docs/
+docs_dir: docs/v2/
 repo_name: 'codedredd/laravel-soap'
 repo_url: 'https://github.com/codedredd/laravel-soap'
 

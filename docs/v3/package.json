@@ -1,0 +1,16 @@
+{
+    "name": "@laravel-soap/docs",
+    "version": "1.0.0",
+    "description": "Docs for laravel-soap",
+    "author": "Gregor Becker",
+    "scripts": {
+        "dev": "nuxt",
+        "build": "nuxt build",
+        "start": "nuxt start",
+        "generate": "nuxt generate"
+    },
+    "dependencies": {
+        "docus": "^2.1.0",
+        "nuxt": "^2.15.8"
+    }
+}
