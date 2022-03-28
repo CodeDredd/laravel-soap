@@ -94,6 +94,7 @@ class SoapClient
 
     /**
      * The sent request object, if a request has been made.
+     *
      * @var Request|null
      */
     protected $request;
