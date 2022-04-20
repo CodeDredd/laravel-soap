@@ -30,6 +30,32 @@ Execute the following command to get the latest version of the package:
 ## Documentation
 You can find here a detailed [documentation](https://codedredd.github.io/laravel-soap/)
 
+## Help me keep working on this project 💚
+
+- [Become a Sponsor on GitHub](https://github.com/sponsors/codedredd)
+- [One-time donation via PayPal](https://paypal.me/dredd1984)
+
+<!--sponsors start-->
+<h3 align="center">Platinum Sponsors</h3>
+<p align="center">
+</p>
+
+<h4 align="center">Gold Sponsors</h4>
+<p align="center">
+</p>
+
+<h4 align="center">Silver Sponsors</h4>
+<p align="center">
+</p>
+
+<h4 align="center">Bronze Sponsors</h4>
+<p align="center">
+</p>
+
+<!--sponsors end-->
+
+---
+
 <a name="contributing"></a>
 ## Contributing
 Please post issues and send PRs.
