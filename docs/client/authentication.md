@@ -42,6 +42,12 @@ Like Wss/Wsse it uses the same package:
         ->withWsa()
         ->call(...)
 
+You can also use the 2005 version of Wsa with 
+
+    $response = Soap::baseWsdl(...)
+        ->withWsa2005()
+        ->call(...)
+
 ### DHL Cis Authentication
 
 DHL uses his own authentication header
