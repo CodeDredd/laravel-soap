@@ -38,6 +38,7 @@ use Soap\Psr18Transport\Middleware\RemoveEmptyNodesMiddleware;
 use Soap\Psr18Transport\Psr18Transport;
 use Soap\Psr18Transport\Wsdl\Psr18Loader;
 use Soap\Psr18WsseMiddleware\WsaMiddleware;
+use Soap\Psr18WsseMiddleware\WsaMiddleware2005;
 use Soap\Wsdl\Loader\FlatteningLoader;
 use Soap\Wsdl\Loader\StreamWrapperLoader;
 
@@ -243,6 +244,18 @@ class SoapClient
     {
         $this->middlewares = array_merge_recursive($this->middlewares, [
             new WsaMiddleware(),
+        ]);
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function withWsa2005()
+    {
+        $this->middlewares = array_merge_recursive($this->middlewares, [
+            new WsaMiddleware2005(),
         ]);
 
         return $this;
