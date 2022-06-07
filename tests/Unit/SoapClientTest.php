@@ -70,6 +70,22 @@ class SoapClientTest extends TestCase
         self::assertTrue($response->ok());
     }
 
+    public function testWsseWithWsa2005Call()
+    {
+        Soap::fake();
+        ray()->showSoapClientRequests();
+        $client = Soap::baseWsdl(dirname(__DIR__, 1).'/Fixtures/Wsdl/weather.wsdl')->withWsse([
+            'userTokenName' => 'Test',
+            'userTokenPassword' => 'passwordTest',
+            'mustUnderstand' => false,
+        ])->withWsa2005();
+        $response = $client->GetWeatherInformation();
+        Soap::assertSent(function (Request $request) {
+            return ! Str::contains($request->xmlContent(), 'mustUnderstand');
+        });
+        self::assertTrue($response->ok());
+    }
+
     public function testArrayAccessResponse()
     {
         Soap::fakeSequence()->push('test');
