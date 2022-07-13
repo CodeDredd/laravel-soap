@@ -157,6 +157,7 @@ class Request
     {
         $doc = Document::fromXmlString($this->body());
         $method = $doc->locate(new SoapBodyLocator());
+
         return Arr::wrap(Arr::get(element_decode($method, traverse(new RemoveNamespaces())), 'Body', []));
     }
 
