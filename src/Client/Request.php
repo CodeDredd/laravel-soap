@@ -156,9 +156,8 @@ class Request
     public function arguments(): array
     {
         $doc = Document::fromXmlString($this->body());
-        $method = $doc->locate(new SoapBodyLocator())?->firstElementChild;
-
-        return Arr::wrap(Arr::get(element_decode($method, traverse(new RemoveNamespaces())), 'node', []));
+        $method = $doc->locate(new SoapBodyLocator());
+        return Arr::wrap(Arr::get(element_decode($method, traverse(new RemoveNamespaces())), 'Body', []));
     }
 
     /**

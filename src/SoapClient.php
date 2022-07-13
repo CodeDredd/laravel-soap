@@ -341,7 +341,7 @@ class SoapClient
                 }
                 $arguments = $arguments->validated();
             }
-            $arguments = [$arguments];
+            $arguments = Arr::wrap($arguments);
             $result = $this->engine->request($method, $arguments);
             if ($result instanceof ResultProviderInterface) {
                 return $this->buildResponse(Response::fromSoapResponse($result->getResult()));
