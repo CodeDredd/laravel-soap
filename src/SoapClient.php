@@ -344,7 +344,7 @@ class SoapClient
     public function call(string $method, Validator|array $arguments = []): Response
     {
         try {
-            if (! $this->isClientBuilded) {
+            if (!$this->isClientBuilded) {
                 $this->buildClient();
             }
             $this->refreshEngine();
@@ -354,12 +354,12 @@ class SoapClient
                 }
                 $arguments = $arguments->validated();
             }
-            $arguments = Arr::wrap($arguments);
+            $arguments = [$arguments];
             $result = $this->engine->request($method, $arguments);
             if ($result instanceof ResultProviderInterface) {
                 return $this->buildResponse(Response::fromSoapResponse($result->getResult()));
             }
-            if (! $result instanceof ResultInterface) {
+            if (!$result instanceof ResultInterface) {
                 return $this->buildResponse(Response::fromSoapResponse($result));
             }
 
@@ -417,9 +417,9 @@ class SoapClient
      */
     public function byConfig(string $setup)
     {
-        if (! empty($setup)) {
-            $setup = config()->get('soap.clients.'.$setup);
-            if (! $setup) {
+        if (!empty($setup)) {
+            $setup = config()->get('soap.clients.' . $setup);
+            if (!$setup) {
                 throw new NotFoundConfigurationException($setup);
             }
             foreach ($setup as $setupItem => $setupItemConfig) {
@@ -523,7 +523,7 @@ class SoapClient
      */
     protected function dispatchResponseReceivedEvent(Response $response)
     {
-        if (! $this->request) {
+        if (!$this->request) {
             return;
         }
 
@@ -611,7 +611,7 @@ class SoapClient
         $this->extSoapOptions = ExtSoapOptions::defaults($this->wsdl, $this->options);
         if ($this->factory->isRecording()) {
             $this->wsdlProvider = new FlatteningLoader(new StreamWrapperLoader());
-//            $this->extSoapOptions->withWsdlProvider($this->wsdlProvider);
+            //            $this->extSoapOptions->withWsdlProvider($this->wsdlProvider);
         }
     }
 
