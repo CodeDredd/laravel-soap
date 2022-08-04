@@ -18,14 +18,26 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | SOAP Code Generation directory
+    | SOAP Ray Configuration
     |--------------------------------------------------------------------------
     |
-    | Define the destination for the code generator under the app directory
+    | Define if all requests should go to ray
     */
 
     'ray' => [
         'send_soap_client_requests' => false,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | SOAP Call behaviour
+    |--------------------------------------------------------------------------
+    |
+    | Define if all requests should go to ray
+    */
+
+    'call' => [
+        'wrap_arguments_in_array' => true,
     ],
 
     /*

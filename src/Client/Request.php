@@ -160,9 +160,14 @@ class Request
     public function arguments(): array
     {
         $doc = Document::fromXmlString($this->body());
+        $wrappedArguments = config()->get('soap.call.wrap_arguments_in_array', true);
         $method = $doc->locate(new SoapBodyLocator());
 
-        return Arr::wrap(Arr::get(element_decode($method, traverse(new RemoveNamespaces())), 'Body', []));
+        if ($wrappedArguments) {
+            $method = $method?->firstElementChild;
+        }
+
+        return Arr::wrap(Arr::get(element_decode($method, traverse(new RemoveNamespaces())), $wrappedArguments ? 'node' : 'Body', []));
     }
 
     /**
