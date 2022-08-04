@@ -10,11 +10,9 @@ use Soap\Psr18Transport\Xml\XmlMessageManipulator;
 use Soap\Xml\Builder\SoapHeader;
 use Soap\Xml\Builder\SoapHeaders;
 use Soap\Xml\Manipulator\PrependSoapHeaders;
-
 use function VeeWee\Xml\Dom\Builder\children;
 use function VeeWee\Xml\Dom\Builder\namespaced_element;
 use function VeeWee\Xml\Dom\Builder\value;
-
 use VeeWee\Xml\Dom\Document;
 
 class CisDhlMiddleware implements Plugin
