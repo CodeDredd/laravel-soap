@@ -33,7 +33,7 @@ return [
     | SOAP Call behaviour
     |--------------------------------------------------------------------------
     |
-    | Define if all requests should go to ray
+    | Define if the arguments should be wrapped in an array
     */
 
     'call' => [
