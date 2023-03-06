@@ -34,7 +34,7 @@
     "require-dev": {
         "symfony/options-resolver": "^6.2.5",
         "phpunit/phpunit": "^10.0",
-        "orchestra/testbench": "^7.0 || ^8.0",
+        "orchestra/testbench": "^8.0 || ^9.0",
         "laminas/laminas-code": "^4.8.0",
         "nunomaduro/larastan": "^2.4",
         "nunomaduro/collision": "^6.1",
@@ -62,5 +62,10 @@
         }
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
+    }
 }
