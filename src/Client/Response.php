@@ -13,6 +13,7 @@ use LogicException;
 use Phpro\SoapClient\Type\ResultInterface;
 use Psr\Http\Message\ResponseInterface;
 use VeeWee\Xml\Dom\Document;
+
 use function Psl\Type\string;
 
 /**
