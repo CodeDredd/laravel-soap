@@ -11,9 +11,9 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
 use LogicException;
 use Phpro\SoapClient\Type\ResultInterface;
-use function Psl\Type\string;
 use Psr\Http\Message\ResponseInterface;
 use VeeWee\Xml\Dom\Document;
+use function Psl\Type\string;
 
 /**
  * Class Response.
@@ -47,11 +47,13 @@ class Response implements ResultInterface, ArrayAccess
         $this->response = $response;
     }
 
-    public function setCookies(array $cookies): void {
-        $this->cookies = $cookies;
+    public function setCookies(array $cookies): void
+    {
+         $this->cookies = $cookies;
     }
 
-    public function setTransferStats(?TransferStats $transferStats): void {
+    public function setTransferStats(?TransferStats $transferStats): void
+    {
         $this->transferStats = $transferStats;
     }
 
