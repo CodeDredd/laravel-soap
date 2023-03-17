@@ -498,9 +498,8 @@ class SoapClient
      */
     protected function populateResponse(Response $response)
     {
-        $response->cookies = $this->cookies;
-
-        $response->transferStats = $this->transferStats;
+        $response->setCookies($this->cookies);
+        $response->setTransferStats($this->transferStats);
 
         return $response;
     }

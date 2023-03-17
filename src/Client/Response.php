@@ -17,15 +17,15 @@ use VeeWee\Xml\Dom\Document;
 
 /**
  * Class Response.
- *
- * @property ?TransferStats $transferStats
- * @property array $cookies
  */
 class Response implements ResultInterface, ArrayAccess
 {
     use Macroable {
         __call as macroCall;
     }
+    protected ?TransferStats $transferStats = null;
+
+    protected array $cookies = [];
 
     /**
      * The underlying PSR response.
@@ -45,6 +45,14 @@ class Response implements ResultInterface, ArrayAccess
     public function __construct(ResponseInterface $response)
     {
         $this->response = $response;
+    }
+
+    public function setCookies(array $cookies): void {
+        $this->cookies = $cookies;
+    }
+
+    public function setTransferStats(?TransferStats $transferStats): void {
+        $this->transferStats = $transferStats;
     }
 
     public static function fromSoapResponse(mixed $result, int $status = 200): Response
