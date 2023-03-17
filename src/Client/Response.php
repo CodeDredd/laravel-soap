@@ -49,7 +49,7 @@ class Response implements ResultInterface, ArrayAccess
 
     public function setCookies(array $cookies): void
     {
-         $this->cookies = $cookies;
+        $this->cookies = $cookies;
     }
 
     public function setTransferStats(?TransferStats $transferStats): void
