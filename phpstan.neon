@@ -3,6 +3,9 @@ includes:
 
 parameters:
     level: 3
+    ignoreErrors:
+        - '#Access to an undefined property DOMNamedNodeMap::\$length#'
+        - '#Calling the helper function#'
     paths:
         - src
         - config
