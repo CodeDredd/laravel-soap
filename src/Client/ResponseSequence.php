@@ -24,9 +24,9 @@ class ResponseSequence
     /**
      * The response that should be returned when the sequence is empty.
      *
-     * @var \GuzzleHttp\Promise\PromiseInterface
+     * @var ?\GuzzleHttp\Promise\PromiseInterface
      */
-    protected $emptyResponse;
+    protected ?\GuzzleHttp\Promise\PromiseInterface $emptyResponse = null;
 
     /**
      * Create a new response sequence.

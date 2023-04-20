@@ -27,9 +27,7 @@ class LaravelRay
 
         $watcher->enable();
 
-        if ($rayProxy) {
-            $watcher->setRayProxy($rayProxy);
-        }
+        $watcher->setRayProxy($rayProxy);
 
         if ($callable) {
             $callable();
