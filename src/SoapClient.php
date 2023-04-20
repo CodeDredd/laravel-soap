@@ -483,7 +483,7 @@ class SoapClient
     {
         return tap($request, function ($request) use ($options) {
             $this->beforeSendingCallbacks->each->__invoke(
-                (new Request($request)),
+                new Request($request),
                 $options,
                 $this
             );
@@ -498,9 +498,8 @@ class SoapClient
      */
     protected function populateResponse(Response $response)
     {
-        $response->cookies = $this->cookies;
-
-        $response->transferStats = $this->transferStats;
+        $response->setCookies($this->cookies);
+        $response->setTransferStats($this->transferStats);
 
         return $response;
     }
@@ -553,7 +552,7 @@ class SoapClient
 
                 return $promise->then(function ($response) use ($request) {
                     optional($this->factory)->recordRequestResponsePair(
-                        (new Request($request)),
+                        new Request($request),
                         new Response($response)
                     );
 
@@ -574,7 +573,7 @@ class SoapClient
             return function ($request, $options) use ($handler) {
                 $response = ($this->stubCallbacks ?? collect())
                     ->map
-                    ->__invoke((new Request($request)), $options)
+                    ->__invoke(new Request($request), $options)
                     ->filter()
                     ->first();
                 if (is_null($response)) {
