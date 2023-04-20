@@ -37,7 +37,7 @@ class XMLSerializer
                             $output[$t] = [];
                         }
                         $output[$t][] = $v;
-                    } elseif (($v || $v === '0')) {
+                    } elseif ($v || $v === '0') {
                         $output = is_array($v) ? json_encode($v) : $v;
                     }
                 }

@@ -9,11 +9,12 @@ use LogicException;
 use Psr\Http\Message\RequestInterface;
 use Soap\Psr18Transport\HttpBinding\SoapActionDetector;
 use Soap\Xml\Locator\SoapBodyLocator;
-use function VeeWee\Xml\Dom\Configurator\traverse;
 use VeeWee\Xml\Dom\Document;
 use VeeWee\Xml\Dom\Traverser\Visitor\RemoveNamespaces;
-use function VeeWee\Xml\Encoding\element_decode;
 use VeeWee\Xml\Encoding\Exception\EncodingException;
+
+use function VeeWee\Xml\Dom\Configurator\traverse;
+use function VeeWee\Xml\Encoding\element_decode;
 
 /**
  * Class Request.
