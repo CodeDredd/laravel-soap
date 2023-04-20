@@ -167,7 +167,7 @@ class SoapClientTest extends TestCase
         'with_fake_array' => 'array',
         'with_fake_string' => 'array',
     ])]
-    public function soapActionProvider(): array
+    public static function soapActionProvider(): array
     {
         $fakeResponse = [
             'GetWeatherInformation' => [
@@ -283,7 +283,7 @@ class SoapClientTest extends TestCase
         });
     }
 
-    public function soapHeaderProvider(): array
+    public static function soapHeaderProvider(): array
     {
         $header = [
             'test' => 'application/soap+xml; charset="utf-8"',
