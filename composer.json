@@ -1,7 +1,12 @@
 {
     "name": "codedredd/laravel-soap",
     "description": "A SoapClient wrapper integration for Laravel",
-    "keywords": ["laravel", "soap", "client", "wrapper"],
+    "keywords": [
+        "laravel",
+        "soap",
+        "client",
+        "wrapper"
+    ],
     "license": "MIT",
     "authors": [
         {
