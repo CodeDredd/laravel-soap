@@ -41,10 +41,10 @@
         "phpunit/phpunit": "^10.0",
         "orchestra/testbench": "^8.0 || ^9.0",
         "laminas/laminas-code": "^4.8.0",
-        "nunomaduro/larastan": "^2.4",
         "nunomaduro/collision": "^6.1",
         "symplify/easy-ci": "^10.0",
-        "spatie/laravel-ray": "^1.32"
+        "spatie/laravel-ray": "^1.32",
+        "larastan/larastan": "^2.9"
     },
     "autoload": {
         "psr-4": {
