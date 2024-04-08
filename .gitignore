@@ -14,3 +14,4 @@ vendor
 .php-cs-fixer.cache
 ray.php
 /docs/v3/node_modules/
+/.phpunit.cache
