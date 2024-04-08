@@ -24,7 +24,7 @@
         "ext-simplexml": "*",
         "illuminate/http": "^9.0 || ^10.0 || ^11.0",
         "illuminate/support": "^9.0 || ^10.0 || ^11.0",
-        "phpro/soap-client": "^3.1.0",
+        "phpro/soap-client": "^2.3.0 || ^3.1.0",
         "php-http/guzzle7-adapter": "^1.0",
         "php-http/discovery": "^1.14",
         "php-http/message": "^1.13",
