@@ -4,7 +4,6 @@ includes:
 parameters:
     level: 4
     ignoreErrors:
-        - '#Access to an undefined property DOMNamedNodeMap::\$length#'
         - '#Calling the helper function#'
     paths:
         - src
