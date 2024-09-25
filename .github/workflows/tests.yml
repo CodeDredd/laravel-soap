@@ -68,11 +68,11 @@ jobs:
 
       -
         if: "matrix.php == 7.4"
-        uses: "ramsey/composer-install@v2"
+        uses: "ramsey/composer-install@v3"
 
       -
         if: "matrix.php >= 8"
-        uses: "ramsey/composer-install@v2"
+        uses: "ramsey/composer-install@v3"
         with:
           composer-options: "--ignore-platform-req php"
 
