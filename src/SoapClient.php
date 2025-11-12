@@ -78,7 +78,7 @@ class SoapClient
 
     protected array $middlewares = [];
 
-    protected SoapFactory|null $factory;
+    protected ?SoapFactory $factory;
 
     protected FlatteningLoader|WsdlProvider $wsdlProvider;
 
@@ -92,7 +92,7 @@ class SoapClient
     /**
      * The stub callables that will handle requests.
      */
-    protected Collection|null $stubCallbacks;
+    protected ?Collection $stubCallbacks;
 
     /**
      * The sent request object, if a request has been made.
