@@ -21,6 +21,7 @@ use Http\Client\Common\PluginClient;
 use Http\Client\Exception\HttpException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
@@ -86,12 +87,12 @@ class SoapClient
     /**
      * The callbacks that should execute before the request is sent.
      */
-    protected \Illuminate\Support\Collection $beforeSendingCallbacks;
+    protected Collection $beforeSendingCallbacks;
 
     /**
      * The stub callables that will handle requests.
      */
-    protected \Illuminate\Support\Collection|null $stubCallbacks;
+    protected Collection|null $stubCallbacks;
 
     /**
      * The sent request object, if a request has been made.
