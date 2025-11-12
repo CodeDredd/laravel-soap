@@ -106,7 +106,7 @@ class SoapClient
      * @param  \CodeDredd\Soap\SoapFactory|null  $factory
      * @return void
      */
-    public function __construct(SoapFactory $factory = null)
+    public function __construct(?SoapFactory $factory = null)
     {
         $this->factory = $factory;
         $this->client = new Client($this->guzzleClientOptions);
@@ -139,7 +139,7 @@ class SoapClient
         return $this->pluginClient;
     }
 
-    protected function setTransport(Transport $handler = null): static
+    protected function setTransport(?Transport $handler = null): static
     {
         $soapClient = AbusedClient::createFromOptions(
             ExtSoapOptions::defaults($this->wsdl, $this->options)

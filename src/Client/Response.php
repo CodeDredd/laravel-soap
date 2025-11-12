@@ -92,7 +92,7 @@ class Response implements ResultInterface, ArrayAccess
      * @param  string|null  $key
      * @return \Illuminate\Support\Collection
      */
-    public function collect(string $key = null): Collection
+    public function collect(?string $key = null): Collection
     {
         return Collection::make($this->json($key));
     }

@@ -19,7 +19,7 @@ class LaravelRay
         SpatieRay::macro('stopShowingSoapClientRequests', fn () => app(SoapClientWatcher::class)->disable());
     }
 
-    protected function handleWatcherCallable(Watcher $watcher, Closure $callable = null): RayProxy
+    protected function handleWatcherCallable(Watcher $watcher, ?Closure $callable = null): RayProxy
     {
         $rayProxy = new RayProxy();
 

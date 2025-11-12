@@ -18,7 +18,7 @@ class SoapTesting
      * @param  \CodeDredd\Soap\SoapFactory|null  $factory
      * @return void
      */
-    public function __construct(SoapFactory $factory = null)
+    public function __construct(?SoapFactory $factory = null)
     {
         $this->factory = $factory;
     }
