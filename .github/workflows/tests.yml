@@ -33,6 +33,6 @@ jobs:
           tools: php-cs-fixer, phpunit, composer:v2
 
       - name: Install dependencies
-        run: composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
+        run: composer update --prefer-dist --no-interaction
 
       - run: vendor/bin/phpunit
