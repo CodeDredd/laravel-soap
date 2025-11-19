@@ -60,7 +60,7 @@ class WsseMiddleware implements Plugin
         return $this;
     }
 
-    public function withUserToken(string $username, string $password = null, $digest = false): self
+    public function withUserToken(string $username, ?string $password = null, $digest = false): self
     {
         $this->userTokenName = $username;
         $this->userTokenPassword = $password;
