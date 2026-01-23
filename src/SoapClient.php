@@ -21,6 +21,7 @@ use Http\Client\Common\PluginClient;
 use Http\Client\Exception\HttpException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
@@ -77,7 +78,7 @@ class SoapClient
 
     protected array $middlewares = [];
 
-    protected SoapFactory|null $factory;
+    protected ?SoapFactory $factory;
 
     protected FlatteningLoader|WsdlProvider $wsdlProvider;
 
@@ -86,12 +87,12 @@ class SoapClient
     /**
      * The callbacks that should execute before the request is sent.
      */
-    protected \Illuminate\Support\Collection $beforeSendingCallbacks;
+    protected Collection $beforeSendingCallbacks;
 
     /**
      * The stub callables that will handle requests.
      */
-    protected \Illuminate\Support\Collection|null $stubCallbacks;
+    protected ?Collection $stubCallbacks;
 
     /**
      * The sent request object, if a request has been made.
@@ -106,7 +107,7 @@ class SoapClient
      * @param  \CodeDredd\Soap\SoapFactory|null  $factory
      * @return void
      */
-    public function __construct(SoapFactory $factory = null)
+    public function __construct(?SoapFactory $factory = null)
     {
         $this->factory = $factory;
         $this->client = new Client($this->guzzleClientOptions);
@@ -139,7 +140,7 @@ class SoapClient
         return $this->pluginClient;
     }
 
-    protected function setTransport(Transport $handler = null): static
+    protected function setTransport(?Transport $handler = null): static
     {
         $soapClient = AbusedClient::createFromOptions(
             ExtSoapOptions::defaults($this->wsdl, $this->options)
