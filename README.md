@@ -14,12 +14,12 @@
 [![documentation](https://img.shields.io/github/workflow/status/codedredd/laravel-soap/documentation?label=docs&logo=read-the-docs&style=flat-square)](https://codedredd.github.io/laravel-soap/)
 
 ## Versions
-| Laravel SOAP Version | Laravel Support | PHP Version |
-|----------------------|-----------------|-------------|
-| 1.x                  | 5.6, 6.x, 7.x   | 7.3 - 8.0   |
-| 2.x                  | 8.x             | 7.3 - 8.0   |
-| 3.x                  | 9.x             | 8.0 - 8.1   |
-| 4.x                  | 9.x, 10.x       | 8.1 - 8.2   |
+| Laravel SOAP Version | Laravel Support       | PHP Version |
+|----------------------|-----------------------|-------------|
+| 1.x                  | 5.6, 6.x, 7.x         | 7.3 - 8.0   |
+| 2.x                  | 8.x                   | 7.3 - 8.0   |
+| 3.x                  | 9.x                   | 8.0 - 8.1   |
+| 4.x                  | 9.x, 10.x, 11.x, 12.x | 8.1 - 8.4   |
 
 <a name="installation"></a>
 ## Installation
